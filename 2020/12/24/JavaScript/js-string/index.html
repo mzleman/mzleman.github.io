@@ -1,0 +1,586 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>JS-String - Personal Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Leman 😀</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/profile/">
+                <i class="iconfont icon-link-fill"></i>
+                简历
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="JS-String">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-24 09:56" pubdate>
+        2020年12月24日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JS-String</h1>
+            
+            <div class="markdown-body">
+              <h1 id="JS字符串常用方法"><a href="#JS字符串常用方法" class="headerlink" title="JS字符串常用方法"></a>JS字符串常用方法</h1><h2 id="length属性"><a href="#length属性" class="headerlink" title="length属性"></a>length属性</h2><p>返回字符串的长度</p>
+<h2 id="查找子串索引"><a href="#查找子串索引" class="headerlink" title="查找子串索引"></a>查找子串索引</h2><h3 id="indexOf-substr-start-0"><a href="#indexOf-substr-start-0" class="headerlink" title="indexOf (substr, [ start = 0 ])"></a>indexOf (<em>substr</em>, [ <em>start</em> = 0 ])</h3><p><code>indexOf</code>方法搜索并(如果找到)返回字符串中搜索到的字符或子字符串的索引。如果没有找到，则返回<code>-1</code>。<code>start</code>是一个可选参数，指定字符串中开始搜索的位置，默认值为<code>0</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//indexOf(char/substring)</span><br><span class="hljs-keyword">var</span> sentence=<span class="hljs-string">&quot;Hi, my name is Sam!&quot;</span><br><span class="hljs-keyword">if</span> (sentence.indexOf(<span class="hljs-string">&quot;Sam&quot;</span>)!=-<span class="hljs-number">1</span>)<br>alert(<span class="hljs-string">&quot;Sam is in there!&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+
+<h3 id="lastIndexOf-substr-start-length-1"><a href="#lastIndexOf-substr-start-length-1" class="headerlink" title="lastIndexOf (substr, [ start = length-1] )"></a>lastIndexOf (<em>substr</em>, [ <em>start</em> = length-1] )</h3><p><code>lastIndexOf()</code> 方法返回指定文本在字符串中最后一次出现的索引, 如果未找到，则返回<code>-1</code>。 “<code>start</code>”是一个可选参数，指定字符串中开始搜索的位置, 默认值为<code>string.length-1</code>。若指定<code>start</code>，则在<code>0~start</code>之间的子串中查找目标子串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//lastIndexOf(substr, [start])</span><br><span class="hljs-keyword">var</span> myString = <span class="hljs-string">&#x27;javascript rox&#x27;</span>;<br><span class="hljs-built_in">console</span>.log(myString.lastIndexOf(<span class="hljs-string">&#x27;r&#x27;</span>));<br><span class="hljs-comment">//output: 11</span><br></code></pre></td></tr></table></figure>
+
+
+<h2 id="子串切片"><a href="#子串切片" class="headerlink" title="子串切片"></a>子串切片</h2><h3 id="charAt-index"><a href="#charAt-index" class="headerlink" title="charAt (index)"></a>charAt (<em>index</em>)</h3><p><code>charAt(x)</code>返回字符串中<code>x</code>位置的字符，下标从 <code>0</code> 开始。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//charAt(x)</span><br><span class="hljs-keyword">var</span> myString = <span class="hljs-string">&#x27;jQuery FTW!!!&#x27;</span>;<br><span class="hljs-built_in">console</span>.log(myString.charAt(<span class="hljs-number">7</span>));<br><span class="hljs-comment">//output: F</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="slice-start-end-length-1"><a href="#slice-start-end-length-1" class="headerlink" title="slice (start, [ end = length-1])"></a>slice (<em>start</em>, [ <em>end</em> = length-1])</h3><p><code>slice()</code> 方法可提取字符串的某个部分，返回一个新的字符串。包括字符串从 <code>start</code> 开始（包括 start）到 <code>end</code> 结束（不包括 <code>end</code>）为止的所有字符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//slice(start, end)</span><br><span class="hljs-keyword">var</span> text=<span class="hljs-string">&quot;excellent&quot;</span><br>text.slice(<span class="hljs-number">0</span>,<span class="hljs-number">4</span>) <span class="hljs-comment">//returns &quot;exce&quot;</span><br>text.slice(<span class="hljs-number">2</span>,<span class="hljs-number">4</span>) <span class="hljs-comment">//returns &quot;ce&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="substr-start-len-length"><a href="#substr-start-len-length" class="headerlink" title="substr (start, [ len = length ])"></a>substr (<em>start</em>, [ <em>len</em> = length ])</h3><p><code>substr()</code> 方法可在字符串中抽取从 <code>start</code> 下标开始的指定数目的字符。返回一个新的字符串，包含从 <code>start</code>（包括 start 所指的字符） 处开始的 <code>length</code> 个字符。如果没有指定 <code>length</code>，那么返回的字符串包含从 <code>start</code> 到该字符串的结尾的字符。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//substr(from, to)</span><br><span class="hljs-keyword">var</span> text=<span class="hljs-string">&quot;excellent&quot;</span><br>text.substr(<span class="hljs-number">0</span>,<span class="hljs-number">4</span>) <span class="hljs-comment">//returns &quot;exce&quot;</span><br>text.substr(<span class="hljs-number">2</span>,<span class="hljs-number">4</span>) <span class="hljs-comment">//returns &quot;cell&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="substring-from-to-length-1"><a href="#substring-from-to-length-1" class="headerlink" title="substring (from, [ to = length -1 ])"></a>substring (<em>from</em>, [ <em>to</em> = length -1 ])</h3><p><code>substring()</code> 方法用于<code>返回</code>一个字符串中介于两个指定下标之间的字符，方返回的子串包括 <code>start</code> 处的字符，但不包括 <code>to</code> 处的字符，<code>to</code> 可选，如果省略该参数，那么返回的子串会一直到字符串的结尾。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//substring(from, [to])</span><br><span class="hljs-keyword">var</span> myString = <span class="hljs-string">&#x27;javascript rox&#x27;</span>;<br>myString = myString.substring(<span class="hljs-number">0</span>,<span class="hljs-number">10</span>);<br><span class="hljs-built_in">console</span>.log(myString)<br><span class="hljs-comment">//output: javascript</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="slice、substr、substring三个方法的区别"><a href="#slice、substr、substring三个方法的区别" class="headerlink" title="slice、substr、substring三个方法的区别"></a>slice、substr、substring三个方法的区别</h3><ol>
+<li>slice和substring参数分别为(起始位置索引值，结束位置索引值)，substr的参数则为(起始位置索引值，截取长度)；</li>
+<li>slice不能颠倒参数顺序，substring可以；<ul>
+<li>slice方法中，<code>start</code> 不可以大于等于 <code>end</code>，否则返回空串。</li>
+<li>substring方法中，<code>from</code>若大于等于<code>to</code>，但返回的结果为<code>[to, from)</code>范围内的子串。</li>
+</ul>
+</li>
+<li>slice和substring的参数为负时，结果不同。<ul>
+<li>slice方法允许参数为负，<code>负参数与length相加</code>得到实际的形参值。<code>如果相加结果仍为负数，则等效为0。</code></li>
+<li>substring方法不允许参数为负，<code>负实参</code>的形参值为<code>0</code>。</li>
+</ul>
+</li>
+</ol>
+<h2 id="内容检测"><a href="#内容检测" class="headerlink" title="内容检测"></a>内容检测</h2><blockquote>
+<p>以下方法都是对searchString大小写敏感的。</p>
+</blockquote>
+<h3 id="includes-searchString-position-0"><a href="#includes-searchString-position-0" class="headerlink" title="includes (searchString, [ position = 0 ])"></a>includes (<em>searchString</em>, [ <em>position</em> = 0 ])</h3><p><code>includes()</code> 方法用于检查字符串是否包含指定的字符串或字符。<code>position</code>为从当前字符串的哪个索引位置开始搜寻子字符串，默认值为 <code>0</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//endsWith()</span><br><span class="hljs-keyword">var</span> mystr = <span class="hljs-string">&quot;List of javascript functions&quot;</span>;<br><span class="hljs-keyword">var</span> n = mystr.endsWith(<span class="hljs-string">&quot;functions&quot;</span>);<br><span class="hljs-comment">//output: True</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="startsWith-searchString-postion-0"><a href="#startsWith-searchString-postion-0" class="headerlink" title="startsWith (searchString, [ postion = 0 ])"></a>startsWith (<em>searchString</em>, [ <em>postion</em> = 0 ])</h3><p><strong>参数</strong></p>
+<ul>
+<li><p><code>searchString</code></p>
+<p>要搜索的子字符串。</p>
+</li>
+<li><p><code>position</code> 可选</p>
+<p>在 <code>str</code> 中搜索 <code>searchString</code> 的开始位置，默认值为 0。</p>
+</li>
+</ul>
+<p><strong>返回值</strong></p>
+<p>如果在字符串的开头找到了给定的字符则返回**<code>true</code><strong>；否则返回</strong><code>false</code>**。</p>
+<h3 id="endsWith-searchString-len-length"><a href="#endsWith-searchString-len-length" class="headerlink" title="endsWith ( searchString, [ len = length] )"></a>endsWith ( <em>searchString</em>, [ <em>len</em> = length] )</h3><p><code>endWith</code>方法用来判断当前字符串是否是以另外一个给定的子字符串“结尾”的，根据判断结果返回 <code>true</code> 或 <code>false</code>。</p>
+<p><strong>参数</strong></p>
+<ul>
+<li><p><code>searchString</code></p>
+<p>要搜索的子字符串。</p>
+</li>
+<li><p><code>length</code> 可选</p>
+<p>在字符串的前length个字符中进行判断。默认值为 <code>str.length</code>。</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">&#x27;Cats are the best!&#x27;</span>;<br><br><span class="hljs-built_in">console</span>.log(str1.endsWith(<span class="hljs-string">&#x27;best&#x27;</span>, <span class="hljs-number">17</span>));<br><span class="hljs-comment">// expected output: true</span><br><br><span class="hljs-keyword">const</span> str2 = <span class="hljs-string">&#x27;12345&#x27;</span>;<br><span class="hljs-built_in">console</span>.log(str2.endsWith(<span class="hljs-string">&#x27;34&#x27;</span>, <span class="hljs-number">4</span>)); <span class="hljs-comment">// length = 4</span><br><span class="hljs-comment">// expected output: true</span><br><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>注意： 以上两个方法名是end<font color = 'red'>s</font>With 以及 start<font color = 'red'>s</font>With</p>
+</blockquote>
+<h2 id="大小写"><a href="#大小写" class="headerlink" title="大小写"></a>大小写</h2><h3 id="toUpperCase"><a href="#toUpperCase" class="headerlink" title="toUpperCase ()"></a>toUpperCase ()</h3><h3 id="toLowerCase"><a href="#toLowerCase" class="headerlink" title="toLowerCase ()"></a>toLowerCase ()</h3><p>返回一个新的字符串。</p>
+<h2 id="填充与修剪"><a href="#填充与修剪" class="headerlink" title="填充与修剪"></a>填充与修剪</h2><blockquote>
+<p>注意： 以下方法只会返回新字符串，不会修改原字符串。</p>
+</blockquote>
+<h3 id="padStart-targetLength-padString"><a href="#padStart-targetLength-padString" class="headerlink" title="padStart (targetLength [, padString])"></a>padStart (<em>targetLength</em> [, <em>padString</em>])</h3><p>该方法用另一个字符串填充当前字符串(如果需要的话，会重复多次)，以便产生的字符串达到给定的长度。从当前字符串的左侧开始填充。</p>
+<p><strong>参数</strong></p>
+<p><code>targetLength</code></p>
+<p>当前字符串需要填充到的目标长度。如果这个数值小于当前字符串的长度，则返回当前字符串本身。</p>
+<p><code>padString</code> 可选</p>
+<p>填充字符串。如果字符串太长，使填充后的字符串长度超过了目标长度，则只保留最左侧的部分，其他部分会被截断。此参数的默认值为 <code>&quot; &quot;</code>（U+0020），<code>即空格</code>。</p>
+<p><strong>返回值</strong></p>
+<p>在原字符串末尾填充指定的填充字符串直到目标长度所形成的新字符串。</p>
+<h3 id="padEnd-targetLength-padString"><a href="#padEnd-targetLength-padString" class="headerlink" title="padEnd (targetLength [, padString])"></a>padEnd (<em>targetLength</em> [, <em>padString</em>])</h3><p>用法与padStart类似</p>
+<h3 id="trim-、trimEnd-、trimStart"><a href="#trim-、trimEnd-、trimStart" class="headerlink" title="trim()、trimEnd()、trimStart()"></a>trim()、trimEnd()、trimStart()</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> greeting = <span class="hljs-string">&#x27;   Hello world!   &#x27;</span>;<br><br><span class="hljs-built_in">console</span>.log(greeting);<br><span class="hljs-comment">// expected output: &quot;   Hello world!   &quot;;</span><br><br><span class="hljs-built_in">console</span>.log(greeting.trim());<br><span class="hljs-comment">// expected output: &quot;Hello world!&quot;;</span><br><br><span class="hljs-built_in">console</span>.log(greeting.trimStart());<br>expected output: <span class="hljs-string">&quot;Hello world!   &quot;</span>;<br><br><span class="hljs-built_in">console</span>.log(greeting.trimEnd());<br><span class="hljs-comment">// expected output: &quot;   Hello world!&quot;;</span><br></code></pre></td></tr></table></figure>
+
+
+<h2 id="拼接与分割"><a href="#拼接与分割" class="headerlink" title="拼接与分割"></a>拼接与分割</h2><h3 id="concat-str2-…strN"><a href="#concat-str2-…strN" class="headerlink" title="concat(str2, [, …strN])"></a>concat(<em>str2</em>, [, <em>…strN</em>])</h3><p><strong>参数</strong></p>
+<ul>
+<li><p><code>str2 [, ...strN]</code></p>
+<p>需要连接到 <code>str</code> 的字符串。</p>
+</li>
+</ul>
+<p><strong>返回值</strong></p>
+<p>一个新的字符串，包含参数所提供的连接字符串。</p>
+<p><strong>描述</strong></p>
+<p><code>concat</code> 方法将一个或多个字符串与原字符串连接合并，形成一个新的字符串并返回。 <code>concat</code> 方法并不影响原字符串。</p>
+<p>如果参数不是字符串类型，它们在连接之前将会被转换成字符串。</p>
+<h3 id="repeat-count"><a href="#repeat-count" class="headerlink" title="repeat(count)"></a>repeat(<em>count</em>)</h3><p><code>repeat()</code> 构造并返回一个新字符串，该字符串包含被连接在一起的指定数量的字符串的副本。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//repeat()</span><br><span class="hljs-keyword">var</span> string = <span class="hljs-string">&quot;Welcome to Edureka&quot;</span>;<br><span class="hljs-built_in">console</span>.log(string.repeat(<span class="hljs-number">2</span>));<br><span class="hljs-comment">//output: Welcome to EdurekaWelcome to Edureka</span><br></code></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>注意： 以上方法只会返回新字符串，不会修改原字符串。</p>
+</blockquote>
+<h3 id="split-separator-‘’-limit-INFINIT"><a href="#split-separator-‘’-limit-INFINIT" class="headerlink" title="split([ separator = ‘’ ], [ limit = INFINIT ] )"></a>split([ <em>separator = ‘’</em> ], [ <em>limit = INFINIT</em> ] )</h3><p><strong>参数</strong></p>
+<ul>
+<li><p><code>separator</code></p>
+<p>指定表示每个拆分应发生的点的字符串。<code>separator</code> 可以是一个字符串或<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp">正则表达式</a>。</p>
+<ol>
+<li>如果没有找到或者省略了分隔符，则该数组包含一个由整个字符串组成的元素。</li>
+<li>如果分隔符为空字符串，则将str转换为字符数组。</li>
+<li>如果分隔符出现在字符串的开始或结尾，或两者都分开，分别返回的数组以空字符串开头，结尾或两者开始和结束。因此，如果字符串仅由一个分隔符实例组成，则该数组由两个空字符串组成。</li>
+</ol>
+</li>
+<li><p><code>limit</code></p>
+<p>一个整数，限定返回的分割片段数量。当提供此参数时，split 方法会在指定分隔符的每次出现时分割该字符串，但在限制条目已放入数组时停止。如果在达到指定限制之前达到字符串的末尾，它可能仍然包含少于限制的条目。新数组中不返回剩下的文本。</p>
+</li>
+</ul>
+<p><strong>返回值</strong></p>
+<p>返回源字符串以分隔符出现位置分隔而成的一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Array"><code>Array</code></a> </p>
+<h2 id="替换"><a href="#替换" class="headerlink" title="替换"></a>替换</h2><blockquote>
+<p>注意：以下方法只会将替换的结果返回，不会改变原字符串。</p>
+</blockquote>
+<h3 id="replace-substr-newSubStr"><a href="#replace-substr-newSubStr" class="headerlink" title="replace( substr, newSubStr)"></a>replace( <em>substr</em>, <em>newSubStr</em>)</h3><p><strong>参数</strong></p>
+<ul>
+<li><p><code>substr </code>(pattern)</p>
+<p>一个将被 <code>newSubStr</code> 替换的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/String"><code>字符串</code></a>。其被视为一整个字符串，而不是一个正则表达式。仅第一个匹配项会被替换。</p>
+</li>
+<li><p><code>newSubStr</code> (replacement)</p>
+<p>用于替换掉第一个参数在原字符串中的匹配部分的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/String"><code>字符串</code></a>。</p>
+</li>
+</ul>
+<p><strong>返回值</strong></p>
+<p>一个部分或全部匹配由替代模式所取代的新的字符串。</p>
+<p><strong>描述</strong></p>
+<p>该方法并不改变调用它的字符串本身，而只是返回一个新的替换后的字符串。</p>
+<h3 id="replaceAll-substr-replacement"><a href="#replaceAll-substr-replacement" class="headerlink" title="replaceAll (substr, replacement )"></a>replaceAll (substr, <em>replacement</em> )</h3><p>该方法返回一个新字符串，即使substr不是一个正则表达式，新字符串所有与 <code>substr</code> 相同的部分都会被<code>replacement</code> 替换。</p>
+<blockquote>
+<p>注意，在Node环境中，Node.js 15.0以上版本才支持此方法</p>
+</blockquote>
+<p><strong>参数</strong></p>
+<ul>
+<li><p><code>substr </code></p>
+<p>一个将被 <code>newSubStr</code> 替换的 字符串。</p>
+</li>
+<li><p><code>newSubStr</code> (replacement)</p>
+<p>用于替换掉第一个参数在原字符串中的匹配部分的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/String"><code>字符串</code></a>。</p>
+</li>
+</ul>
+<p><strong>返回值</strong></p>
+<p>一个部分或全部匹配由替代模式所取代的新的字符串。</p>
+<p><strong>描述</strong></p>
+<p>该方法并不改变调用它的字符串本身，而只是返回一个新的替换后的字符串。</p>
+<h2 id="String-raw"><a href="#String-raw" class="headerlink" title="String.raw"></a>String.raw</h2><p>在JS中，<code>String.raw</code>后面跟上一个<code>反引号</code>括起的字符串，其作用类似于python中的 <code>r</code>修饰符。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># python</span><br>s1 = <span class="hljs-string">r&#x27;c:\home&#x27;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// JavaScript</span><br><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">String</span>.raw <span class="hljs-string">`c:\home`</span><br></code></pre></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/23/JavaScript/js-regexp/">
+                        <span class="hidden-mobile">JS正则表达式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
