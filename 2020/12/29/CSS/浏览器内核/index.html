@@ -17,9 +17,25 @@
   <meta name="description" content="">
   <meta name="author" content="Leman">
   <meta name="keywords" content="">
-  <title>Personal Blog</title>
+  <title>浏览器内核 - Personal Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -47,7 +63,7 @@
 
 
 <body>
-  <header style="height: 100vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -141,22 +157,55 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/banner1.jpg') no-repeat center center;
+         style="background: url('/img/post.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Hello Wolrd">
+            <span class="h2" id="subtitle" title="浏览器内核">
               
             </span>
 
             
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-29 21:23" pubdate>
+        2020年12月29日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      370 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      4
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
           </div>
 
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
           
         </div>
       </div>
@@ -165,277 +214,141 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          style=margin-top:0>
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
 
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/29/CSS/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%86%85%E6%A0%B8/">浏览器内核</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/29/CSS/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%86%85%E6%A0%B8/">
-          
-          
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">浏览器内核</h1>
             
-          
-          浏览器与浏览器内核五大浏览器
-IE (Internet Explorer)
-火狐 (Firefox)
-谷歌浏览器 (Chrome)
-苹果浏览器 (Safari)
-欧朋浏览器 (Opera)
+            <div class="markdown-body">
+              <h1 id="浏览器与浏览器内核"><a href="#浏览器与浏览器内核" class="headerlink" title="浏览器与浏览器内核"></a>浏览器与浏览器内核</h1><h2 id="五大浏览器"><a href="#五大浏览器" class="headerlink" title="五大浏览器"></a>五大浏览器</h2><ul>
+<li>IE (Internet Explorer)</li>
+<li>火狐 (Firefox)</li>
+<li>谷歌浏览器 (Chrome)</li>
+<li>苹果浏览器 (Safari)</li>
+<li>欧朋浏览器 (Opera)</li>
+</ul>
+<h2 id="浏览器内核"><a href="#浏览器内核" class="headerlink" title="浏览器内核"></a>浏览器内核</h2><h3 id="内核的组成"><a href="#内核的组成" class="headerlink" title="内核的组成"></a>内核的组成</h3><p>浏览器内核可以分成两部分:</p>
+<ol>
+<li>渲染引擎，其职责有：<ul>
+<li>取得网页的内容（HTML、XML、图像等）</li>
+<li>整理讯息（例如加入CSS等）</li>
+<li>计算网页的显示方式</li>
+</ul>
+</li>
+<li>JS引擎，其职责为：<ul>
+<li>解析JavaScript语言，执行JavaScript脚本来实现网页的动态效果。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>最开始渲染引擎和JS引擎没有区分的很明确，后来JS引擎越来越独立，<code>内核就倾向于只指渲染引擎。</code></p>
+</blockquote>
+<h3 id="主流内核"><a href="#主流内核" class="headerlink" title="主流内核"></a>主流内核</h3><ol>
+<li><p>Trident</p>
+<p>代表作：IE</p>
+</li>
+<li><p>Gecko</p>
+<p>代表作：火狐</p>
+</li>
+<li><p>Webkit</p>
+<p>代表作：Safari + 旧版Chrome</p>
+</li>
+<li><p>Blink</p>
+<p>代表作：Opera + 新版Chrome</p>
+</li>
+</ol>
+<h3 id="国产浏览器内核"><a href="#国产浏览器内核" class="headerlink" title="国产浏览器内核"></a>国产浏览器内核</h3><ol>
+<li><code>搜狗浏览器</code> Trident（兼容模式）+ Webkit(高速模式)</li>
+<li><code>QQ浏览器</code>  Trident（兼容模式）+ Webkit(高速模式)</li>
+<li><code>UC浏览器</code> Trident（兼容模式）+ Webkit(高速模式)</li>
+<li><code>360浏览器</code> IE + Chrome双内核</li>
+<li><code>百度浏览器</code> IE内核</li>
+<li><code>猎豹浏览器</code> IE+Chrome双内核</li>
+<li><code>世界之窗浏览器</code> IE内核</li>
+<li><code>遨游浏览器</code> Trident（兼容模式）+ Webkit(高速模式)</li>
+</ol>
+<h3 id="手机操作系统自带浏览器的内核"><a href="#手机操作系统自带浏览器的内核" class="headerlink" title="手机操作系统自带浏览器的内核"></a>手机操作系统自带浏览器的内核</h3><ul>
+<li><p>Android：使用率最高的是Webkit，即使大部分国产手机厂商宣称系统浏览器用的是自己的内核，但也属于Webkit二次开发。</p>
+</li>
+<li><p>IOS：一般是Safari的Webkit。</p>
+</li>
+<li><p>WP7：一般是IE的Trident。</p>
+</li>
+</ul>
 
-浏览器内核内核的组成浏览器内核可以分成两部分:
-
-渲染引擎，其职责有：
-取得网页的内容（HTML、XML、图像等）
-整理讯息（例如加入CSS等）
-计算网页的显示方式
-
-
-JS引擎，其职责为：
-解析JavaSc
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-29 21:23" pubdate>
-              2020-12-29
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/CSS/">CSS</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%89%8D%E7%AB%AF/">前端</a>
-            
-              <a href="/tags/css/">css</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/24/Vue/vue/">Vue.js笔记</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/24/Vue/vue/">
-          
-          
-            
-          
-          VueVue是一个渐进式JavaScript框架。
-高级功能和特点：
-
-解耦视图和数据
-可复用的组件
-前端路由技术
-状态管理
-虚拟DOM
-
-Vue.js的Hello world
-1234567891011121314151617181920212223&lt;!DOCTYPE html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;    &lt;m
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-24 15:54" pubdate>
-              2020-12-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Vue/">Vue</a>
-            
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/24/JavaScript/js-string/">JS字符串常用方法</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/24/JavaScript/js-string/">
-          
-          
-            
-          
-          JS字符串常用方法length属性返回字符串的长度
-查找子串索引indexOf (substr, [ start = 0 ])indexOf方法搜索并(如果找到)返回字符串中搜索到的字符或子字符串的索引。如果没有找到，则返回-1。start是一个可选参数，指定字符串中开始搜索的位置，默认值为0。
-1234//indexOf(char/substring)var sentence=&quot;Hi,
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-24 09:56" pubdate>
-              2020-12-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/JavaScript/">JavaScript</a>
-            
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/23/JavaScript/js-regexp/">JS正则表达式</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/23/JavaScript/js-regexp/">
-          
-          
-            
-          
-          JS正则相关Regular Expression：RegExp
-创建JS正则表达式对象
-/正则表达式/修饰符
-1let reg = /^\d+$/mg;
-
-
-
-
-
-使用构造函数1234567891011let reg = new RegExp(&#x27;正则表达式的字符串形式&#x27;, [修饰符])// 例：let reg = new RegExp(&#x27;^\\d+$&#x27;, &
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-23 22:56" pubdate>
-              2020-12-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/JavaScript/">JavaScript</a>
-            
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/23/hello-world/">Hello World</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/23/hello-world/">
-          
-          
-            
-          
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-23 12:22" pubdate>
-              2020-12-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Demo/">Demo</a>
-            
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/CSS/">CSS</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%89%8D%E7%AB%AF/">前端</a>
+                    
+                      <a class="hover-with-bg" href="/tags/css/">css</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/24/Vue/vue/">
+                        <span class="hidden-mobile">Vue.js笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -515,9 +428,15 @@ Quick
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
 
 
 

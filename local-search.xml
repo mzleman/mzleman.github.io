@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>浏览器内核</title>
+    <link href="/2020/12/29/CSS/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%86%85%E6%A0%B8/"/>
+    <url>/2020/12/29/CSS/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%86%85%E6%A0%B8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="浏览器与浏览器内核"><a href="#浏览器与浏览器内核" class="headerlink" title="浏览器与浏览器内核"></a>浏览器与浏览器内核</h1><h2 id="五大浏览器"><a href="#五大浏览器" class="headerlink" title="五大浏览器"></a>五大浏览器</h2><ul><li>IE (Internet Explorer)</li><li>火狐 (Firefox)</li><li>谷歌浏览器 (Chrome)</li><li>苹果浏览器 (Safari)</li><li>欧朋浏览器 (Opera)</li></ul><h2 id="浏览器内核"><a href="#浏览器内核" class="headerlink" title="浏览器内核"></a>浏览器内核</h2><h3 id="内核的组成"><a href="#内核的组成" class="headerlink" title="内核的组成"></a>内核的组成</h3><p>浏览器内核可以分成两部分:</p><ol><li>渲染引擎，其职责有：<ul><li>取得网页的内容（HTML、XML、图像等）</li><li>整理讯息（例如加入CSS等）</li><li>计算网页的显示方式</li></ul></li><li>JS引擎，其职责为：<ul><li>解析JavaScript语言，执行JavaScript脚本来实现网页的动态效果。</li></ul></li></ol><blockquote><p>最开始渲染引擎和JS引擎没有区分的很明确，后来JS引擎越来越独立，<code>内核就倾向于只指渲染引擎。</code></p></blockquote><h3 id="主流内核"><a href="#主流内核" class="headerlink" title="主流内核"></a>主流内核</h3><ol><li><p>Trident</p><p>代表作：IE</p></li><li><p>Gecko</p><p>代表作：火狐</p></li><li><p>Webkit</p><p>代表作：Safari + 旧版Chrome</p></li><li><p>Blink</p><p>代表作：Opera + 新版Chrome</p></li></ol><h3 id="国产浏览器内核"><a href="#国产浏览器内核" class="headerlink" title="国产浏览器内核"></a>国产浏览器内核</h3><ol><li><code>搜狗浏览器</code> Trident（兼容模式）+ Webkit(高速模式)</li><li><code>QQ浏览器</code>  Trident（兼容模式）+ Webkit(高速模式)</li><li><code>UC浏览器</code> Trident（兼容模式）+ Webkit(高速模式)</li><li><code>360浏览器</code> IE + Chrome双内核</li><li><code>百度浏览器</code> IE内核</li><li><code>猎豹浏览器</code> IE+Chrome双内核</li><li><code>世界之窗浏览器</code> IE内核</li><li><code>遨游浏览器</code> Trident（兼容模式）+ Webkit(高速模式)</li></ol><h3 id="手机操作系统自带浏览器的内核"><a href="#手机操作系统自带浏览器的内核" class="headerlink" title="手机操作系统自带浏览器的内核"></a>手机操作系统自带浏览器的内核</h3><ul><li><p>Android：使用率最高的是Webkit，即使大部分国产手机厂商宣称系统浏览器用的是自己的内核，但也属于Webkit二次开发。</p></li><li><p>IOS：一般是Safari的Webkit。</p></li><li><p>WP7：一般是IE的Trident。</p></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>CSS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>前端</tag>
+      
+      <tag>css</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Vue.js笔记</title>
     <link href="/2020/12/24/Vue/vue/"/>
     <url>/2020/12/24/Vue/vue/</url>
