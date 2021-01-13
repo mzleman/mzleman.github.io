@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      26
+      27
        分钟
     </span>
   
@@ -334,13 +334,14 @@
 <ol>
 <li>Chrome中：</li>
 </ol>
-<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mathematica">隐藏的高度 <span class="hljs-operator">=</span> 可见的后代元素在布局之后溢出该元素内容区的最大高度<br><span class="hljs-variable">scrollHeight</span> <span class="hljs-operator">=</span> <span class="hljs-variable">padding</span><span class="hljs-operator">-</span><span class="hljs-variable">top</span> <span class="hljs-operator">+</span> <span class="hljs-built_in">Max</span><span class="hljs-punctuation">(</span>隐藏的高度， <span class="hljs-variable">padding</span><span class="hljs-operator">-</span><span class="hljs-variable">bottom</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mathematica">隐藏的高度 <span class="hljs-operator">=</span> 可见的后代元素在布局之后溢出该元素内容区的最大高度<br><span class="hljs-variable">scrollHeight</span> <span class="hljs-operator">=</span> <span class="hljs-variable">padding</span><span class="hljs-operator">-</span><span class="hljs-variable">top</span> <span class="hljs-operator">+</span> <span class="hljs-variable">contentHeight</span> <span class="hljs-operator">+</span> 隐藏内容的高度 <span class="hljs-operator">+</span> <span class="hljs-variable">padding</span><span class="hljs-operator">-</span><span class="hljs-variable">bottom</span><br></code></pre></td></tr></table></figure>
 <ol start="2">
 <li>火狐、Edge：</li>
 </ol>
-<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">scrollHeight</span> <span class="hljs-operator">=</span> <span class="hljs-variable">padding</span><span class="hljs-operator">-</span><span class="hljs-variable">top</span> <span class="hljs-operator">+</span>隐藏的高度<br></code></pre></td></tr></table></figure>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">scrollHeight</span> <span class="hljs-operator">=</span> <span class="hljs-variable">padding</span><span class="hljs-operator">-</span><span class="hljs-variable">top</span> <span class="hljs-operator">+</span> <span class="hljs-variable">contentHeight</span> <span class="hljs-operator">+</span> <span class="hljs-built_in">Max</span><span class="hljs-punctuation">(</span>隐藏内容的高度<span class="hljs-operator">,</span> <span class="hljs-variable">padding</span><span class="hljs-operator">-</span><span class="hljs-variable">bottom</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
 <blockquote>
 <p>感觉Chrome更为合理。</p>
+<p>火狐和Edge在隐藏区域的高度小于padding-bottom时是无法滚动的。</p>
 </blockquote>
 <h3 id="scrollTop和scrollLeft"><a href="#scrollTop和scrollLeft" class="headerlink" title="scrollTop和scrollLeft"></a>scrollTop和scrollLeft</h3><p><code>scrollTop</code>：对象的最顶部到对象在当前窗口显示的范围内的顶边的距离，即在出现了纵向滚动条的情况下，滚动条拉动的距离。</p>
 <p><code>scrollLeft</code>：对象的最左边到对象在当前窗口显示的范围内的左边的距离，即在出现了横向滚动条的情况下，滚动条拉动的距离。</p>
