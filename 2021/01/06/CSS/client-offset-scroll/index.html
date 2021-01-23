@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.2k 字
+      2.3k 字
     </span>
   
 
@@ -314,6 +314,9 @@
 <blockquote>
 <p>html、body元素的offsetLeft和offsetTop值在不同浏览器中计算方法不同。（火狐和Chrome就不相同）</p>
 </blockquote>
+<blockquote>
+<p>❗ 注意：当为body、html设置了padding、border等情况时，offsetParent为body的元素的offsetLeft和offsetTop值会和意想的不一样，所以尽量不要为body和html设置padding和margin还有border。</p>
+</blockquote>
 <h2 id="scroll前缀的四个属性"><a href="#scroll前缀的四个属性" class="headerlink" title="scroll前缀的四个属性"></a>scroll前缀的四个属性</h2><p>scrollWidth和scrollHeight这两个属性用来获取指定元素<code>内容层的真实宽度和高度</code>。</p>
 <blockquote>
 <p>“内容层”不是内容区，是一个抽象概念。</p>
@@ -360,12 +363,22 @@
 </blockquote>
 </li>
 </ol>
+<p>❗  <strong>最佳实践：</strong>元素滑到底了：</p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">scrollHeight</span> <span class="hljs-operator">-</span> <span class="hljs-variable">scrollTop</span> <span class="hljs-operator">==</span> <span class="hljs-variable">clientHeight</span><br></code></pre></td></tr></table></figure>
+
+
+
+
 <p>❗ <strong>最佳实践</strong>：对可能会发生纵向滚动的页面设置样式</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">html</span>,<span class="hljs-selector-tag">body</span> &#123;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><span class="hljs-selector-tag">html</span> &#123;<br>    <span class="hljs-attribute">overflow</span>: hidden;<br>&#125;<br><span class="hljs-selector-tag">body</span> &#123;<br>    <span class="hljs-attribute">overflow-y</span>: scroll; <span class="hljs-comment">/* 一开始就加上滚动条，防止滚动条的出现和消失影响body.width的计算值 */</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 <p>❗ <strong>最佳实践</strong>：不允许页面整体发生滚动</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">html</span>, <span class="hljs-selector-tag">body</span> &#123;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>    <span class="hljs-attribute">overflow</span>: hidden;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
 
 
 <h2 id="总结图"><a href="#总结图" class="headerlink" title="总结图"></a>总结图</h2><p><img src="/2021/01/06/CSS/client-offset-scroll/image-20210106211714854.png" srcset="/img/loading.gif" alt="image-20210106211714854"></p>
