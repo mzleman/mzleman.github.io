@@ -1,0 +1,698 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Leman">
+  <meta name="keywords" content="">
+  <title>Vue2.x组件化分析 - Personal Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"mzleman.gitee.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Leman 😀</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/profile/">
+                <i class="iconfont icon-link-fill"></i>
+                简历
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Vue2.x组件化分析">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-25 13:36" pubdate>
+        2021年3月25日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      74
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Vue2.x组件化分析</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Vue2-x组件化的实现"><a href="#Vue2-x组件化的实现" class="headerlink" title="Vue2.x组件化的实现"></a>Vue2.x组件化的实现</h1><h2 id="从-h-gt-h-app-说起"><a href="#从-h-gt-h-app-说起" class="headerlink" title="从 h =&gt; h(app)说起"></a>从 h =&gt; h(app)说起</h2><p>我们知道，由vue-cli3创建的runtime-only脚手架项目里的<code>main.js</code>文件有这样一段代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span><br><span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span> <span class="hljs-comment">// 👈脚手架项目顶级组件App</span><br><span class="hljs-keyword">import</span> router <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./router&#x27;</span> <span class="hljs-comment">// 👈 我自己添加的vue-router内容</span><br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store&#x27;</span> <span class="hljs-comment">// 👈 我自己添加的Vuex内容</span><br><br><span class="hljs-keyword">new</span> Vue(&#123;<br>  router, <br>  store, <br>  render: <span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> h(App)<br>&#125;).$mount(<span class="hljs-string">&#x27;#app&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p>在我学习的过程中，常规的创建Vue实例的手段是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span><br><span class="hljs-keyword">new</span> Vue(&#123;<br>    el: <span class="hljs-string">&#x27;#app&#x27;</span><br>    template: <span class="hljs-string">&#x27;&lt;app/&gt;&#x27;</span>,<br>    component: &#123;<br>    	App<br>	&#125;,<br>    router,<br>    store<br>&#125;)<br></code></pre></td></tr></table></figure>
+<p><strong>而为什么vue-cli3没有这样做呢？</strong></p>
+<p>因为是脚手架构建runtime-only版本的项目，对于js文件，webpack只是会压缩部分代码，但是不会像对待<code>*.vue</code>文件那样使用<code>vue-loader</code>将main.js中的模板进行编译成render函数。</p>
+<p><strong>但是，那为何不像下面做呢？</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span><br><span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span> <span class="hljs-comment">// 👈脚手架顶级组件App</span><br><span class="hljs-keyword">import</span> router <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./router&#x27;</span> <span class="hljs-comment">// 👈 我自己添加的vue-router内容</span><br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store&#x27;</span> <span class="hljs-comment">// 👈 我自己添加的Vuex内容</span><br><br><span class="hljs-comment">// 此时App已经是一个具有render函数的extendOptions</span><br><span class="hljs-comment">// App: &#123;name: &#x27;Vue&#x27;, data()&#123;...&#125;, render: new Function(`with(this)&#123;...&#125;`)&#125;</span><br>App.router = router<br>App.store = store<br>App.el = <span class="hljs-string">&#x27;#app&#x27;</span><br><span class="hljs-keyword">new</span> Vue(App);<br><br></code></pre></td></tr></table></figure>
+<p>答案是：你当然可以这样做。但相比于原版<code>main.js</code>中不够优雅，当越来越多额外的option选项（如Vuex的store、vue-router的router）需要传给Vue构造函数时，就会越来越丑陋，而且逻辑不够清晰。</p>
+<p>其实我更推荐的做法是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span><br><span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span> <span class="hljs-comment">// 👈脚手架顶级组件App</span><br><span class="hljs-keyword">import</span> router <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./router&#x27;</span> <span class="hljs-comment">// 👈 我自己添加的vue-router内容</span><br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store&#x27;</span> <span class="hljs-comment">// 👈 我自己添加的Vuex内容</span><br><br><span class="hljs-keyword">new</span> Vue(&#123;<br>    ...App,<br>    store,<br>    router<br>&#125;).$mount(<span class="hljs-string">&#x27;#app&#x27;</span>); <span class="hljs-comment">/* 这样创建好的顶级组件实例的根vnode就是一个tag为div的vnode，</span><br><span class="hljs-comment">而不再是一个tag为app的组件vnode /*</span><br></code></pre></td></tr></table></figure>
+
+
+<p><strong>接下来我们来从两个问题切入，分析原版的main.js：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span><br><span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span> <span class="hljs-comment">// 👈脚手架顶级组件App</span><br><span class="hljs-keyword">import</span> router <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./router&#x27;</span> <span class="hljs-comment">// 👈 我自己添加的vue-router内容</span><br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store&#x27;</span> <span class="hljs-comment">// 👈 我自己添加的Vuex内容</span><br><br><span class="hljs-keyword">new</span> Vue(&#123;<br>  router, <br>  store, <br>  render: <span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> h(App)<br>&#125;).$mount(<span class="hljs-string">&#x27;#app&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>第一个问题：</strong>为什么用<code>$mount(&#39;#app&#39;)</code>？</p>
+<p>答案：其实这没啥，因为<code>$mount(&#39;#app&#39;)</code>和在options中设置<code>&#123;el: &#39;#app&#39;&#125;</code>效果是等价的。原因是Vue实例初始化的最后存在一个逻辑是<code>if (vm.$el) vm.$mount(vm.$el)</code>（即vm._init()方法最后几句代码）。</p>
+<blockquote>
+<p>vm.$el属性是在mountComponent(vm, el)时挂载到Vue实例上的：</p>
+<p>el = el &amp;&amp; query(el)；</p>
+<p>vm.$el = el；</p>
+</blockquote>
+<p>如果在创建Vue实例时不传入el属性，则组件实例调用$mount时只会创建自己根vnode和绑定的根elm，而不会将根elm插入到某个父亲DOM元素中。将来可以在某个时机将vnode.elm插入到某个父亲元素中。</p>
+<p><font color='red'>vm.$mount(‘#app’)会调用mountComponent，而mountComponent中会创建vm的渲染watcher，即</font> <code>new Watcher(vm, ()=&gt; vm._update(vm.render()))</code><font color='red'>，Watcher的构造函数第二个参数是一个字符串或一个getter表达式，渲染watcher的getter就是调用一次vm的update方法。渲染watcher实例化时会立刻调用一次getter，这是为了获取初始的value，从而依次执行了update和render，继而使得vm的渲染的流程正式开始了。</font></p>
+<p><strong>第二个问题：</strong>render: h =&gt; h(App)会执行哪些逻辑？h是什么？</p>
+<p>答：h是vm.$createElement，而vm.$createElement是对createElement函数的封装，createElement又是对_createElement的封装。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210318222745530.png" srcset="/img/loading.gif" alt="image-20210318222745530"></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210318222705175.png" srcset="/img/loading.gif" alt="image-20210318222705175"></p>
+<p> <code>vm.$createElement</code>是一个闭包函数，含有对vm的引用，即保证内层的<code>createElement</code>函数在执行时的上下文环境永远是vm，而不会是其他组件实例。</p>
+<p>而<code>createElement</code>又是对<code>_createElement</code>函数的封装，见下图：</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210318223450113.png" srcset="/img/loading.gif" alt="image-20210318223450113"></p>
+<p><strong>所以，h =&gt; h(App) 的逻辑是：在render函数执行时，将App作为参数tag传入给<code>_createElement</code>并执行。</strong></p>
+<blockquote>
+<p>这里注意为什么App在h中明明是第一个参数，却传给了第二个占位参数tag。</p>
+<p>在vm.$createElement函数的定义中，参数位置发生了改变，并且vm作为自由变量被传入到_createElement参数的第一个位置，形成闭包。</p>
+</blockquote>
+<p>接下来我们就深入<code>_createElement</code>函数一探究竟。</p>
+<h2 id="createElement"><a href="#createElement" class="headerlink" title="_createElement"></a>_createElement</h2><p>如果你了解模板编译，看到往上第二张图就会发现<code>$createElement</code>函数就是代码字符串的<code>_c</code>方法，只是在最后一个参数上不同。<code>vm._c</code>就是在模板编译情况下的render函数需要调用的方法。而不论是<code>$createElement</code>还是<code>vm._c</code>都将最后调用<code>_createElement</code></p>
+<blockquote>
+<p>代码字符串: <code>with(this)&#123; _c(tag, [data], [children])&#125;</code></p>
+</blockquote>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210318225101219.png" srcset="/img/loading.gif" alt="image-20210318225101219"></p>
+<p><code>_createElement</code>逻辑比较复杂，我们还是从 <code>render: h =&gt; h(app)</code>执行时会发生什么切入。</p>
+<p>我们刚才提到 <code>h =&gt; h(App) </code>的逻辑是：在render函数执行时，将App作为参数tag传入给<code>_createElement</code>并执行。所以tag是App，而App不是String类型，所以会进入上图所示的else部分，即执行createComponent。</p>
+<blockquote>
+<p>这里多说一句，我在一开始展示了另外一种main.js的写法，</p>
+<p>即<code>new Vue(App)</code>，由于App.vue是经过vue-loader编译的，所以App组件的模板编译成了render函数，而App实例的根标签将会是div#app，所以如果使用<code>new Vue(App)</code>，顶层tag会是<code>&#39;div&#39;</code>，会进入上图里第一个if逻辑，即 <code>if (config.isReservedTag(&#39;div&#39;))</code>，从而执行<code>new Vnode(&#39;div&#39;, data, children)</code>。</p>
+</blockquote>
+<p>重新陈述一遍，由于App是编译后的extendOptions，所以是引用类型，h =&gt; h(app)最终要执行<code>createComponent(App, undefined, vm, undefined)</code>。</p>
+<p><strong>这里我们小结一下：</strong><code>_createElement</code>函数的主要逻辑就是</p>
+<p>① 如果tag是一个HTML内置标签，则创建以该标签为tag的根Vnode；</p>
+<p>② 如果tag是String类型，但tag不是HTML内置标签，则认为该tag是组件标签，类似于’<cpn/>‘、’<my-component/>‘这些，则应该到当前vm实例的components属性上查找该子组件的定义并赋值给Ctor变量，Ctor变量的值可能会是子组件的构造函数或extendOptions，然后继续执行createComponent(Ctor, data, vm, children, tag)，创建一个根Vnode。</p>
+<p>③如果tag不是String类型，则该Tag应该是一个子组件的构造函数或extendOptions，执行createComponent(App, undefined, vm, undefined)，创建一个根Vnode。</p>
+<blockquote>
+<p>①~③都会得到一个Vnode，<code>_createElement</code>会返回这个Vnode，最终一层层向上返回值，最终使得<code>vm._render</code>的返回值为该Vnode。</p>
+</blockquote>
+<h2 id="创建组件Vnode：createComponent"><a href="#创建组件Vnode：createComponent" class="headerlink" title="创建组件Vnode：createComponent"></a>创建组件Vnode：createComponent</h2><p>Vue源码中有两个createComponent函数，一个定义在vdom目录下的create-component.js中，另一个定义在vdom目录下的patch.js中的patch方法内部。我们这里将要分析的是前者，<font color='red'>它的作用是接收一些参数，创建一个组件Vnode</font>，而非元素Vnode或文本Vnode。</p>
+<p>_createElement函数会在遇到组件标签或tag实参不是String类型时，执行createComponent。</p>
+<p><strong>我们来分析一下createComponent函数的逻辑，以下为转载内容 + 参杂我的分析：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b7535850cddc">参考链接</a></p>
+<pre><code>**createComponent** 的逻辑会有一些复杂，但是分析源码比较推荐的是只分析核心流程，分支流程可以之后针对性的看，所以这里**针对组件渲染这个 case 主要就 3 个关键步骤：构造子类构造函数，安装组件钩子函数和实例化 vnode**。</code></pre>
+<h3 id="新建一个子类"><a href="#新建一个子类" class="headerlink" title="新建一个子类"></a>新建一个子类</h3><p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319104118330.png" srcset="/img/loading.gif" alt="image-20210319104118330"></p>
+<p>我们在编写一个组件的时候，通常都是创建一个普通对象，还是以我们的 App.vue 为例，代码如下：</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319104314590.png" srcset="/img/loading.gif" alt="image-20210319104314590"></p>
+<p>这里HelloWorld是导入的一个extendOptions对象，所以 createComponent 里的代码逻辑会执行到 **baseCtor.extend(Ctor)**。当然， h =&gt; h(App)也是同理，App将会作为第一个实参传给createComponent，也就是赋值给了Ctor，isObject(App)为true，所以也会执行 Ctor = baseCtor.extend(App)。</p>
+<p>在这里 <strong>baseCtor 实际上就是 Vue</strong>，这个的定义是在最开始初始化 Vue 的阶段，在 src/core/global-api/index.js 中的 initGlobalAPI 函数有这么一段逻辑：</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319105227985.png" srcset="/img/loading.gif" alt="image-20210319105227985"></p>
+<p> <strong>这里定义的是 Vue.options，而vm.options_base能拿到Vue是经历了两个步骤。</strong></p>
+<p><strong>第一步：首先Vue.extend方法会生成一个子类Ctor</strong>，<strong>extend方法执行过程中会将Vue.options浅复制到Ctor.options上。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js">Vue.extend = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">extendOptions</span>) </span>&#123;<br>    <span class="hljs-comment">//....</span><br>    <span class="hljs-keyword">const</span> Sub = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">VueComponent</span> (<span class="hljs-params">options</span>) </span>&#123; <br>      <span class="hljs-built_in">this</span>._init(options) <span class="hljs-comment">// 模板方法，_init实际是Vue.prototype的方法</span><br>    &#125;<br>    Sub.prototype = <span class="hljs-built_in">Object</span>.create(Super.prototype)  <span class="hljs-comment">// 原型继承的逻辑</span><br>    Sub.prototype.constructor = Sub<br>	Sub.superOptions = Super.options<br>    Sub.extendOptions = extendOptions<br>    Sub.sealedOptions = extend(&#123;&#125;, Sub.options)<br>    Sub.options = mergeOptions(<br>      Super.options,<br>      extendOptions<br>    )<br>    Sub[<span class="hljs-string">&#x27;super&#x27;</span>] = Super<br>    <span class="hljs-comment">//....</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>我们来看一下 <strong>Vue.extend</strong> 函数的定义，在 src/core/global-api/extend.js 中。</p>
+<p> <strong>Vue.extend</strong> 的作用就是构造一个 Vue 的子类，它使用一种非常经典的<strong>原型继承</strong>的方式。子类的原型对象的<code>__proto__</code>属性指向父类的<code>prototype</code>对象，从而继承父类的实例方法。</p>
+<p>然后对 Sub 这个构造函数本身扩展了一些属性（类的属性和方法），如扩展 options、添加全局 API 等；并且对配置中的 props 和 computed 做了规格化工作；最后对于这个 Sub 构造函数做了缓存，避免多次执行 Vue.extend 的时候对同一个extendOptions对象重复构造新的子类。</p>
+<p>所以经过在createComponent调用 Vue.extend(CtorExtendOptions)，会将Vue的options与Ctor的options合并，在Ctor.options_base中保存了Vue。</p>
+<p><strong>第二步：这样当我们去实例化Ctor 的时候，就会执行 this._init 逻辑再次走到了 Vue 实例的初始化逻辑。（这里用到了模板方法设计模式）而vm._init中有下图的这一段逻辑：</strong></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319105309320.png" srcset="/img/loading.gif" alt="image-20210319105309320"></p>
+<pre><code>而我们的 createComponent 取的是 **context.$options**，实际上在 src/core/instance/init.js 里 Vue 原型上的 _init 函数中有这么一段逻辑：这样就又将Ctor.options扩展到了vm.$options上。所以我们也就能通过 vm.$options.\_base 拿到 Vue 这个构造函数了。 </code></pre>
+<blockquote>
+<p>小结：任何组件构造器都能通过 <code>options._base</code>拿到Vue，任何组件实例都能通过<code>$options._base</code>拿到Vue。</p>
+</blockquote>
+<h3 id="收集注入内容"><a href="#收集注入内容" class="headerlink" title="收集注入内容"></a>收集注入内容</h3><p>此部分暂时省略，主要逻辑就是将vm的状态以及子组件标签上需要的data进行融合，其目的主要就是产生propsData和parentListener，绑定到组件Vnode的componentOptions上。</p>
+<p>当然还要处理插槽等额外的注入。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319153125657.png" srcset="/img/loading.gif" alt="image-20210319153125657"></p>
+<h3 id="为组件Vnode安装钩子"><a href="#为组件Vnode安装钩子" class="headerlink" title="为组件Vnode安装钩子"></a>为组件Vnode安装钩子</h3><p>我们之前提到 Vue.js 使用的 Virtual DOM 参考的是开源库 <a target="_blank" rel="noopener" href="https://github.com/snabbdom/snabbdom">snabbdom</a>，它的一个特点是在 <strong>VNode 的 patch 流程中对外暴露了各种时机的钩子函数</strong>，<strong>方便我们做一些额外的事情</strong>，Vue.js 也是充分利用这一点，在初始化一个 Component 类型的 VNode 的过程中实现了几个钩子函数：</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319153446768.png" srcset="/img/loading.gif" alt="image-20210319153446768"></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319153620358.png" srcset="/img/loading.gif" alt="image-20210319153620358"></p>
+<p>整个 <strong>installComponentHooks</strong> 的过程就是<strong>把 componentVNodeHooks 的钩子函数合并到 data.hook</strong> 中，在 VNode 执行 patch 的过程中执行相关的钩子函数，具体的执行我们稍后在介绍 patch 过程中会详细介绍。这里要注意的是<strong>合并策略</strong>，在合并过程中，如果某个时机的钩子已经存在 data.hook 中，那么通过执行 mergeHook 函数做合并，这个逻辑很简单，就是在最终执行的时候，依次执行这两个钩子函数即可。</p>
+<p>这些钩子同样定义在vdom目录下的create-component.js中</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319153723962.png" srcset="/img/loading.gif" alt="image-20210319153723962"></p>
+<ul>
+<li><p>init钩子用于为该组件Vnode创建一个组件实例。</p>
+</li>
+<li><p>prepatch钩子用于在patch组件Vnode时，更新组件Vnode的数据。</p>
+</li>
+<li><p>insert钩子与keep-alive、vue-router相关。</p>
+</li>
+<li><p>destroy钩子调用时会调用子组件Vnode的组件实例的$destroy()方法，如果用keep-alive包裹只是会取消该子组件的激活状态。</p>
+</li>
+</ul>
+<h3 id="实例化VNode并返回"><a href="#实例化VNode并返回" class="headerlink" title="实例化VNode并返回"></a>实例化VNode并返回</h3><p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319160651038.png" srcset="/img/loading.gif" alt="image-20210319160651038"></p>
+<p> 最后一步非常简单，通过 new VNode 实例化一个 vnode 并返回。需要注意的是和普通元素节点的 vnode 不同，组件的 vnode 是没有 children 的，这点很关键。</p>
+<p>到此createComponent会将创建好的组件Vnode传给上层<code>_createElement</code>，然后继续向上返回，直到作为render函数的返回值。</p>
+<p>对于 render：h =&gt; h(app)而言，它的返回值就是一个Vnode，类似于下面这种结构：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&#123;<br>    tag: <span class="hljs-string">&#x27;Vue-component-0&#x27;</span><br>    data: &#123;<br>      hooks: &#123;<br>          init钩子，<br>          prepatch钩子,<br>          insert钩子,<br>          destroy钩子<br>      &#125;  <br>    &#125;,<br>    children: <span class="hljs-literal">undefined</span>,<br>    componentOptions: &#123;<br>        Ctor: App的构造函数<br>        propsData: &#123;...&#125;,<br>        listeners: &#123;...&#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="执行vm-update-vm-render"><a href="#执行vm-update-vm-render" class="headerlink" title="执行vm._update(vm._render())"></a>执行vm._update(vm._render())</h2><p>流程走到<code>vm._update(vm._render)</code>，从之前的介绍可知，render: h =&gt; h(app)得到了一个VNode，接下来我们要对该VNode和旧的Vnode进行patch。等一下，哪来的旧的Vnode？对，此时确实是没有旧的VNode的，所以_update方法对patch做了一层封装。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319165736432.png" srcset="/img/loading.gif" alt="image-20210319165736432"></p>
+<p>如果没有preVnode，则调用 vm.$el = vm.<strong>patch</strong>(vm.$el, vnode)。图中解释了，对于第一个Vue实例而言，它是具有$el属性的，因为他使用了$mount(‘#app’)，HTML中的div#app此时就是vm.$el。</p>
+<p>而当存在preVnode时，只需要对新旧Vnode进行patch。</p>
+<blockquote>
+<p>对于除去顶级组件的internalComponent而言，在第一次进行patch时，$el属性都为undefined，所以执行的是</p>
+<p>vm.__patch__(undefined, vm.render())。</p>
+</blockquote>
+<h2 id="执行-patch-vm-el-vnode"><a href="#执行-patch-vm-el-vnode" class="headerlink" title="执行__patch__(vm.$el, vnode)"></a>执行__patch__(vm.$el, vnode)</h2><p>执行该方法会将HTML模板中的div#app替换为由vnode创建的DOM元素。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319170548586.png" srcset="/img/loading.gif" alt="image-20210319170548586"></p>
+<p><font color='red'>由于<code>vm.$el</code>是一个真实的DOM元素</font>，根据if else逻辑，代码会执行红框中的代码块。为了简单起见，我们忽略关于SSR的部分。<code>emptyNodeAt()</code>函数会以HTML文件中的div#app为参照，创建一个VNode，并命名为oldVnode。</p>
+<p>Vue的思路是：认为以div#app为模板创建的Vnode是一个旧的vnode，而render函数生成的vnode是新的vnode，新的vnode和oldvnode不是同一个vnode，新的应该替换掉旧的。</p>
+<p>所以接下来的逻辑就是以vnode创建一个DOM元素，替换掉div#app。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319171001006.png" srcset="/img/loading.gif" alt="image-20210319171001006"></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319171433536.png" srcset="/img/loading.gif" alt="image-20210319171433536"></p>
+<p>执行完该方法后，<code>vm.$el = vm._update(vm_render())</code>，即vm.$el等于由vm._render创建的vnode生成的新的DOM元素，也就是App组件实例第一次渲染后对应的DOM元素。</p>
+<h2 id="createElm-vnode-queue-parentElm-refElm"><a href="#createElm-vnode-queue-parentElm-refElm" class="headerlink" title="createElm(vnode, queue, parentElm, refElm)"></a>createElm(vnode, queue, parentElm, refElm)</h2><p>组件第一次渲染时，patch 的过程会调用 <strong>createElm 根据新的vnode创建元素节点及其子节点</strong>。</p>
+<p>来看一下 createElm 的实现，它的定义在 src/core/vdom/patch.js 中：</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319194420225.png" srcset="/img/loading.gif" alt="image-20210319194420225"></p>
+<p>我们删掉多余的代码，只保留关键的逻辑，这里会判断 <strong>createComponent</strong>(vnode, insertedVnodeQueue, parentElm, refElm) 的返回值，如果为 true 则直接结束，那么接下来看一下 createComponent 方法的实现。</p>
+<h2 id="创建组件实例：createComponent"><a href="#创建组件实例：createComponent" class="headerlink" title="创建组件实例：createComponent"></a>创建组件实例：createComponent</h2><p><code>createElm &gt;&gt; createComponent</code></p>
+<p>createComponent的整体逻辑如下：</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319194554511.png" srcset="/img/loading.gif" alt="createComponent"></p>
+<p>首先对Vnode进行检测，如果其data属性上挂载了hooks.init说明是一个组件Vnode，然后要调用其init钩子，初始化组件Vnode。</p>
+<p>我们之前提到在vdom目录下的create-component.js中定义的createComponent在创建组件Vnode前会为组件Vnode的data属性挂载4个钩子，init钩子就是其中之一。该钩子函数的调用时机就是在执行createElm(Vnode)为一个Vnode创建元素时发现该Vnode是一个组件Vnode，就需要对该组件Vnode进行初始化操作。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210319195103101.png" srcset="/img/loading.gif" alt="组件Vnode的init钩子"></p>
+<p><code>createElm &gt;&gt; createComponent &gt;&gt; init</code></p>
+<p>init 钩子函数执行也很简单，我们先不考虑 keepAlive 的情况，它是通过 <strong>createComponentInstanceForVnode 为组件Vnode创建一个组件实例，然后调用 $mount 方法，先来看一下 createComponentInstanceForVnode</strong> 的实现。</p>
+<p><code>createElm &gt;&gt; createComponent &gt;&gt; init &gt;&gt; createComponentInstanceForVnode</code></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324144302581.png" srcset="/img/loading.gif" alt="createComponentInstanceForVnode"></p>
+<p> 忽略inline-template的部分，createComponentInstanceForVnode做了一件事，新建一个options，并新建一个组件实例。</p>
+<ul>
+<li><p>_isComponent: true 用于标记该组件为一个internalComponent，</p>
+</li>
+<li><p>_parentVnode: vnode 指示由组件vnode创建的组件实例的_parentVnode指向该vnode，</p>
+</li>
+<li><p>parent的实参值为activeInstance，activeInstance永远指向正在执行update方法的那一个vm，所以parent的含义是将vnode产生的组件实例的父组件实例。</p>
+</li>
+</ul>
+<p>将这三个内容合并为一个options，然后创建一个Ctor实例，新建的实例将在构建函数中执行_init方法，这里我们回顾一下vm._init方法。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324191342131.png" srcset="/img/loading.gif" alt="vm._init"></p>
+<p>vm._init方法中，如果options._isComponent为true，则执行initInternalComponent。说明_isComponent === true是internalComponent的唯一标识，internalComponent可以理解为由模板中的子组件标签生成的组件，这种组件实例的创建统一交给了Vue来处理，而不是用new语法创建。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324191807618.png" srcset="/img/loading.gif" alt="initInternalComponent"></p>
+<p>initInternalComponent主要是处理options。</p>
+<p>在vm._init函数中，需要对创建实例时传入的options进行处理，而Vue源码中有两种方式：</p>
+<ul>
+<li><p>一种是如果组件是internalComponent，则用initInternalComponent处理options；</p>
+</li>
+<li><p>另一种是使用mergeOptions合并传入的options和组件构造器的options。</p>
+<blockquote>
+<p>这两种方式的目的都是让创建的vm同时能访问组件构造器的options以及使用new实例化时传入的options参数。</p>
+</blockquote>
+</li>
+</ul>
+<p>initInternalComponent不是执行合并操作，而是将vm的$options原型指向组件构造器的options，然后向vm.$options挂载_parentVnode、parent、propsData以及_parentListeners等等一些内容。</p>
+<blockquote>
+<p>第一次渲染时，父组件向子组件注入数据就是在这一步。props以及父组件对子组件的监听器就是在这时候挂载到子组件实例上的。vm._init方法后面会继续执行initProps、initEvents等一系列初始化流程。</p>
+</blockquote>
+<p>由于原型链的存在，以后vm.$options可以访问到组件构造器中的options。</p>
+<p>在initInternalComponent执行完后，vm._init会继续对数据进行规格化，对状态进行初始化。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324193544853.png" srcset="/img/loading.gif" alt="vm._init的剩余流程"></p>
+<p>由于我们单文件组件中一般不在组件options中书写el，options._el为undefined，所以vm._init不会挂载子组件。</p>
+<p>到此，我们就完成了对 App组件实例的创建，该从createComponentInstance回到init钩子。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324194301580.png" srcset="/img/loading.gif" alt="children.$mount()"></p>
+<p><code>createElm &gt;&gt; createComponent &gt;&gt; init</code></p>
+<p>init钩子最后执行了一句关键的child.$mount()。child就是我们刚刚创建好的子组件实例，它挂载到了组件vnode.componentInstance上。在非SSR环境下，此时child.$el还不存在，所以child.$mount()最终会执行 child.$el = child.__patch__(undefined, child.render())。这就开启了子组件的第一次渲染，但需要注意的是子组件创建的$el还不会插入到父组件中。</p>
+<blockquote>
+<p>child.$mount会依次执行vnode = child.render()、update.update(vnode)、patch(undefined, vnode)、createElm(vnode)，从而创建了一个组件及其根虚拟Vnode，以及根$el，这个$el是真实的创建好的DOM子树根节点。</p>
+</blockquote>
+<p>子组件实例调用$mount完成属于自己的第一次渲染后，就从组件Vnode的init钩子中跳出，执行子组件Vnode的剩余操作。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324193900834.png" srcset="/img/loading.gif" alt="createComponent创建组件实例并初始化"></p>
+<p><code>createElm &gt;&gt; createComponent &gt;&gt; initComponent</code></p>
+<p>首先，由于子组件Vnode实例化了一个组件实例，一定具有componentInstance属性，因为该属性值指向与子组件Vnode绑定的组件实例。往下继续执行initComponent。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324200927306.png" srcset="/img/loading.gif" alt="initComponent"></p>
+<p>initComponent主要做了三件事：</p>
+<ul>
+<li><p>insertedVnodeQueue.push.apply(insertedVnodeQueue, vnode.data.pendingInsert)</p>
+<p>如果子组件在渲染的过程中由于插入了元素而将对应的vnode加入到了插入顺序队列中，则将子组件中所有安装了insert钩子的的vnode加入到父组件的插入顺序队列中。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324202145673.png" srcset="/img/loading.gif" alt="invokeInsertHook"></p>
+<blockquote>
+<p>这是第一次渲染的特殊操作，每个组件第一次执行patch时，会将新的具有insert钩子的vnode加入到插入顺序队列中，子组件会将自己的插入顺序队列保存到组件Vnode.data.pendingInsert中。</p>
+<p>详见 invokeInsertHook。</p>
+<p>最终，所有具有insert钩子的vnode（父组件以及子孙组件的vnode）都按照从父亲到后代的顺序加入到了顶级组件的插入顺序队列中，而insert的调用顺序是从子到父。（队列结构）</p>
+</blockquote>
+</li>
+<li><p>vnode.elm = vnode.componentInstance.$el</p>
+<p>将子组件Vnode的elm属性指向子组件实例创建好的$el元素。</p>
+</li>
+<li><p>invokeCreateHooks(vnode, inseredVnodeQueue)</p>
+<p>调用组件vnode的create钩子，如果本组件vnode具有insert钩子，也将添加到插入顺序队列中。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324202230704.png" srcset="/img/loading.gif" alt="image-20210324202230704"></p>
+</li>
+</ul>
+<p>initComponent完成后，跳回createComponent。</p>
+<p><code>createElm &gt;&gt; createComponent</code></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324203302805.png" srcset="/img/loading.gif" alt="image-20210324203302805"></p>
+<p>接下来的逻辑就比较简单，将子组件Vnode的elm插入到父级DOM元素中。然后return true 跳回creatElm。</p>
+<h2 id="第一次渲染完成"><a href="#第一次渲染完成" class="headerlink" title="第一次渲染完成"></a>第一次渲染完成</h2><p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324214146624.png" srcset="/img/loading.gif" alt="creatElm部分逻辑"></p>
+<p>由于createComponent返回的是true，所以createElm也会直接return结束执行。</p>
+<p><strong>到这里，我们就彻底完成了从new Vue( {render: h =&gt; h(App)]})，到App组件渲染成DOM并插入到body中的过程。</strong></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324215104859.png" srcset="/img/loading.gif" alt="image-20210324215104859"></p>
+<h2 id="回到-patch"><a href="#回到-patch" class="headerlink" title="回到__patch__"></a>回到__patch__</h2><p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324223138108.png" srcset="/img/loading.gif" alt="patch的剩余执行步骤"></p>
+<p>new Vue({render: h =&gt; h(App)})经过一些列过程后，由createElm创建了一个Vnode。该Vnode没有子节点，而且是单一的子组件Vnode，并且该vnode已经创建好了组件实例和DOM元素，并且插入到了文档的body元素中。</p>
+<p>接下来执行invokeInsertHook：</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210324223534090.png" srcset="/img/loading.gif" alt="invokeInsertHook"></p>
+<p>我们之前在initComponent中提到过该函数，如果不是第一次渲染，该函数会调用插入顺序队列中的每个Vnode的insert钩子。</p>
+<p>但是，我们需要明确的是，new Vue()得到的实例在这里会直接调用队列中所有vnode的insert钩子。不对？这里很奇怪？明明new Vue（）得到的实例在此时的确是第一次渲染，为什么会调用队列中的钩子？关键在于invokeInsertHook的initial参数，如果patch方法的第一个参数只要不是undefined，isInitialPatch这个实参的值等于false，initial接受的值就为false，invokeInsertHook函数就认为本次执行不是组件根vnode的第一次渲染。</p>
+<p>调用过插入顺序队列中所有vnode的insert钩子之后，顶级组件及其子组件的第一次渲染流程就“真正”地完成了。</p>
+<h2 id="props和listeners的第一次注入"><a href="#props和listeners的第一次注入" class="headerlink" title="props和listeners的第一次注入"></a>props和listeners的第一次注入</h2><p>父组件和子组件通信的最主要机制就是：父组件向子组件的props上注入数据，同时监听子组件的自定义事件，子组件通过emit自定义事件向父组件发送数据。</p>
+<p>所以我们来看一下父级组件和子组件之间的这种通信机制是如何实现的（在哪个步骤实现的）。</p>
+<p><strong>首先，需要注意的是：</strong>父组件render函数执行时，创建某一个元素Vnode/组件Vnode时，会根据模板编译出的AST，将data传入到_createElement的第二个参数位置，data此时已经是一个真实的JS数据，包含了props、attrs、styles、class、on/nativeOn等等，只是和子组件实例中要求的内容格式“暂时”不同。</p>
+<p><strong>接下来，当我们使用_createElement(tag, data, children)创建组件Vnode时，会进一步调用createComponent(tag, data,children)。</strong></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210325103154592.png" srcset="/img/loading.gif" alt="creatComponent"></p>
+<p>createComponent有上面标注的两段逻辑，第一段是将propsData从子组件Vnode的data中提取出来，此时data.props中已经生成好了将要注入到子组件中的通信数据；第二段逻辑是把子组件Vnode的data.on中的父组件事件监听器提取出来，再将data.on赋值为data.nativeOn，data.nativeOn中保存了父组件监听子组件的原生DOM监听器。</p>
+<p>到这里其实已经得到了全部需要用到的父向子注入的数据以及父组件对子组件的事件监听器，只是尚未规格化而已。（规格化操作是由子组件初始化时完成的）</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210325103659889.png" srcset="/img/loading.gif" alt="创建子组件Vnode"></p>
+<p><strong>最后创建子组件Vnode，并且将子组件的组件构造器、propsData、listeners等等全部挂载到组件Vnode的componentOptions上。</strong></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210325104347165.png" srcset="/img/loading.gif" alt="子组件实例拿到父组件注入的内容"></p>
+<p>在子组件初始化时，通过子组件在父组件Vnode树中的占位Vnode拿到了父组件注入的数据，分别挂载到$options.propsData和options._parentListeners中。</p>
+<blockquote>
+<p>子组件实例的options._parentVnode指向自己在父组件Vnode树中的占位Vnode。</p>
+</blockquote>
+<p>值得注意的是，_parentListeners中的监听器函数应该是由高阶函数返回的函数，该函数内部封装了一个父组件的函数执行，其执行过程中this指向父组件。</p>
+<p><strong>接下来就是分别使用initEvents和initProps初始化父组件向自己注入的内容。</strong></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210325111517913.png" srcset="/img/loading.gif">  <img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210325111708770.png" srcset="/img/loading.gif" alt="image-20210325111708770"></p>
+<blockquote>
+<ul>
+<li><p>如果prop的值是基本类型，且模板中对该值有依赖，修改prop的值时，会触发子组件更新。但尽量不要随意修改，修改了会导致逻辑混乱。</p>
+</li>
+<li><p>如果prop的值是引用类型，可以修改该值的内容。如果该值是响应式数据，且模板中对该值有依赖，则该值的内容发生改变时，子组件会重新渲染并且影响父级组件以及依赖于该值的兄弟组件。如果该值不是响应式的，修改该值的内容不仅不会影响到其他组件，也不会触发子组件更新。</p>
+</li>
+</ul>
+<p>总之，在子组件中避免出现 this.prop = xxx 的操作，但是可以执行 this.prop.foo = xxx（强烈不建议这样做）。</p>
+</blockquote>
+<h2 id="props的patch"><a href="#props的patch" class="headerlink" title="props的patch"></a>props的patch</h2><p>一般来说，父组件对子组件的事件监听器不会发生太多变化，我们这里简单分析一下在父组件的某个状态发生变化导致父组件更新时，父组件对子组件的props会产生什么影响。</p>
+<p>当对子组件Vnode进行patch时，patchVnode函数中有这样一段代码：</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210325120526393.png" srcset="/img/loading.gif" alt="patchVnode"></p>
+<p>在对text、children等内容进行patch前，patchVnode会对oldVnode和vnode的data进行patch，其中就包括了props。</p>
+<p>如果Vnode具有prepatch钩子，则执行这个钩子。prepatch钩子一般只包含组件Vnode的prepatch钩子。组件Vnode的prepatch钩子是在createComponent创建组件Vnode时安装的四个钩子之一。</p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210325121059597.png" srcset="/img/loading.gif" alt="image-20210325121059597"></p>
+<p><img src="/2021/03/25/Vue/Vue%E7%BB%84%E4%BB%B6%E5%8C%96/image-20210325121328153.png" srcset="/img/loading.gif" alt="updateChildComponent"> </p>
+<p>在updateChildComponent中，对子组件实例vm._props进行了更新。</p>
+<ul>
+<li>如果vm._props中某个属性值为非undefined或null的基本类型，该值发生改变时，会触发子组件更新。</li>
+<li>如果vm._props中某个属性值为引用类型，该引用类型的指向没有发生改变，不会触发子组件更新。除非该引用类型的值为响应式数据且内容发生了改变，则会触发子组件更新。</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Vue/">Vue</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%89%8D%E7%AB%AF/">前端</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/03/25/CSS/scss/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Scss</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/19/python3/python3/">
+                        <span class="hidden-mobile">python3笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
