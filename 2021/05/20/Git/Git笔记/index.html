@@ -1,0 +1,1051 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Leman">
+  <meta name="keywords" content="">
+  <title>Git笔记 - Personal Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"mzleman.gitee.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Leman 😀</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/profile/">
+                <i class="iconfont icon-link-fill"></i>
+                简历
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Git笔记">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-05-20 23:58" pubdate>
+        2021年5月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      85
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Git笔记</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Git与GitHub"><a href="#Git与GitHub" class="headerlink" title="Git与GitHub"></a>Git与GitHub</h1><h2 id="Git结构"><a href="#Git结构" class="headerlink" title="Git结构"></a>Git结构</h2><p>==<font size='6'>工作区</font>==(写代码)</p>
+<pre><code> git add 👇</code></pre>
+<p>==<font size='6'>暂存区</font>==(临时存储)</p>
+<p>  git commit 👇</p>
+<p>==<font size='6'>本地库</font>==(历史版本)</p>
+<h2 id="Git和代码托管中心"><a href="#Git和代码托管中心" class="headerlink" title="Git和代码托管中心"></a>Git和代码托管中心</h2><p><strong>代码托管中心的任务:   维护远程库</strong></p>
+<ul>
+<li>局域网环境下<ol>
+<li>GitLab服务器</li>
+</ol>
+</li>
+<li>外网环境下<ol>
+<li>GitHub</li>
+<li>码云</li>
+</ol>
+</li>
+</ul>
+<h2 id="Git的文件管理机制"><a href="#Git的文件管理机制" class="headerlink" title="Git的文件管理机制"></a>Git的文件管理机制</h2><p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200805160547652.png" srcset="/img/loading.gif" alt="image-20200805160547652"></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200805161324105.png" srcset="/img/loading.gif" alt="image-20200805161324105"></p>
+<p><code>commit对象</code>、<code>tree对象</code>、<code>blob对象</code></p>
+<p>commit对象具有一个hash索引，该索引值即版本id。一个commit对象具有一棵tree，代表仓库主目录的一组快照。</p>
+<p>tree对象也具有一个hash索引，代表文件树id，可以理解成一个目录。</p>
+<p>tree对象中保存了各个文件快照blob对象以及子树的hash索引。</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121150722116.png" srcset="/img/loading.gif" alt="image-20201121150722116"></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200805162312028.png" srcset="/img/loading.gif" alt="image-20200805162312028"></p>
+<p>不同的commit对象使用parent指针形成一张反向的链表。</p>
+<h2 id="常用git命令"><a href="#常用git命令" class="headerlink" title="常用git命令"></a>常用git命令</h2><h3 id="git-init：初始化本地仓库"><a href="#git-init：初始化本地仓库" class="headerlink" title="git init：初始化本地仓库"></a>git init：初始化本地仓库</h3><p>git init</p>
+<h3 id="git-config-user-xxx：设置签名"><a href="#git-config-user-xxx：设置签名" class="headerlink" title="git config user.xxx：设置签名"></a>git config user.xxx：设置签名</h3><p>设置签名可以区分不同开发人员的身份。</p>
+<p>签名的形式:  用户名：xxx   Email地址：<a href="mailto:&#x78;&#120;&#x78;&#120;&#x40;&#x78;&#x78;&#46;&#x63;&#x6f;&#109;">&#x78;&#120;&#x78;&#120;&#x40;&#x78;&#x78;&#46;&#x63;&#x6f;&#109;</a></p>
+<p><font color='red'>这里的签名和登录远程库的账号密码没有任何关系</font></p>
+<ul>
+<li><p>设置项目级别/仓库级别的签名,仅在当前本地库范围有效。</p>
+<p>git config user.name  ==mazheng== </p>
+<p>git config user.email  ==mzleman@126.com==</p>
+<p>配置信息保存在了当前本地仓库目录下的 ./.git/config文件中</p>
+</li>
+</ul>
+<ul>
+<li><p>设置用户级别的签名，系统用户权限内有效。</p>
+<p>git config –global user.name ==’admin’==   👈 可以加引号</p>
+<p>git config –global user.email  ==’xxx@126.com’==</p>
+<p>配置信息保存在用户根目录下 ~/.gitconfig文件中</p>
+</li>
+</ul>
+<ul>
+<li><p>(基本不用) 设置系统级别的签名，对系统所有登录的用户有效。</p>
+<p>git config –system user.name ==admin==</p>
+<p>git config –system user.email ==xxx@126.com==</p>
+</li>
+</ul>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121121008005.png" srcset="/img/loading.gif" alt="image-20201121121008005"></p>
+<p><em>签名优先级</em>规则：采取就近原则，项目级别签名的优先级更高，两种签名（local和global）至少设置一个。</p>
+<h3 id="git-status：状态查看"><a href="#git-status：状态查看" class="headerlink" title="git status：状态查看"></a>git status：状态查看</h3><p>git status</p>
+<h3 id="git-add：添加到暂存区"><a href="#git-add：添加到暂存区" class="headerlink" title="git add：添加到暂存区"></a>git add：添加到暂存区</h3><p>git add ==filePath==</p>
+<p>git add -u  👈将显示”<font color="red">modified</font>“的<code>已经被git管理的文件</code>提交到暂存区。</p>
+<p>git add *     👈将显示”<font color="red">untracked</font>“和<font color="red">modified</font>“的文件都提交到暂存区。</p>
+<h3 id="git-commit：提交到本地库"><a href="#git-commit：提交到本地库" class="headerlink" title="git commit：提交到本地库"></a>git commit：提交到本地库</h3><p>git commit</p>
+<p>git commit -m ==”提交信息”==</p>
+<p>git commit -am ==”提交信息”== 👈 工作区直接提交到本地库，不提交到暂存区（不推荐使用）</p>
+<h3 id="git-rm：清除对文件和目录的跟踪、删除文件"><a href="#git-rm：清除对文件和目录的跟踪、删除文件" class="headerlink" title="git rm：清除对文件和目录的跟踪、删除文件"></a>git rm：清除对文件和目录的跟踪、删除文件</h3><p>git rm –cached ==filename==  👈清除git对该文件的跟踪，但文件系统中不会删除该文件</p>
+<p>git rm  ==filename== 👈清除git对该文件的跟踪，同时在文件系统中删除该文件</p>
+<p>git rm -r –cached ==dirname== 👈清除对目录的跟踪，不删除目录</p>
+<p>git rm -r –force/-f ==dirname== 👈清除对目录的跟踪，同时删除该目录</p>
+<blockquote>
+<p>不带参数的git rm命令相当于带默认参数 –force</p>
+</blockquote>
+<h3 id="git-mv：重命名、移动文件"><a href="#git-mv：重命名、移动文件" class="headerlink" title="git mv：重命名、移动文件"></a>git mv：重命名、移动文件</h3><p>git mv ==oldname==  ==newname== 👈重命名文件</p>
+<p>git mv ==filename== ==tragetPath== 👈移动文件</p>
+<h3 id="git-diff：比较文件的前后差异"><a href="#git-diff：比较文件的前后差异" class="headerlink" title="git diff：比较文件的前后差异"></a>git diff：比较文件的前后差异</h3><p><strong>当前分支下的比较命令：</strong></p>
+<ul>
+<li><p>git diff </p>
+<p> 比较所有被git管理的文件在<code>工作区</code>与<code>暂存区</code>之间的区别</p>
+</li>
+<li><p>git diff ==[filename1== ==filename2…]== </p>
+<p> 比较指定文件在<code>工作区</code>与<code>暂存区</code>之间的区别</p>
+</li>
+<li><p>git diff –cached </p>
+<p> 比较所有被git管理的文件在<code>暂存区</code>与<code>本地库</code>之间的区别</p>
+</li>
+<li><p>git diff –cached ==[filename1== ==filename2…]== </p>
+<p>比较指定文件在<code>暂存区</code>与<code>本地库</code>之间的区别</p>
+</li>
+<li><p>git diff commitHash1 commitHash2 [==filename==] </p>
+<p>比较同一分支下不同commit对象指定文件/全部文件的区别</p>
+</li>
+</ul>
+<p><strong>不同分支commit之间的比较：</strong></p>
+<ul>
+<li><p>git diff ==branch1== ==branch2==</p>
+<p>比较两个分支指针指向的commit对象之间所有文件的区别</p>
+</li>
+<li><p>git diff ==branch1== ==branch2==   –  [==filename1== ==filename2…==]</p>
+<p>git diff ==commitHash1== ==commitHash2==   –  [==filename1== ==filename2…==]</p>
+<p>比较不同commit指定文件的区别</p>
+</li>
+</ul>
+<h3 id="git-stash：藏匿处"><a href="#git-stash：藏匿处" class="headerlink" title="git stash：藏匿处"></a>git stash：藏匿处</h3><p>git  stash命令可以临时存储”尚未完成编辑”以及“需要临时藏匿”的文件，在需要的时候再加载到工作区。</p>
+<p>git使用一个栈结构管理每一次藏匿请求。</p>
+<blockquote>
+<p>将stash堆栈中的内容正常拉取的前提是：拉取出的内容与当前工作区文件状态不冲突，否则会报错，需要合并冲突。</p>
+</blockquote>
+<p><strong>查看stash堆栈：</strong></p>
+<ul>
+<li><p>git stash list</p>
+<p>查看stash堆栈。</p>
+</li>
+<li><p>git stash show</p>
+<p>查看stash堆栈中的内容和当前工作区内的差别。</p>
+</li>
+<li><p>git stash show n</p>
+<p>查看stash堆栈中索引为n的藏匿内容和当前工作区的差别</p>
+</li>
+</ul>
+<p><strong>藏匿暂未缓存的内容：</strong></p>
+<p>未缓存的内容即未提交到缓存区的内容，包括<code>modified</code> <code>untracked</code> <code>ignored</code>的文件。</p>
+<ul>
+<li><p>git stash</p>
+<p>将当前工作区所有尚未暂存的全部修改藏匿起来。</p>
+</li>
+<li><p>git stash –include-untracked / -u</p>
+<p>将当前工作区<code>modified</code>修改了的追踪文件、<code>untracked</code>未追踪文件等所有尚未暂存的内容藏匿起来。</p>
+<blockquote>
+<p>不包括.gitignore中忽略的文件和目录。但是如果.gitignore中指定了</p>
+</blockquote>
+</li>
+<li><p>git stash –all</p>
+<p>将当前工作区所有尚未暂存的文件藏起起来，包括<code>modiefied</code>、<code>untracked</code>以及<code>ignored</code>的文件。</p>
+<blockquote>
+<p>包括.gitignore中的指定文件和目录</p>
+</blockquote>
+</li>
+<li><p>git stash –==filename==</p>
+<p>将指定文件的修改藏起来。</p>
+</li>
+<li><p>git stash -m”==message==”</p>
+<p>将当前工作区所有尚未暂存的全部修改藏匿起来，<em>并写入提示信息。</em></p>
+</li>
+</ul>
+<p><strong>将藏匿内容添加到工作区：</strong></p>
+<ul>
+<li><p>git stash pop n</p>
+<p>将stash中索引为n的工作区内容取出来。当不写n时，n默认为0。</p>
+</li>
+<li><p>git stash apply n</p>
+<p>将stash中索引为n的工作区内容取出来。当不写n时，n默认为0。</p>
+<blockquote>
+<p>apply 和 pop 的区别在于apply不会将索引为n的内容从stash中移除。</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>删除stash堆栈中的内容：</strong></p>
+<ul>
+<li><p>git stash drop n</p>
+<p>将stash中索引为n的工作区内容从堆栈中删除。当不写n时，n默认为0。</p>
+</li>
+<li><p>git stash clear</p>
+<p>清空stash中的所有内容</p>
+</li>
+</ul>
+<h3 id="git-restore：恢复操作"><a href="#git-restore：恢复操作" class="headerlink" title="git restore：恢复操作"></a>git restore：恢复操作</h3><ul>
+<li><p>git restore ==filename1 [filename2]== </p>
+<p>撤销工作区指定一个或多个<font color='red'>已追踪文件</font>的修改。</p>
+<p>👉 等价于 git checkout – ==filename1== ==[filename2]==</p>
+</li>
+<li><p>git restore *</p>
+<p>撤销工作区所有<font color='red'>已追踪文件</font>的修改。</p>
+<p>👉 等价于 git checkout – *</p>
+<blockquote>
+<p>即去除 工作区区内<code>modified</code>文件</p>
+</blockquote>
+</li>
+<li><p>git restore –staged ==filename1== ==filename2…==</p>
+<p>撤销暂存区指定内容相对于本地库的修改。</p>
+<blockquote>
+<p>撤销暂存区内容的操作不会影响工作区。</p>
+</blockquote>
+</li>
+<li><p>git restore –staged  *</p>
+<p>撤销暂存区所有内容相对于本地库的修改。</p>
+<p>👉等价于 git reset –mixed HEAD</p>
+</li>
+</ul>
+<h3 id="git-checkout"><a href="#git-checkout" class="headerlink" title="git checkout"></a>git checkout</h3><p>应用：</p>
+<ol>
+<li><p>切换分支</p>
+<p>git checkout ==branchName==</p>
+</li>
+<li><p>基于某一commit对象新建分支，同时切换到该分支</p>
+<p>git checkout -b ==branchName== ==commitHash==</p>
+</li>
+<li><p>分离头指针</p>
+<p>git checkout ==commitHash==</p>
+</li>
+<li><p>撤销工作区内容修改</p>
+<p>git checkout – ==filename==  👈 单文件</p>
+<p>git checkout – ==filename1== ==filename2…==   👈 多文件</p>
+<p>git checkout – *  👈 所有文件</p>
+</li>
+</ol>
+<h2 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h2><p><strong>定义：在版本控制过程中，使用多条线同时推进多个任务。</strong></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200804222504990.png" srcset="/img/loading.gif" alt="image-20200804222504990"></p>
+<p><strong>使用分支的优势：</strong>1. 同时并行推进多个功能的开发，提高开发效率。2. 各个分支在开发过程中，如果某一个分支开发失败，不会对其他分支有任何影响。失败的分支删除重新开始即可。</p>
+<h3 id="分支常用命令"><a href="#分支常用命令" class="headerlink" title="分支常用命令"></a>分支常用命令</h3><h4 id="1-创建分支"><a href="#1-创建分支" class="headerlink" title="1. 创建分支"></a>1. 创建分支</h4><ul>
+<li><p>git branch ==分支名== 基于当前commit创建新分支</p>
+</li>
+<li><p>git branch ==分支名== ==commitHash== 基于指定commit创建新分支</p>
+</li>
+<li><p>git checkout -b ==newBranch== ==targetBranch/commitHash== 在某个版本处创建新分支,同时切换到该分支 ⭐</p>
+<p>指针关系：HEAD 👉 newBranch 👉 targetBranch/commitHash</p>
+</li>
+</ul>
+<h4 id="2-查看所有分支"><a href="#2-查看所有分支" class="headerlink" title="2. 查看所有分支"></a>2. 查看所有分支</h4><p>git branch -v</p>
+<p>git branch -av  查看包含远程分支在内的所有分支</p>
+<h4 id="3-切换到分支"><a href="#3-切换到分支" class="headerlink" title="3. 切换到分支"></a>3. 切换到分支</h4><p>git checkout ==分支名==</p>
+<h4 id="4-合并分支"><a href="#4-合并分支" class="headerlink" title="4. 合并分支"></a>4. 合并分支</h4><p>git merge ==被合并分支名==</p>
+<ul>
+<li><p>第一步，切换到接受修改的分支（要合并其他分支的主分支）</p>
+<p>git checkout [主分支]</p>
+</li>
+<li><p>第二步，执行git merge [被合并分支名]</p>
+</li>
+</ul>
+<p><strong>解决合并冲突：</strong></p>
+<p>合并主分支与被合并分支时，若同一个文件的同一个位置在两个分支内的内容有差异，则这时产生合并冲突。</p>
+<ul>
+<li><p>第一步：合并分支，若出现冲突，git会发出提示需要解决冲突，或取消合并。</p>
+</li>
+<li><p>第二步：若继续合并，则首先应编辑发生冲突的文件内容位置，删除标记冲突的特殊符号。</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200804231102746.png" srcset="/img/loading.gif" alt="image-20200804231102746"></p>
+</li>
+<li><p>第三步：git add ==发生冲突的文件== 或   git add .</p>
+</li>
+<li><p>第四步：git commit -m “日志信息”   <font color="red">此时commit一定不能带具体文件名</font>&gt;</p>
+</li>
+</ul>
+<h4 id="5-删除分支"><a href="#5-删除分支" class="headerlink" title="5. 删除分支"></a>5. 删除分支</h4><p>git branch -d ==branchName== 👈可以删除已经被合并过的分支</p>
+<p>git branch -D ==branchName== 👈可以删除任意分支</p>
+<blockquote>
+<p>若要删除当前分支，则应先切换到其他分支再删除。</p>
+</blockquote>
+<h3 id="使用指针管理分支"><a href="#使用指针管理分支" class="headerlink" title="使用指针管理分支"></a>使用指针管理分支</h3><ul>
+<li><p><strong>新建分支testing，并切换到testing。</strong></p>
+<p>底层：新建一个分支指针testing指向当前版本，同时HEAD指针指向testing指针。</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200805163243391.png" srcset="/img/loading.gif" alt="image-20200805163243391"></p>
+</li>
+</ul>
+<ul>
+<li><p><strong>在testing分支下提交新的版本873ab2。</strong></p>
+<p>底层：在testing分支下创建了一个新的commit对象，hash索引为87ab2，该对象的parent指针指向testing指针正在指向的commit对象，再把testing指针指向新建的commit对象。</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200805163507534.png" srcset="/img/loading.gif" alt="image-20200805163507534"></p>
+</li>
+</ul>
+<ul>
+<li><p><strong>切换回master主分支</strong></p>
+<p>底层：只需要将HEAD指针指向master即可。</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200805171322879.png" srcset="/img/loading.gif" alt="image-20200805171322879"></p>
+</li>
+</ul>
+<ul>
+<li><p><strong>在master主分支内提交新的版本</strong></p>
+<p>底层：新建一个commit对象，hash索引设为c2b92，parent指针指向前一个commit对象f30ab。master指针指向该新建的commit对象。</p>
+<blockquote>
+<p><em>HEAD指针无需移动，一直指向master即可</em></p>
+</blockquote>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200805171504066.png" srcset="/img/loading.gif" alt="image-20200805171504066"></p>
+</li>
+</ul>
+<h2 id="查看提交记录"><a href="#查看提交记录" class="headerlink" title="查看提交记录"></a>查看提交记录</h2><p>git log   完整的查看历史记录</p>
+<p>完整的查看历史记录</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200804174018030.png" srcset="/img/loading.gif" alt="image-20200804174018030"> g</p>
+<p><strong>git log –pretty=oneline</strong>   </p>
+<p>一次提交记录显示成一行，同时显示完整的版本号</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200804174101612.png" srcset="/img/loading.gif" alt="image-20200804174101612"> </p>
+<p><strong>git log –oneline</strong> ⭐</p>
+<p>一次提交记录显示成一行，同时显示版本号的前几位</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200804174138482.png" srcset="/img/loading.gif" alt="image-20200804174138482"> </p>
+<p><strong>git reflog</strong> </p>
+<p>包含移动步数 HEAD@{移动步数}</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200804174328155.png" srcset="/img/loading.gif" alt="image-20200804174328155"> </p>
+<p><strong>git log –all</strong> </p>
+<p>查看所有分支的历史版本</p>
+<p><strong>git log –all –graph</strong>  ⭐</p>
+<p>以分支图的形式在终端中显示所有分支的历史版本</p>
+<p><strong>git log –oneline –all –graph</strong> ⭐⭐</p>
+<p>​            </p>
+<h2 id="分离头指针"><a href="#分离头指针" class="headerlink" title="分离头指针"></a>分离头指针</h2><p>git checkout ==commitHash版本hash / HEAD~n指针移动位数==</p>
+<p>个人对分离头指针的定义：头指针不再指向某个分支指针，而指向具体版本。</p>
+<p>问题情景： </p>
+<p>第一步：git checkout 版本hash  或 git checkout HEAD~n将HEAD指针指向历史版本</p>
+<p>第二步：对代码进行修改</p>
+<p>第三步⭐：修改添加到缓存区，提交版本到本地库==假设Git将该版本hash值设为abc123==，此时便真正处于<code>分离头指针状态 HEAD detached</code></p>
+<p><strong>分离头指针状态存在这样一个问题</strong>：==abc123== 与所有branch指针都没有关联，此时git就要求我们新建一个分支保存该版本，否则会在distached缓存被清除后，丢失该版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">git branch ==newBranchName== ==abc123==<br><br>或<br>git checkout -b newBranchName<br></code></pre></td></tr></table></figure>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201122172536098.png" srcset="/img/loading.gif" alt="image-20201122172536098"></p>
+<h2 id="版本回退git-reset-和-git-revert"><a href="#版本回退git-reset-和-git-revert" class="headerlink" title="版本回退git reset 和 git revert"></a>版本回退git reset 和 git revert</h2><h3 id="基于分支的版本回退git-reset"><a href="#基于分支的版本回退git-reset" class="headerlink" title="基于分支的版本回退git reset"></a>基于分支的版本回退git reset</h3><p>git reset 命令主要是修改分支最近版本的指针。</p>
+<h3 id="git-reset-soft-hard-mixed之区别深解-⭐"><a href="#git-reset-soft-hard-mixed之区别深解-⭐" class="headerlink" title="git reset soft,hard,mixed之区别深解 ⭐"></a><strong>git reset soft,hard,mixed之区别深解 ⭐</strong></h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zpf336/article/details/80896020?utm_medium=distribute.pc_relevant.none-task-blog-title-3&spm=1001.2101.3001.4242">参考资料</a></p>
+<p><strong>首先我们来看几个术语</strong></p>
+<ul>
+<li><strong>HEAD:</strong> 这是当前分支版本顶端的别名，也就是在当前分支你最近的一个提交</li>
+<li><strong>Index:</strong> 也被称为Staging area，是指一整套即将被下一个提交的文件集合。他也是将成为HEAD的父亲的那个commit</li>
+<li><strong>Working Copy:</strong> Working copy代表你正在工作的那个文件集</li>
+</ul>
+<p>当你第一次checkout一个分支，HEAD就指向当前分支的最近一个commit。在HEAD中的文件集（实际上他们从技术上不是文件，他们是blobs（一团），但是为了讨论的方便我们就简化认为他们就是一些文件）和在index中的文件集是相同的，在working copy的文件集和HEAD,INDEX中的文件集是完全相同的。所有三者(HEAD,INDEX(STAGING),WORKING COPY)都是相同的状态，GIT很happy。</p>
+<p><img src="https://img-blog.csdn.net/20180703134050437" srcset="/img/loading.gif" alt="img"></p>
+<p>当你对一个文件执行一次修改，Git感知到了这个修改，并且说：“嘿，文件已经变更了！你的working copy不再和index,head相同！”，随后GIT标记这个文件是修改过的。</p>
+<p><img src="https://img-blog.csdn.net/20180703134315399" srcset="/img/loading.gif" alt="img"></p>
+<p>然后，当你执行一个git add,它就stages the file in the index，并且GIT说：“嘿，OK，现在你的working copy和index区是相同的，但是他们和HEAD区是不同的！”</p>
+<p><img src="https://img-blog.csdn.net/20180703134238194" srcset="/img/loading.gif" alt="img"></p>
+<p>当你执行一个git commit,GIT就创建一个新的commit，随后HEAD就指向这个新的commit，而index,working copy的状态和HEAD就又完全匹配相同了，GIT又一次HAPPY了。</p>
+<p><img src="https://img-blog.csdn.net/20180703134050437" srcset="/img/loading.gif" alt="img"></p>
+<p><strong>Reset 参数</strong></p>
+<p>git reset 有一些参数，不同参数对应的细节变化又是不一样的，具体如下：</p>
+<p><strong><code>--mixed：</code></strong></p>
+<blockquote>
+<p>–mixed是reset的默认参数，也就是当你不指定任何参数时的参数。它将重置HEAD到另外一个commit,并且重置index以便和HEAD相匹配，但是也到此为止。working copy不会被更改。所有该branch上从original HEAD（commit）到你重置到的那个commit之间的所有变更将作为local modifications保存在working area中，（被标示为local modification or untracked via git status)，但是并未staged的状态，你可以重新检视然后再做修改和commit。</p>
+</blockquote>
+<blockquote>
+<p><img src="https://img-blog.csdn.net/20180703134315399" srcset="/img/loading.gif" alt="img"></p>
+</blockquote>
+<p><code>--soft：</code></p>
+<blockquote>
+<p>–soft参数告诉Git重置HEAD到另外一个commit，但也到此为止。如果你指定–soft参数，Git将停止在那里而什么也不会根本变化。这意味着index,working copy都不会做任何变化，所有的在original HEAD和你重置到的那个commit之间的所有变更集都放在stage(index)区域中。</p>
+<p><img src="https://img-blog.csdn.net/20180703134238194" srcset="/img/loading.gif" alt="img"></p>
+</blockquote>
+<p><code>--hard：</code></p>
+<blockquote>
+<p>–hard参数将会重置HEAD返回到另外一个commit，重置index以便反映HEAD的变化，并且重置working copy也使得其完全匹配起来。这是一个比较危险的动作，具有破坏性，数据因此可能会丢失！如果真是发生了数据丢失又希望找回来，那么只有使用：<strong>git reflog</strong>命令了。makes everything match the commit you have reset to.你的所有本地修改将丢失。如果我们希望彻底丢掉本地修改但是又不希望更改branch所指向的commit，则执行：</p>
+</blockquote>
+<h3 id="reset-参数归纳总结："><a href="#reset-参数归纳总结：" class="headerlink" title="reset 参数归纳总结："></a>reset 参数归纳总结：</h3><p><code>git reset --hard </code></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200804205051569.png" srcset="/img/loading.gif" alt="image-20200804205051569"> </p>
+<ol>
+<li><p>切换到目标分支</p>
+<p>git checkout master</p>
+</li>
+<li><p>指定要回退的版本</p>
+<p>git reset –hard ==版本索引值==            使用索引值前进后退</p>
+<p>git reset –hard HEAD^            后退一个版本</p>
+<p>git reset –hard HEAD^^          后退两个版本 （几个^就后退几个版本）</p>
+<p>git reset  –hard HEAD <del>==n==     后退n个版本 （^换成了</del>）</p>
+<blockquote>
+<p>注意：在某个分支上执行git reset 会导致丢失原版本和回退版本之间的版本。</p>
+</blockquote>
+</li>
+</ol>
+<p> <code>git reset --mixed </code></p>
+<p>执行git reset 相当于执行 git reset –mixed 即默认使用mixed。</p>
+<p>将分支的指针指向某个commit，同时暂存区与该commit一致，工作区代码保留。</p>
+<p>应用场景： </p>
+<ol>
+<li><p>撤回暂存区的内容。</p>
+<p>git reset HEAD</p>
+</li>
+<li><p>撤回暂存区一个或多个文件，暂存区的撤回内容不会对工作区造成影响。</p>
+<p>git reset HEAD – ==file1== ==file2…==</p>
+<p><code>相当于 </code>git restore –staged ==file1== ==file2…==</p>
+</li>
+</ol>
+<p><code>git reset --soft</code></p>
+<p>将分支的指针指向某个commit，暂存区和工作区仍保留原来状态。</p>
+<p>HEAD！= INDEX = WORKING COPY</p>
+<p>由于暂存区仍然保持回退前的状态，所以如果想要撤销回退，直接git commit即可。</p>
+<h3 id="常见情景：删除文件并找回"><a href="#常见情景：删除文件并找回" class="headerlink" title="常见情景：删除文件并找回"></a><strong>常见情景：删除文件并找回</strong></h3><p>前提：删除前，文件存在时的状态提交到了本地库。（本地库中存储了具有该文件的状态版本）。</p>
+<p>操作：git reset –hard [指针位置]</p>
+<ul>
+<li>删除操作已经提交到了本地库：调整指针位置到该文件存在的历史版本。</li>
+<li>删除上做尚未提交到本地库：指针位置调整为HEAD（最新版本）。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">//demo：使用版本的后退来撤销删除文件的操作<br><br>git rm new.txt<br>git commit -m <span class="hljs-string">&quot;delete new.txt&quot;</span><br><br>git reset --hard HEAD^     👈回退一个版本，即返回到删除new.txt前的版本<br></code></pre></td></tr></table></figure>
+
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span>demo：删除文件的操作尚未提交到本地库，但拉取到了缓存区，恢复该文件的方法👇<br><br><span class="hljs-regexp">//gi</span>t reset命令的--hard参数的含义是强制本地库、缓存区、工作区同时回退到某个版本<br><br><span class="hljs-regexp">//</span>可利用该特性来拉回缓存区的内容<br><br>git rm new.txt<br><br>git commit --mixed HEAD  👈回退到当前版本，使缓存区与本地库一致。<br><span class="hljs-regexp">//</span>或者使用 git restore --staged new.txt + git restore new.txt分两步解决<br></code></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="git-revert"><a href="#git-revert" class="headerlink" title="git revert"></a>git revert</h3><ol>
+<li><p>git revert ==commitHash==</p>
+<p>撤销指定commit版本的操作，这个操作也会生成一个新的commit，指定版本commit之前及之后的操作均不受影响。</p>
+<blockquote>
+<p><strong>需要注意的是，<code>如果git revert指定了一个非上一版本的历史版本</code>，则该版本的parent的某些内容<code>可能会</code>和当前版本发生冲突，这就需要<code>合并冲突</code>才能提交git revert产生的新版本。</strong></p>
+<p>发生冲突的情况举例：</p>
+<p>current1  “ echo abc &gt; new.txt “👈HEAD</p>
+<p>history2  “create a.txt”</p>
+<p>history3   “echo 123&gt; new.txt”   👈 git revert history3</p>
+<p>history4  “create new.txt”</p>
+<p>可见，history4版本下new.txt内容为空，history3版本下new.txt内容为123，current1版本new.txt内容为abc，如果撤销history3的commit，则history4和current1之间便丢失了中间过程（git存储的是文件内容的变化），会导致历史链断裂。</p>
+<p>不发生冲突的情况举例：</p>
+<p>current1  “ echo abc &gt; new.txt “👈HEAD</p>
+<p>history2   “echo 123&gt; new.txt” </p>
+<p>history3  “create a.txt”  👈 git revert history3</p>
+<p>history4  “create new.txt”</p>
+<p>上述的情况不会发生冲突是因为撤销history3并不会使history2和history4之间丢失中间的变化过程。</p>
+</blockquote>
+</li>
+<li><p>git revert ==commitHash1== ==commitHash2…==</p>
+<p>撤销指定的多个commit版本。</p>
+</li>
+<li><p>git revert ==olderCommit..oldCommit==</p>
+<p>撤销 (olderCommit, oldCommit]之间的commit，左开右闭，即会保留olderCommit的提交。</p>
+<blockquote>
+<p>current 👈HEAD</p>
+<p>history1</p>
+<p>oldCommit    ← revert end</p>
+<p>….</p>
+<p>olderCommit  ← revert start</p>
+<p>….</p>
+<p>如上所示，如果(start, end]之间的commit撤销后，olderCommit和 [ history, currnet]之间丢失了中间过程，同样会导致冲突。</p>
+</blockquote>
+</li>
+</ol>
+<pre><code>综上所述：使用git revert时最推荐的做法还是根据从新到旧的顺序，依次撤销commit，尽量不要存在间隔。</code></pre>
+<h2 id="变基命令-rebase"><a href="#变基命令-rebase" class="headerlink" title="变基命令 rebase"></a>变基命令 rebase</h2><p>git rebase -i ==baseCommit==</p>
+<blockquote>
+<p>-i / –interactive  代表交互式</p>
+</blockquote>
+<h3 id="应用情景1：修改commit的message"><a href="#应用情景1：修改commit的message" class="headerlink" title="应用情景1：修改commit的message"></a>应用情景1：修改commit的message</h3><ol>
+<li><p><strong>修改最近一次提交的commit的message</strong></p>
+<p>git commit –amend， 会出现以下文件内容：</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121220040518.png" srcset="/img/loading.gif" alt="image-20201121220040518"></p>
+<p>修改顶部的message内容，:wq保存即可。</p>
+</li>
+</ol>
+<ol start="2">
+<li><p><strong>修改历史任意一个commit的message</strong></p>
+<p>例如，我们需要修改 hash值为balf22b的commit对象的message，则我们<code>需要以balf22b的parent为基础</code>进行变基操作。</p>
+<p>==commit 18b080c==   👈<code>parent</code>   ==commit balf22b== 👈<code>parent</code> ==commit child123==</p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121221505369.png" srcset="/img/loading.gif" alt="image-20201121221505369"> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ git rebase -i init00 进入交互式页面。（一个文件）<br></code></pre></td></tr></table></figure>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121221531229.png" srcset="/img/loading.gif" alt="image-20201121221531229"></p>
+<p>pick 命令代表使用该commit对象</p>
+<p>reword 命令代表修改该commit对象的message</p>
+<p>drop 命令代表丢弃该commit对象，即从历史版本链中删除该版本。</p>
+<p>squash 命令代表合并commit</p>
+<p>……</p>
+<p>⭐ 可见，我们这里应该使用reword </p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121221721667.png" srcset="/img/loading.gif" alt="image-20201121221721667"></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121221837885.png" srcset="/img/loading.gif" alt="image-20201121221837885"></p>
+</li>
+</ol>
+<blockquote>
+<p>这里解释为何必须选择目标commit的父级commit进行变基：</p>
+<p>如果直接基于需要修改message的commit进行变基，则修改该commit的message后，该commit的hash值便发生了改变（例如由abc123变为def456），其后的版本commit的parent指针仍然指向abc123，所以就发生了版本链的断裂，而且abc123指向不明，就会报错。</p>
+</blockquote>
+<h3 id="应用情景2：合并commit"><a href="#应用情景2：合并commit" class="headerlink" title="应用情景2：合并commit"></a>应用情景2：合并commit</h3><ol>
+<li><p><strong>合并连续的commit</strong></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121223201907.png" srcset="/img/loading.gif" alt="image-20201121223201907"> </p>
+<p>如上图，连续编辑了两次index.html的操作可以合并成一个。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#这里，853f263和d1bc279可以合并成一个，则必须使用853f263的父级commit进行变基操作。</span><br>$ git rebase -i 30438ce<br></code></pre></td></tr></table></figure>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121223508509.png" srcset="/img/loading.gif" alt="image-20201121223508509"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#使用squash命令，将d1bc279合并到853f263</span><br></code></pre></td></tr></table></figure>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121223715612.png" srcset="/img/loading.gif" alt="image-20201121223715612"></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121223831593.png" srcset="/img/loading.gif" alt="image-20201121223831593"></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121223924154.png" srcset="/img/loading.gif" alt="image-20201121223924154"></p>
+</li>
+</ol>
+<ol start="2">
+<li><p><strong>合并不连续的commit</strong></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121224221399.png" srcset="/img/loading.gif" alt="image-20201121224221399"> </p>
+<p>在两次变基index.html中间有提交README的commit，则要合并间隔的commit<code>0775df9</code>和<code>5e1d10e</code>需要特殊操作。</p>
+<blockquote>
+<p>注意：</p>
+<pre><code>合并0775df9和5e1d10e，要求合并的结果与 0775df9到5e1d10e之间任何一个版本不存在冲突，才允许合并。</code></pre>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-variable">$git</span> rebase -i 30438ce<br></code></pre></td></tr></table></figure>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121224428436.png" srcset="/img/loading.gif" alt="image-20201121224428436"></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121224534459.png" srcset="/img/loading.gif" alt="image-20201121224534459"></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121224638413.png" srcset="/img/loading.gif" alt="image-20201121224638413"></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201121224751464.png" srcset="/img/loading.gif" alt="image-20201121224751464"></p>
+</li>
+</ol>
+<h3 id="应用场景3：删除一个或多个commit"><a href="#应用场景3：删除一个或多个commit" class="headerlink" title="应用场景3：删除一个或多个commit"></a>应用场景3：删除一个或多个commit</h3><p>git rebase -i ==baseHash==</p>
+<p>然后对指定的commit使用<code>drop命令</code>，其用法逻辑与git revert类似。但需要注意的是，一旦drop某版本，就会丢失该版本。而git revert会保留原版本，创建新版本。 </p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201123172927502.png" srcset="/img/loading.gif" alt="image-20201123172927502"></p>
+<h3 id="变基操作失败"><a href="#变基操作失败" class="headerlink" title="变基操作失败"></a>变基操作失败</h3><p>git status查询状态，若处于rebase交互状态但抛出了错误，需要处理冲突。</p>
+<p>或者可以使用git rebase –abort跳出rebase交互。</p>
+<h2 id="Git仓库本地备份"><a href="#Git仓库本地备份" class="headerlink" title="Git仓库本地备份"></a>Git仓库本地备份</h2><p>假设本地有个git仓库的地址为 <code>~/Desktop/Git</code></p>
+<p>想要在本地建立地址为 <code>D:/repository/Git</code>的备份仓库。</p>
+<h3 id="使用本地库备份"><a href="#使用本地库备份" class="headerlink" title="使用本地库备份"></a><strong>使用本地库备份</strong></h3><ol>
+<li><p>切换到D:/repository目录（父级目录）</p>
+</li>
+<li><p>执行命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 命令格式： git clone 被备份仓库目录名/.git 备份仓库目录名  </span><br>git <span class="hljs-built_in">clone</span> ~/Desktop/Git/.git Git<br></code></pre></td></tr></table></figure></li>
+<li><p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/Desktop/Git <span class="hljs-comment"># 切换到被备份的仓库</span><br>git remote add localBackup D:/repository/Git<br>git push -u localBackup master <span class="hljs-comment"># 将master分支上传到本地备份库</span><br></code></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h3 id="使用裸仓库备份"><a href="#使用裸仓库备份" class="headerlink" title="使用裸仓库备份"></a><strong>使用裸仓库备份</strong></h3><p>裸仓库：不含有工作区的Git仓库，由于不存在工作区，所以在该仓库目录下不能执行用于更新的git命令，该仓库只能通过其他仓库push或自身去fetch来更新。</p>
+<blockquote>
+<p>网络释义：使用 git init –bare <repo> 或git clone –bare <url> <repo>可以创建一个裸仓库，并且这个仓库是可以被正常 clone 和 push 更新的， 裸仓库不包含工作区，所以并不会存在在裸仓库上直接提交变更的情况。</p>
+</blockquote>
+<ol>
+<li><p>切换到D:/repository</p>
+</li>
+<li><p>执行带–bare参数的git clone命令，创建裸仓库（不带工作区）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 使用哑协议</span><br>git <span class="hljs-built_in">clone</span> --bare ~/Desktop/Git/.git Git <br><span class="hljs-comment"># 或使用file协议</span><br>git <span class="hljs-built_in">clone</span> --bare file://C:\\Users\\Mazheng\\Desktop\\Git\\.git Git <br><br><span class="hljs-comment"># 此时 D:/repository/Git成为一个裸仓库。</span><br></code></pre></td></tr></table></figure></li>
+<li><p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/Desktop/Git <span class="hljs-comment"># 切换到被备份的仓库</span><br>git remote add localBackup D:/repository/Git<br>git push -u localBackup master <span class="hljs-comment"># 将master分支上传到本地备份库</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+</li>
+</ol>
+<h2 id="本地库与GitHub远程库交互"><a href="#本地库与GitHub远程库交互" class="headerlink" title="本地库与GitHub远程库交互"></a>本地库与GitHub远程库交互</h2><h3 id="本地库内容推送到远程库"><a href="#本地库内容推送到远程库" class="headerlink" title="本地库内容推送到远程库"></a>本地库内容推送到远程库</h3><ol>
+<li><p>首先在GitHub账户内创建仓库。</p>
+</li>
+<li><p>在本地新建一个git仓库。</p>
+</li>
+<li><p>本地库提交版本后向远程库推送。</p>
+<p>以http协议的URL向GitHub仓库推送为例</p>
+<p>git remote add ==URL别名/主机名== ==远程仓库URL==</p>
+<p>例：git remote add origin <a target="_blank" rel="noopener" href="https://github.com/mzleman/MyFirstTest.git">https://github.com/mzleman/MyFirstTest.git</a> </p>
+</li>
+<li><p>输入GitHub账号与密码</p>
+<p><font color="red">只有远程库仓库的Owner以及Collaborator才有权限向远程库推送，同时如果本地库的远程库版本比远程库当前版本旧（远程库被他人更新，用户本地的版本旧，或者是拉取的版本旧），则无法向远程库推送。必须拉取新的远程库到本地后，再更新内容，才可以向远程库推送。</font></p>
+</li>
+<li><p>git push -u ==URL别名/主机名== ==本地分支名==</p>
+<p>-u参数是将本地的分支与远程主机的同名分支关联起来。同时git push命令用于将当前分支提交到远程库。</p>
+</li>
+<li><p>在使用过一次带-u的git push命令后，只需要在切换到当前分支后直接使用git push就可以将当前分支推送到远程对应的分支。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">git remote add origin https://github.com/mzleman/MyFirstTest.git <br>git push -u origin master  <br>👆 第一次建立本地分支与远程分支之间的关联，并将本地的master分支推送到origin主机下的同名分支(这里就是master)。<br><br>👇<br>git checkout master<br>git push  在已经建立好远程分支关联的情况下，可以直接使用git push将本分支推送到远程分支<br></code></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h3 id="SSH密钥登录"><a href="#SSH密钥登录" class="headerlink" title="SSH密钥登录"></a>SSH密钥登录</h3><p><strong>通过以下步骤：</strong></p>
+<ol>
+<li><p>客户端生成私钥和公钥。</p>
+</li>
+<li><p>GitHub账户内保存客户端SSH公钥</p>
+</li>
+<li><p>本地库设置远程库SSH地址的别名，例如==origin==</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git remote add origin &lt;SSH&gt;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>就可以在本地库使用SSH远程地址向GitHub仓库推送，具体可百度或看视频</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Ep4y1Q7KR?p=31">参考视频1</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1pW411A7a5?p=42">参考视频2</a></p>
+<p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20201124175026945.png" srcset="/img/loading.gif" alt="image-20201124175026945"></p>
+<h3 id="远程库拷贝到本地"><a href="#远程库拷贝到本地" class="headerlink" title="远程库拷贝到本地"></a>远程库拷贝到本地</h3><ol>
+<li><p>切换到准备存放本地库的<code>父级目录</code>。</p>
+</li>
+<li><p>拷贝远程库到本地</p>
+<p>git clone ==GitHub仓库的URL(https/ssh)== ==本地库文件夹名==</p>
+<p><font color="red">git clone命令会做三件事： ①完整的把远程库下载到本地 ；②创建origin远程地址别名 ；③在本地库目录中执行git init命令，初始化本地库。</font></p>
+<blockquote>
+<p>注意：如果在服务端设置了公钥，本地用户配置了公钥和私钥，则使用ssh地址克隆时，可以免密推送。</p>
+</blockquote>
+</li>
+<li><p>切换到本地库目录</p>
+<p>cd ==本地库文件夹名==</p>
+</li>
+</ol>
+<h3 id="远程库的拉取"><a href="#远程库的拉取" class="headerlink" title="远程库的拉取"></a>远程库的拉取</h3><p>本地库拉取远程库的较新版本，若本地库的历史记录中已经拉取过了远程库该版本，本地库将不发生任何改变，并提示本地库已经是最新版本。 </p>
+<ul>
+<li><p><strong>间接拉取某个分支</strong></p>
+<ol>
+<li><p>git fetch ==远程库别名== ==分支名==</p>
+<p>执行fetch操作后，git本地库会创建一个临时的新分支，分支名为  ==远程库别名/分支名== ，这个分支可供本地库拥有者查看远程库拉取的内容，再决定是否合并到本地库某个分支。</p>
+</li>
+<li><p>切换到要合并远程库的本地库分支，执行git merge ==远程库别名/分支名==</p>
+</li>
+<li><p>若发生合并冲突，解决冲突后执行git add 和git commit操作。</p>
+</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><strong>直接拉取某个分支</strong><ol>
+<li>git pull ==远程库别名== ==分支名==</li>
+<li>若发生合并冲突，解决冲突后执行git add和git commit操作。</li>
+</ol>
+</li>
+</ul>
+<h2 id="团队协同合作"><a href="#团队协同合作" class="headerlink" title="团队协同合作"></a>团队协同合作</h2><p>多数情况下，一个项目是由多人协同开发。</p>
+<p>假设现有两个人维护开发同一个分支，可能会产生以下的情景：</p>
+<h3 id="情景1-两人修改了不同的文件"><a href="#情景1-两人修改了不同的文件" class="headerlink" title="情景1. 两人修改了不同的文件"></a>情景1. 两人修改了不同的文件</h3><p>Coder1 在commit abc123的基础上修改了<code>index.html</code></p>
+<p>Coder2 在commit abc123的基础上修改了<code>style.css</code></p>
+<p>Coder1 提交了修改了index.html的版本commit def456，同时push到远端分支。</p>
+<p>Coder2 提交修改style.css的版本，再向远端push时会<font color ="red">报错</font></p>
+<h3 id="情景2-两人修改了同一文件的不同区域"><a href="#情景2-两人修改了同一文件的不同区域" class="headerlink" title="情景2. 两人修改了同一文件的不同区域"></a>情景2. 两人修改了同一文件的不同区域</h3><p>Coder1 在commit abc123的基础上修改了index.html的<code>第一行</code></p>
+<p>Coder2 在commit abc123的基础上修改了index.html的<code>第二行</code></p>
+<p>Coder1 提交了修改了index.html的版本commit def456，同时push到远端分支。</p>
+<p>Coder2 提交修改index.html的版本，再向远端push时会<font color ="red">报错</font>。</p>
+<blockquote>
+<p>以上两种情况，只需要后提交的Coder在提交前进行一次 fetch + merge 的操作，就可以解决问题。因为多人修改不同的文件、修改同一文件的不同区域都不会引发合并冲突。</p>
+<p>fetch + merge = pull</p>
+<p>但是建议使用fetch后查看一下当前分支和远端分支的区别。</p>
+</blockquote>
+<h3 id="情景3-两人修改了同一文件的同一区域"><a href="#情景3-两人修改了同一文件的同一区域" class="headerlink" title="情景3. 两人修改了同一文件的同一区域"></a>情景3. 两人修改了同一文件的同一区域</h3><p>Coder1 在commit abc123的基础上修改了index.html的<code>第一行</code></p>
+<p>Coder2 在commit abc123的基础上修改了index.html的<code>第一行</code></p>
+<p>Coder1 提交了修改了index.html的版本commit def456，同时push到远端分支。</p>
+<p>Coder2 提交修改index.html的版本，再向远端push时会<font color ="red">报错</font></p>
+<blockquote>
+<p>这种情况要求Coder2进行一次 fetch + merge + 合并冲突 的操作，然后再将合并后新版本push到远程库。</p>
+</blockquote>
+<h3 id="情景4-一人只修改了文件名，另一人只修改了该文件内容"><a href="#情景4-一人只修改了文件名，另一人只修改了该文件内容" class="headerlink" title="情景4. 一人只修改了文件名，另一人只修改了该文件内容"></a>情景4. 一人只修改了文件名，另一人只修改了该文件内容</h3><p>Coder1 在commit abc123的基础上将index.html改名为index.htm</p>
+<p>Coder2 在commit abc123的基础上修改了index.html的<code>第一行</code></p>
+<p>Coder1 提交了修改了index.html的版本commit def456，同时push到远端分支。</p>
+<p>Coder2 提交自己的的版本（包含修改了第一行的index.html），再向远端push时会<font color ="red">报错</font></p>
+<blockquote>
+<p>此时需要Coder2将远端分支 fetch + merge  / pull 即可。由于修改文件名的操作并不会修改blob对象的哈希值，所以Git在Coder2拉取def456时能感知到index.html只是修改了文件名，而没有修改文件内容，所以可以直接合并。</p>
+</blockquote>
+<h3 id="情景5-两人同时修改了一个文件的文件名"><a href="#情景5-两人同时修改了一个文件的文件名" class="headerlink" title="情景5. 两人同时修改了一个文件的文件名"></a>情景5. 两人同时修改了一个文件的文件名</h3><p>Coder1 在commit abc123的基础上将index.html改名为index.htm</p>
+<p>Coder2 在commit abc123的基础上将index.html改名为main.htm</p>
+<p>Coder1 提交了修改了index.html的版本commit def456，同时push到远端分支。</p>
+<p>Coder2 提交自己的新版本（包含main.htm），再向远端push时会<font color ="red">报错</font></p>
+<blockquote>
+<p>此时需要Coder2将远端分支 fetch + merge / pull 拉取远端分支最新内容。由于修改文件名的操作不会修改blob对象的hash值，Coder2的新版本和远端分支最近版本（Coder1提交的def456）之间的冲突<code>在于文件名的冲突</code>，所以需要依次执行</p>
+<p>git rm index.html</p>
+<p>git rm main.htm/index.htm</p>
+<p>git add index.htm/main.htm</p>
+<p>即在main.htm 和 index.htm中选择一个，提交成新commit后再push到远端分支。</p>
+</blockquote>
+<h3 id="情景6-两人同时修改了一个文-件的文件名，并对内容都做了修改。"><a href="#情景6-两人同时修改了一个文-件的文件名，并对内容都做了修改。" class="headerlink" title="情景6. 两人同时修改了一个文 件的文件名，并对内容都做了修改。"></a>情景6. 两人同时修改了一个文 件的文件名，并对内容都做了修改。</h3><p>Coder1 在commit abc123的基础上将index.html改名为index.htm，修改了第一行内容。</p>
+<p>Coder2 在commit abc123的基础上将index.html改名为main.htm，修改了第一行内容。</p>
+<p>Coder1 提交了修改了index.html的版本commit def456，同时push到远端分支。</p>
+<p>Coder2 提交自己的新版本（包含main.htm），再向远端push时会<font color ="red">报错</font></p>
+<blockquote>
+<p>尽管不建议这样处理，但还是进行简单说明处理办法：</p>
+<p>在这种情况下，Git会认为 远端分支删除了index.html、新增了index.htm，本地新增了main.htm，只需要简单的合并即可，并不会发生冲突。</p>
+</blockquote>
+<blockquote>
+<p>❗  <strong>强烈建议</strong> ❗：在重命名某个文件后进行一次commit操作，同时push到远程库。让重命名文件的操作能够让团队协作者发现，从而可以提前发现问题。！！！</p>
+</blockquote>
+<h2 id="跨团队协作"><a href="#跨团队协作" class="headerlink" title="跨团队协作"></a>跨团队协作</h2><p><img src="/2021/05/20/Git/Git%E7%AC%94%E8%AE%B0/image-20200805225957085.png" srcset="/img/loading.gif" alt="image-20200805225957085"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/06/Web/front-end-optimization/">
+                        <span class="hidden-mobile">前端性能优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
