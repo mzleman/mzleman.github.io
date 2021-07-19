@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      10.9k 字
+      11.9k 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      121
+      131
        分钟
     </span>
   
@@ -236,30 +236,62 @@
 <li>布局模块：在将DOM树和CSS树合并为Render树后，布局模块计算每个元素的位置和大小。</li>
 <li>绘图模块：绘制页面。</li>
 </ol>
-<h2 id="大致的渲染流程"><a href="#大致的渲染流程" class="headerlink" title="大致的渲染流程"></a>大致的渲染流程</h2><ol>
-<li>调用HTML解析器解析HTML文本，目标是构建一棵DOM树。</li>
-<li>遇到<code>style</code>标签，异步地解析<code>style</code>标签内的CSS代码，并更新CSS树（不阻塞合成Render Tree）。</li>
-<li>遇到<code>link stylesheet</code>，异步地请求资源，在CSS文件被返回时，异步地调用CSS解析器解析文件中的CSS代码，并更新CSS树（不同于style标签，这里会阻塞Render Tree的合成）。</li>
-<li>遇到<code>普通 script</code>标签，同步地请求资源，在JS文件被返回时，同步地执行文件中的JS代码。</li>
-<li>HTML解析完成后生成一棵DOM树，CSS树构建完成后，将CSS树和DOM树合并为<code>Render Tree</code>。</li>
-<li>布局渲染树，计算每个节点的几何信息（位置和形状）👈 再次触发这个过程就称为回流。</li>
-<li>根据外观样式+布局的结果，将节点绘制到图层位图上 👈 再次触发这个过程就称为重绘。</li>
-<li>将像素图层发送给GPU，显卡发送信号展示页面。</li>
+<h2 id="大致的解析与渲染流程"><a href="#大致的解析与渲染流程" class="headerlink" title="大致的解析与渲染流程"></a>大致的解析与渲染流程</h2><ol>
+<li><p>调用HTML解析器解析HTML文本（包括HTML标签、SVG、XHTML），目标是构建一棵DOM树。</p>
+</li>
+<li><p>遇到<code>style</code>标签，异步地解析<code>style</code>标签内的CSS代码，并更新CSS树。</p>
+<blockquote>
+<p>内联的CSS代码不阻塞Render Tree生成与页面初次渲染。</p>
+</blockquote>
+</li>
+<li><p>遇到<code>link stylesheet</code>，异步地请求资源，在CSS文件被返回时，异步地调用CSS解析器解析文件中的CSS代码，并更新CSSOM（CSS Object Model）。</p>
+<blockquote>
+<p>不同于style标签，外链CSS样式表的下载与解析会阻塞Render Tree的生成与后续的页面初次渲染。</p>
+</blockquote>
+</li>
+<li><p>遇到<code>普通 script</code>标签，同步地请求资源，在JS文件被返回时，同步地执行文件中的JS代码。</p>
+</li>
+<li><p>HTML解析完成后生成一棵DOM树，CSSOM构建完成后，将CSSOM和DOM树合并为<code>Render Tree</code>。</p>
+<blockquote>
+<p>渲染树不是简单地将二者合并，它只会包含可视节点与其样式信息。</p>
+</blockquote>
+</li>
+<li><p>根据渲染树中的尺寸样式和布局样式，计算每个节点的几何信息（位置和形状）</p>
+<blockquote>
+<p>初次渲染时这个环节可以叫做“布局”，再次触发这个过程就称为回流 <code>reflow</code>或重排。</p>
+</blockquote>
+</li>
+<li><p>根据外观样式+布局的结果，将节点绘制到图层位图上 👈 再次触发这个过程就称为重绘。</p>
+<blockquote>
+<p>初次渲染时这个环节可以叫“绘制”，再次触发这个过程就称为重绘<code>repaint</code>。</p>
+</blockquote>
+</li>
+<li><p>将像素图层发送给GPU，显卡发送信号展示页面。</p>
+</li>
 </ol>
-<h3 id="生成渲染树"><a href="#生成渲染树" class="headerlink" title="生成渲染树"></a>生成渲染树</h3><p><img src="/2021/05/06/Web/front-end-optimization/image-20210525230335464.png" srcset="/img/loading.gif" alt="image-20210525230335464"></p>
-<p>为了构建渲染树，浏览器主要完成了以下工作：</p>
+<h3 id="生成渲染树"><a href="#生成渲染树" class="headerlink" title="生成渲染树"></a>生成渲染树</h3><p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210525230335464.png" srcset="/img/loading.gif" alt="image-20210525230335464"></p>
+<p><strong>为了构建渲染树，浏览器主要完成了以下工作：</strong></p>
 <ol>
 <li>从DOM树的根节点开始遍历每个可见节点。</li>
-<li>对于每个可见的节点，找到CSSOM树中对应的规则，并应用它们。</li>
+<li>对于每个可见的节点，找到CSSOM中对应的规则，并应用它们。</li>
 <li>根据每个可见节点以及其对应的样式，组合生成渲染树。</li>
 </ol>
-<p>第一步中，既然说到了要遍历可见的节点，那么我们得先知道，什么节点是不可见的。不可见的节点包括：</p>
+<blockquote>
+<p>⭐ 由此可见，构建渲染树是一个相当复杂且费时的工作。</p>
+<p>所以我们在构建页面时，要注意：</p>
+<ol>
+<li>DOM树要小，层级不宜过深。</li>
+<li>CSS选择器尽量用id和class，层级不宜过深。</li>
+</ol>
+</blockquote>
+<p>第一步中，既然说到了要遍历可见的节点，那么我们得先知道，什么节点是不可见的。</p>
+<p><strong>不可见的节点包括：</strong></p>
 <ul>
 <li>一些不会渲染输出的节点，比如<code>script、meta、link</code>等。</li>
 <li>一些通过css进行隐藏的节点。比如<code>display:none</code>。注意，利用visibility和opacity隐藏的节点，还是会显示在渲染树上的。只有display:none的节点才不会显示在渲染树上。</li>
 </ul>
 <blockquote>
-<p>渲染树中只包含可见的节点。</p>
+<p>再次强调，<strong>渲染树中只包含可见的节点。</strong></p>
 </blockquote>
 <h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><h3 id="CSS阻塞"><a href="#CSS阻塞" class="headerlink" title="CSS阻塞"></a>CSS阻塞</h3><ol>
 <li><p><strong>关于style标签内的CSS</strong></p>
@@ -268,10 +300,8 @@
 </li>
 </ol>
 <ul>
-<li><strong>不阻塞DOM解析</strong><ul>
+<li><strong>不阻塞DOM解析</strong></li>
 <li><strong>不阻塞DOM渲染</strong>（style标签内的CSS代码是异步解析更新CSS树的）</li>
-</ul>
-</li>
 </ul>
 <ol start="2">
 <li><p><strong>关于link标签引用的外部样式表</strong></p>
@@ -288,23 +318,23 @@
 <blockquote>
 <p>优化手段：</p>
 <ul>
-<li>CSS文件压缩合并。</li>
-<li>尽可能早地让浏览器下载解析CSS文件（通过preload、CDN、HTML中link标签位置等）。</li>
-<li>优化CSS代码。</li>
+<li>小：优化CSS代码，CSS文件压缩合并。</li>
+<li>早：通过preload资源暗示、HTML中link标签位置放置于JS脚本之前等。</li>
+<li>近：利用CDN节点。</li>
 </ul>
+<p>⭐ 目的都是尽可能快的下载CSS文件。</p>
 </blockquote>
 <h3 id="JS阻塞"><a href="#JS阻塞" class="headerlink" title="JS阻塞"></a>JS阻塞</h3><ol>
 <li><p><strong>普通的内联JS代码</strong></p>
 <p>例如：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><br><span class="javascript">	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;foo&#x27;</span>);</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
-</li>
-</ol>
+
 <ul>
-<li><strong>内联的JS脚本的执行阻塞DOM解析</strong>，即HTML解析器会停下来等待脚本执行完毕。<ul>
+<li><strong>内联的JS脚本的执行阻塞DOM解析</strong>，即HTML解析器会停下来等待脚本执行完毕。</li>
 <li><strong>由于阻塞DOM解析，所以一定阻塞DOM渲染</strong>（渲染的必要条件是DOM解析完成，构建DOM树）。</li>
 </ul>
 </li>
-</ul>
+</ol>
 <ol start="2">
 <li><p><strong>普通的外部JS资源</strong></p>
 <p>例如：</p>
@@ -337,7 +367,7 @@
 <ul>
 <li><p><strong>defer script 的下载是异步的，不阻塞DOM解析，也不阻塞渲染。</strong></p>
 </li>
-<li><p><strong>defer script 的执行不阻塞DOM解析</strong>。最早的执行时间点是DOM解析完成之后，DOMContentLoaded事件之前。</p>
+<li><p><strong>defer script 的执行不阻塞DOM解析</strong>。<font color='red'>最早的执行时间点</font>是DOM解析完成之后，DOMContentLoaded事件之前。</p>
 </li>
 <li><p><strong>defer script 的执行可能阻塞DOM渲染</strong>。如果defer script在DOM解析完成之前下载完成，则将在DOM解析完成之后进行执行，则可能阻塞DOM渲染。</p>
 </li>
@@ -348,7 +378,7 @@
 </blockquote>
 </li>
 </ul>
-<p>   <img src="/2021/05/06/Web/front-end-optimization/image-20210523144121965.png" srcset="/img/loading.gif" alt="image-20210523144121965"></p>
+<p>   <img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210523144121965.png" srcset="/img/loading.gif" alt="image-20210523144121965"></p>
 <blockquote>
 <p>优化手段：</p>
 <ul>
@@ -386,17 +416,17 @@
 </li>
 <li><p>拥有CSS加速属性的元素（<code>will-change</code>）。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-id">#animate</span> &#123;<br>    <span class="hljs-attribute">will-change</span>: transform;<br>&#125;<br></code></pre></td></tr></table></figure></li>
-<li><p>❓ 不确定。固定定位fixed和粘滞定位stick的元素好像也会单独设置为一个图层。</p>
+<li><p>❓ 不确定。Chrome中固定定位fixed和粘滞定位stick的元素好像也会单独设置为一个图层。</p>
 </li>
 </ol>
-<h2 id="回流与重绘"><a href="#回流与重绘" class="headerlink" title="回流与重绘"></a>回流与重绘</h2><h3 id="回流-reflow"><a href="#回流-reflow" class="headerlink" title="回流 reflow"></a>回流 reflow</h3><p>基于构造出的渲染树或更新后的渲染树，将可见DOM节点与其布局样式、尺寸结合起来，计算出它们在布局视口中的确切位置和形状大小，这个计算的阶段就是回流。</p>
+<h2 id="回流与重绘"><a href="#回流与重绘" class="headerlink" title="回流与重绘"></a>回流与重绘</h2><h3 id="回流-reflow"><a href="#回流-reflow" class="headerlink" title="回流 reflow"></a>回流 reflow</h3><p>基于更新后的渲染树，将可见DOM节点与其布局样式、尺寸结合起来，计算出它们在布局视口中的确切位置和形状大小，这个计算的阶段就是回流。</p>
 <h3 id="重绘-repaint"><a href="#重绘-repaint" class="headerlink" title="重绘 repaint"></a>重绘 repaint</h3><p>我们通过构造渲染树和回流阶段，我们知道了哪些节点是可见的，和他们的具体几何信息(位置、大小)，那么我们就可以再根据外观样式，将渲染树的每个节点都转换为屏幕上的实际像素，这个阶段就叫做重绘。</p>
 <blockquote>
 <p><strong>重绘是以图层为单位的</strong>，如果图层中某个元素需要重绘，则整个图层都需要重绘。</p>
 <p>所以为了提高性能，我们应该让这些经常会重绘的元素拥有一个自己的图层。</p>
 </blockquote>
 <h3 id="触发回流的情况"><a href="#触发回流的情况" class="headerlink" title="触发回流的情况"></a>触发回流的情况</h3><ul>
-<li>添加或删除可见的DOM元素（包括修改<code>display：none</code>） 。</li>
+<li>添加或删除可见的DOM元素（包括设置<code>display：none</code>或由<code>none</code>转为其他值） 。</li>
 <li>元素的位置发生变化。</li>
 <li>元素的尺寸发生变化（包括外边距、内边框、边框大小、高度和宽度等）</li>
 <li>内容发生变化，比如文本变化或图片被另一个不同尺寸的图片所替代。</li>
@@ -409,15 +439,15 @@
 <p><strong>大部分情况下，重排是以Render Tree为单位的</strong>，因为如果某个独立图层上的元素触发了重排，而该图层的元素没有脱离文档流，则单独重排该图层是达不到效果的。</p>
 </blockquote>
 <p><strong>具体而言，以下CSS属性发生改变会触发回流：</strong></p>
-<p><img src="/2021/05/06/Web/front-end-optimization/image-20210525232641079.png" srcset="/img/loading.gif" alt="image-20210525232641079"></p>
-<p><strong>同时，通过Web API访问CSS样式会触发回流：</strong></p>
-<p><img src="/2021/05/06/Web/front-end-optimization/image-20210525233110226.png" srcset="/img/loading.gif" alt="image-20210525233110226"></p>
+<p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210525232641079.png" srcset="/img/loading.gif" alt="image-20210525232641079"></p>
+<p><strong>同时，通过Web APIS访问以下CSS样式会触发回流：</strong></p>
+<p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210525233110226.png" srcset="/img/loading.gif" alt="image-20210525233110226"></p>
 <blockquote>
 <p><strong>只要是获取元素位置相关的操作，都会触发回流，原因在于：</strong></p>
-<p>现代的浏览器都是很聪明的，由于每次重排都会造成额外的计算消耗，因此大多数浏览器都会通过队列化修改并批量执行来优化重排过程。浏览器会将修改操作放入到队列里，直到过了一段时间或者操作达到了一个阈值，才清空队列。但是！<strong>当你获取布局信息的操作的时候，会强制队列刷新</strong>。</p>
-<p>以上属性和方法都需要返回最新的布局信息，因此浏览器不得不清空队列，触发回流重绘来返回正确的值。因此，我们在修改样式的时候，<strong>最好避免使用上面列出的属性，他们都会刷新渲染队列。如果要使用它们，最好将值缓存起来。</strong></p>
+<p>现代的浏览器是经过优化的，由于每次重排都会造成额外的计算消耗，因此大多数浏览器都会通过队列化修改并批量执行来优化重排过程。浏览器会将修改操作放入到队列里，直到过了一段时间或者操作达到了一个阈值，才清空队列进行一次回流/重绘，以减少回流/重绘次数（类似于节流）。但是！<strong>当你每次获取布局信息的操作的时候，会强制队列刷新，进行一次回流/重绘，以得到最新最准确的信息</strong>。</p>
+<p>以上属性和方法都需要返回最新的布局信息，因此浏览器不得不清空队列，触发回流重绘来返回正确的值。因此，我们在修改样式的时候，<strong>最好避免使用上面列出的属性，他们都会刷新触发回流的操作队列，强制进行一次回流计算。如果要使用它们，最好将值缓存到JS变量中。</strong></p>
 </blockquote>
-<h3 id="触发重绘的情况"><a href="#触发重绘的情况" class="headerlink" title="触发重绘的情况"></a>触发重绘的情况</h3><p><img src="/2021/05/06/Web/front-end-optimization/image-20210530192602044.png" srcset="/img/loading.gif" alt="image-20210530192602044"></p>
+<h3 id="触发重绘的情况"><a href="#触发重绘的情况" class="headerlink" title="触发重绘的情况"></a>触发重绘的情况</h3><p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210530192602044.png" srcset="/img/loading.gif" alt="image-20210530192602044"></p>
 <blockquote>
 <p>总结为： </p>
 <ul>
@@ -448,9 +478,9 @@
 </li>
 <li><p>利用元素的<code>class</code>，将多个样式的改变合并成一次操作（修改元素类名）。</p>
 </li>
-<li><p>将DOM元素脱离文档流后再修改。</p>
+<li><p>将DOM元素脱离DOM树后再修改。</p>
 <blockquote>
-<p>DOM元素不在文档流中意味着元素不在渲染树中，这有两种情况：</p>
+<p>DOM元素不在DOM树中意味着元素不在渲染树中，这有两种情况：</p>
 <ul>
 <li>元素不在DOM树中，就不可能存在于渲染树中。</li>
 <li>元素在DOM树中，但<code>display: none;</code></li>
@@ -465,12 +495,53 @@
 </ol>
 <p><strong>其他关于动画的优化手段：</strong></p>
 <ol>
-<li><p>当通过背景图片位置的变化实现动画效果时，记得为该元素开启一个图层，最简单的方式：<code>transform: translateZ(0)</code>。</p>
+<li>当通过背景图片位置的变化实现动画效果时，记得为该元素开启一个图层，最简单的方式：<code>transform: translateZ(0)</code>。</li>
+<li>不懂❓ 为动画元素新增图层，提高动画元素的<code>z-index</code>。</li>
+</ol>
+<h2 id="Event-Loop-与-渲染"><a href="#Event-Loop-与-渲染" class="headerlink" title="Event Loop 与 渲染"></a>Event Loop 与 渲染</h2><p>关于 Event Loop 的文章很多，但是有很多只是在讲「宏任务」、「微任务」，我先提出几个问题：</p>
+<ol>
+<li>每一轮 Event Loop 都会伴随着渲染吗？</li>
+<li><code>requestAnimationFrame</code> 在哪个阶段执行，在渲染前还是后？在 <code>microTask</code> 的前还是后？</li>
+<li><code>requestIdleCallback</code> 在哪个阶段执行？如何去执行？在渲染前还是后？在 <code>microTask</code> 的前还是后？</li>
+<li><code>resize</code>、<code>scroll</code> 这些事件是何时去派发的。</li>
+</ol>
+<blockquote>
+<p>这是一篇博客提出的问题👉<a target="_blank" rel="noopener" href="https://blog.csdn.net/frontend_frank/article/details/106309066">原文</a>。</p>
+</blockquote>
+<h3 id="事件循环与页面渲染的流程"><a href="#事件循环与页面渲染的流程" class="headerlink" title="事件循环与页面渲染的流程"></a>事件循环与页面渲染的流程</h3><p>注意：同一时间，JavaScript脚本执行与页面渲染互斥。</p>
+<ol>
+<li><p>从任务队列中取出一个<font color='red'>宏任务</font>执行。</p>
 </li>
-<li><p>不懂❓ 为动画元素新增图层，提高动画元素的<code>z-index</code>。</p>
+<li><p>检查微任务队列，执行并清空<font color='red'>微任务</font>队列，如果在微任务的执行中又加入了新的微任务，也会在这一步一起执行。</p>
 </li>
-<li><p>使用<code>requestAnimationFrame</code>实现动画效果。</p>
-<p>MDN解释：<code>window.requestAnimationFrame(fn)</code>告诉浏览器——你希望执行动画，并且要求浏览器在下一次重绘之前调用指定的回调函数更新动画。</p>
+<li><p>清空微任务队列后，<font color='red'>判断是否允许渲染</font>（每次渲染间有一个<font color='red'>最小时间间隔阈值</font>，这个阈值与用户屏幕刷新率、页面性能状态等有关）。</p>
+<blockquote>
+<p>浏览器会尽可能的保持帧率稳定，例如页面性能无法维持 60fps（每 16.66ms 渲染一次）的话，那么浏览器就会选择 30fps 的更新速率，而不是偶尔丢帧。</p>
+</blockquote>
+</li>
+<li><p>如果允许渲染，就这是一个<code>rendering oppotunity</code>，<font color='red'>再判断是否需要渲染</font>：</p>
+<ul>
+<li>考虑更新渲染是否会带来视觉上的改变？如果是，则渲染。</li>
+<li>观察<code>map of animation frame callbacks</code>是否为空，即是否使用了requestAnimationFrame注册了回调。如果是，则渲染。</li>
+</ul>
+<p>如果上述两个条件都不满足，则浏览器将<font color='red'>跳过接下来的渲染流程</font>。</p>
+</li>
+<li><p>对于需要渲染的文档，如果窗口的大小发生了变化，执行监听的 <code>resize</code> 方法。</p>
+</li>
+<li><p>对于需要渲染的文档，如果页面发生了滚动，执行 <code>scroll</code> 方法。</p>
+</li>
+</ol>
+<blockquote>
+<p>❓ 对于5和6，也不清楚具体的意思，但是好像scroll和resize事件的回调有比较高的优先级。</p>
+</blockquote>
+<ol start="7">
+<li>对于需要渲染的文档，执行帧动画回调，也就是<font color='red'>执行requestAnimationFrame 的回调</font>。</li>
+<li>对于需要渲染的文档， 执行 InterpObserver 的回调。</li>
+<li>对于需要渲染的文档，<strong>重新渲染</strong>绘制用户界面。 ⭐⭐ <font color='red'>终于轮到正式渲染页面一次</font>。</li>
+<li><font color='red'>判断宏任务队列和微任务队列是否都为空</font>，如果是的话，则进行 <code>Idle</code> 空闲周期的算法，判断是否要执行 <code>requestIdleCallback</code> 的回调函数。</li>
+</ol>
+<h3 id="requestAnimationFrame"><a href="#requestAnimationFrame" class="headerlink" title="requestAnimationFrame"></a>requestAnimationFrame</h3><p>使用<code>requestAnimationFrame</code>实现动画效果。</p>
+<p><strong>MDN解释：</strong><code>window.requestAnimationFrame(fn)</code>告诉浏览器——你希望执行动画，并且要求浏览器<font color='red'>在下一次重绘之前调用指定的回调函数</font>更新动画。</p>
 <ul>
 <li><p>该方法需要传入一个回调函数<code>fn</code>作为参数，该回调函数会被注册，并在浏览器下一次重绘之前执行，执行完毕后会从注册表中清除，如果想实现连续的动画效果，<code>fn</code>中需要重新调用<code>requestAnimationFrame</code>。</p>
 </li>
@@ -478,14 +549,9 @@
 </li>
 </ul>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> distance = <span class="hljs-number">0</span>;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">move</span>(<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">let</span> elm = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;foo&#x27;</span>);<br>    elm.style.transform = <span class="hljs-string">`translateX(<span class="hljs-subst">$&#123;++distance&#125;</span>)`</span>;<br>    id = requestAnimationFrame(move);  <span class="hljs-comment">// 更新id，JS会阻塞DOM渲染。</span><br>&#125;<br><br><span class="hljs-keyword">let</span> id = requestAnimationFrame(move); <span class="hljs-comment">// 页面第一次渲染时会发生重绘，动画便开始了。</span><br><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> cancelAnimationFrame(id), <span class="hljs-number">2000</span>); <span class="hljs-comment">// 👈2s 后取消动画</span><br></code></pre></td></tr></table></figure>
-
-
-
-
-
-
-</li>
-</ol>
+<blockquote>
+<p>requestAnimationFrame注册的回调函数会在下一个<code>render oppotunity</code>时执行，不同用户屏幕的刷新率不同，高刷屏幕执行该回调函数的频率会更大。</p>
+</blockquote>
 <h2 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h2><p>CDN的全称是Content Delivery Network，即内容分发网络。其目的是通过在现有的Internet中增加一层新的网络架构，<strong>将网站的内容发布到最接近用户的“边缘节点”，使用户可以就近取得所需的内容</strong>，提高用户访问网站的响应速度。CDN有别于镜像，因为它比镜像更智能，或者可以做这样一个比喻：CDN=更智能的镜像+缓存+流量导流。因而，CDN可以明显提高Internet网络中信息流动的效率。从技术上全面解决由于网络带宽小、用户访问量大、网点分布不均等问题，提高用户访问网站的响应速度。</p>
 <p>————————————————<br>版权声明：本文为CSDN博主「xiangzhihong8」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiangzhihong8/article/details/83147542">https://blog.csdn.net/xiangzhihong8/article/details/83147542</a></p>
 <h3 id="CDN相关技术"><a href="#CDN相关技术" class="headerlink" title="CDN相关技术"></a>CDN相关技术</h3><p>CDN的实现需要依赖多种网络技术的支持，其中最主要的包括负载均衡技术、动态内容分发与复制技术、缓存技术等。</p>
@@ -513,7 +579,7 @@
 <p>从以上内容可以分析出，CDN技术的主要组成部分之一是DNS接管。</p>
 </blockquote>
 <p><strong>首先，让我们看一下传统的未加缓存服务的访问过程：</strong></p>
-<p><img src="/2021/05/06/Web/front-end-optimization/image-20210531165645196.png" srcset="/img/loading.gif" alt="image-20210531165645196"></p>
+<p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210531165645196.png" srcset="/img/loading.gif" alt="image-20210531165645196"></p>
 <p>如图可以看出，传统的网络访问的流程如下：</p>
 <ol>
 <li><p>用户输入访问的域名,操作系统向 LocalDns 查询域名的ip地址；</p>
@@ -540,7 +606,7 @@
 </li>
 </ol>
 <p><strong>下面让我们看一下使用CDN缓存后的网站的访问过程：</strong></p>
-<p><img src="/2021/05/06/Web/front-end-optimization/image-20210531170631233.png" srcset="/img/loading.gif" alt="image-20210531170631233"></p>
+<p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210531170631233.png" srcset="/img/loading.gif" alt="image-20210531170631233"></p>
 <p>如上图，是使用CDN缓存后的网络访问流程：</p>
 <ol>
 <li><p>用户通过浏览器访问网站，浏览器调用操作系统接口向 LocalDns 查询域名的ip地址。</p>
@@ -749,7 +815,7 @@
 <li><p><code>SameSite</code></p>
 <p>Chrome 51 开始，浏览器的 Cookie 新增加了一个<code>SameSite</code>属性，用来防止跨站点请求伪造（CSRF）攻击和用户追踪。这个属性也被IEIF提倡使用。当然防止CSRF攻击还有其他方法，如<code>CSRF token</code>校验以及<code>Referer</code>请求头校验。</p>
 <p>SameSite属性可以设置三个值: <code>① Strict ② Lax ③ None</code>。</p>
-<p><img src="/2021/05/06/Web/front-end-optimization/image-20210602151717018.png" srcset="/img/loading.gif" alt="image-20210602151717018"></p>
+<p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210602151717018.png" srcset="/img/loading.gif" alt="image-20210602151717018"></p>
 <p><strong>1. Strict</strong><br>Strict最为严格，完全禁止第三方 Cookie，<font color='red'>跨站点时</font>，任何情况下都不会发送此类型Cookie。换言之，只有当前网页的URL的主机名部分与Cookie的Domain属性值是同站的关系（same-site），请求时才会发送此类型的Cookie。</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-attribute">Set-Cookie</span>: CookieName=CookieValue; SameSite=Strict;<br></code></pre></td></tr></table></figure>
 <p>这个规则过于严格，可能造成非常不好的用户体验。比如，当前网页有一个 GitHub 链接，用户点击跳转就不会带有 GitHub 的 Cookie，跳转过去总是未登陆状态。</p>
@@ -886,10 +952,10 @@
 <p>一个企业开发的网站，使用多少级域名由企业自己决定。</p>
 <h2 id="对跨域和跨站的理解"><a href="#对跨域和跨站的理解" class="headerlink" title="对跨域和跨站的理解"></a>对跨域和跨站的理解</h2><p><strong>同域名</strong>：<code>scheme+host+port</code>相同，其他视为跨域。</p>
 <p>举例：</p>
-<p><img src="/2021/05/06/Web/front-end-optimization/image-20210602225335101.png" srcset="/img/loading.gif" alt="image-20210602225335101"></p>
+<p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210602225335101.png" srcset="/img/loading.gif" alt="image-20210602225335101"></p>
 <p><strong>同站点</strong>：<code>eTLD+1</code>相同，其他视为跨站。</p>
 <p>举例：</p>
-<p><img src="/2021/05/06/Web/front-end-optimization/image-20210602225354985.png" srcset="/img/loading.gif" alt="image-20210602225354985"></p>
+<p><img src="/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.assets/image-20210602225354985.png" srcset="/img/loading.gif" alt="image-20210602225354985"></p>
 <blockquote>
 <p>注意：</p>
 <ol>
@@ -943,8 +1009,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/04/09/JavaScript/webapis/">
-                        <span class="hidden-mobile">WebAPIs</span>
+                      <a href="/2021/04/29/Vue/vue3/">
+                        <span class="hidden-mobile">Vue3笔记</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

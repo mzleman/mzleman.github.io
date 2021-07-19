@@ -1,0 +1,783 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Leman">
+  <meta name="keywords" content="">
+  <title>Node.js模块与包 - Personal Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"mzleman.gitee.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Leman 😀</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/profile/">
+                <i class="iconfont icon-link-fill"></i>
+                简历
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Node.js模块与包">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-07-19 17:38" pubdate>
+        2021年7月19日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      94
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Node.js模块与包</h1>
+            
+            <div class="markdown-body">
+              <h1 id="CommonJS-模块化规范"><a href="#CommonJS-模块化规范" class="headerlink" title="CommonJS 模块化规范"></a>CommonJS 模块化规范</h1><p>在Node.js中，一个<code>JS</code>文件就是一个模块，包也可以叫做模块。</p>
+<p>模块化规范中的模块可以理解为<font color='red'>JS文件和包</font>。</p>
+<p>但是<code>CommonJS</code>还可以导入<code>JSON</code>、<code>.node</code>文件。</p>
+<h2 id="模块分类与导入规则"><a href="#模块分类与导入规则" class="headerlink" title="模块分类与导入规则"></a>模块分类与导入规则</h2><p><strong>1. 核心模块</strong></p>
+<blockquote>
+<p>其实叫做内置包更为准确。</p>
+</blockquote>
+<p><code>require(builtInPackageName)</code></p>
+<p><strong>2.  本地文件模块</strong></p>
+<p><code>require(path)</code> ，则按照指定路径查找。path应当为 ./  或 ../  开头的相对路径，以及绝对路径(包括以”/“开头的根目录绝对路径)。</p>
+<ul>
+<li>若path为相对路径，相对路径设置的值只和<font color='red'>当前执行的js文件位置有关(当前执行上下文)</font>。且当想要使用相对路径加载本目录下的JS模块时，’./‘不能省略</li>
+<li>若path为绝对路径，在window下<code>/</code>代表<font color='red'>磁盘根目录</font>，Linux下<code>/</code>代表<code>/home</code></li>
+</ul>
+<blockquote>
+<p>如果使用<code>require方法</code>按确切的模块文件名没有找到模块，则 Node.js 会尝试带上 <code>.js</code>、 <code>.json</code> 或 <code>.node</code> 拓展名再加载。</p>
+<p><code>.js</code> 文件会被解析为 JavaScript 文本文件， <code>.json</code> 文件会被解析为 JSON 文本文件。 <code>.node</code> 文件会被解析为通过 <code>process.dlopen()</code> 加载的编译后的插件模块。</p>
+<p>所以在使用require导包时，文件名末尾的<code>.js</code>或<code>.json</code>可以省略。</p>
+</blockquote>
+<p><strong>3. 第三方模块</strong></p>
+<p><code>require(packageName)</code>,按照以下顺序查找该模块:</p>
+<ol>
+<li><p>查找本JS文件所在目录下的<code>node_modules</code>目录，若不存在该目录，则向上一级目录查找<code>node_modules</code>目录。</p>
+</li>
+<li><p><code>node_modules</code>目录中查找名为<code>packageName.js</code>的JS模块，如果不存在则再判断是否存在<code>packageName</code>目录，若仍不存在，向上一级目录中查找node_modules模块，即重复第一步。</p>
+<ul>
+<li><p>如果在某一级<code>node_modules</code>目录中找到了<code>packageName.js</code>，则获取该JS模块的module.exports，结束模块解析过程。</p>
+</li>
+<li><p>如果在某一级<code>node_modules</code>找到了<code>packageName</code>目录，则在<code>packageName</code>目录中查找<code>package.json</code>文件，查找该文件中main属性标注的入口js文件。若未标明入口文件，查找<code>packageName</code>目录中是否有<code>index.js</code>文件，若存在则将<code>index.js</code>作为入口JS文件。</p>
+<ul>
+<li>若连<code>index.js</code>文件都不存在，则再向上一级目录查找<code>node_modules</code>，即重复第一步。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="模块封装器"><a href="#模块封装器" class="headerlink" title="模块封装器"></a>模块封装器</h2><p>在执行模块代码之前，Node.js 会使用一个如下的函数封装器将其封装：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript">(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"><span class="hljs-built_in">exports</span>, <span class="hljs-built_in">require</span>, <span class="hljs-built_in">module</span>, __filename, __dirname</span>) </span>&#123;<br><span class="hljs-comment">// 模块的代码实际上在这里</span><br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>通过这样做，Node.js 实现了以下几点：</p>
+<ul>
+<li><p>它保持了JS模块顶层的变量（用 <code>var</code>、 <code>const</code> 或 <code>let</code> 定义）作用在模块范围内，而不是全局对象。</p>
+</li>
+<li><p>它有助于提供一些看似全局的但实际上是模块特定的变量，例如：</p>
+<ul>
+<li>实现者可以用于从模块中导出值的 <code>module</code> 和 <code>exports</code> 对象。</li>
+<li>包含模块绝对文件名和目录路径的快捷变量 <code>__filename</code> 和 <code>__dirname</code> 。</li>
+</ul>
+</li>
+</ul>
+<h2 id="模块作用域"><a href="#模块作用域" class="headerlink" title="模块作用域"></a>模块作用域</h2><blockquote>
+<p>以下变量看似是全局变量，实际是模块作用域中的局部变量。</p>
+</blockquote>
+<h3 id="dirname"><a href="#dirname" class="headerlink" title="__dirname"></a>__dirname</h3><p>返回<code>&lt;string&gt;</code></p>
+<p>当前模块所在目录的绝对路径。 相当于<code>path.dirname(__filename)</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 示例，从 /Users/mjr 运行 node example.js：</span><br><br><span class="hljs-built_in">console</span>.log(__dirname);<br><span class="hljs-comment">// 打印: /Users/mjr</span><br><span class="hljs-built_in">console</span>.log(path.dirname(__filename));<br><span class="hljs-comment">// 打印: /Users/mjr</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="filename"><a href="#filename" class="headerlink" title="__filename"></a>__filename</h3><p>返回<code>&lt;string&gt;</code></p>
+<p>当前的模块文件的绝对路径。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 示例：从 /Users/mjr 运行 node example.js：</span><br><br><span class="hljs-built_in">console</span>.log(__filename);<br><span class="hljs-comment">// 打印: /Users/mjr/example.js</span><br><span class="hljs-built_in">console</span>.log(__dirname);<br><span class="hljs-comment">// 打印: /Users/mjr</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="module"><a href="#module" class="headerlink" title="module"></a>module</h3><p><code>&lt;Object&gt;</code></p>
+<p>对当前模块的引用。该对象保存了模块的信息。</p>
+<h3 id="module-filename"><a href="#module-filename" class="headerlink" title="module.filename"></a>module.filename</h3><p><code>&lt;string&gt;</code></p>
+<p>当前模块文件的绝对路径。（目录+文件名） 相当于<code>__filename</code></p>
+<h3 id="module-id"><a href="#module-id" class="headerlink" title="module.id"></a>module.id</h3><p><code>&lt;string&gt;</code></p>
+<p>模块的标识符，通常是当前模块文件的绝对路径。<font color='red'>入口模块</font>的<code>module.id</code>为<code>.</code>。</p>
+<h3 id="module-loaded"><a href="#module-loaded" class="headerlink" title="module.loaded"></a>module.loaded</h3><p><code>&lt;boolean&gt;</code></p>
+<p>模块是否已经加载完成。在CommonJS中当一个模块的代码被完整地执行完，加入到缓存中后，此属性值才被置为<code>true</code>。</p>
+<h3 id="module-exports"><a href="#module-exports" class="headerlink" title="module.exports"></a>module.exports</h3><p><code>&lt;any&gt;</code></p>
+<p><code>module.exports</code>用于指定一个模块所到处的内容，既可以通过<code>require()</code>访问的内容。</p>
+<h3 id="exports-快捷方式"><a href="#exports-快捷方式" class="headerlink" title="exports 快捷方式"></a>exports 快捷方式</h3><p><code>exports</code> 变量是在模块的文件级作用域内可用的，且在模块执行之前赋值为 <code>module.exports</code>。</p>
+<p>它允许使用快捷方式，因此 <code>module.exports.f = ...</code> 可以更简洁地写成 <code>exports.f = ...</code>。 但是，就像任何变量一样，如果为 <code>exports</code> 赋予了新值，则它将不再绑定到 <code>module.exports</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports.hello = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 从模块的引用中导出。</span><br><span class="hljs-built_in">exports</span> = &#123; <span class="hljs-attr">hello</span>: <span class="hljs-literal">false</span> &#125;;  <span class="hljs-comment">// 不导出，仅在模块中可用。</span><br></code></pre></td></tr></table></figure>
+
+
+<p>当 <code>module.exports</code> 属性被新对象完全替换时，通常也会重新赋值 <code>exports</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports = <span class="hljs-built_in">exports</span> = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Constructor</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-comment">// ... 如果不为exports赋值，它会仍然指向废弃掉的导出对象。</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+
+<p>为了说明这种行为，想象对 <code>require()</code> 的假设实现，它与 <code>require()</code> 的实际实现非常类似：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs javascript">⭐⭐⭐ <span class="hljs-comment">// 贴近Node.js的导包原理</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">require</span>(<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) </span>&#123;<br>  <span class="hljs-keyword">const</span> <span class="hljs-built_in">module</span> = &#123; <span class="hljs-attr">exports</span>: &#123;&#125; &#125;;<br>  (<span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>, <span class="hljs-built_in">exports</span></span>) =&gt;</span> &#123;<br>    <span class="hljs-comment">// 模块代码在这。在这个例子中，定义了一个函数。</span><br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someFunc</span>(<span class="hljs-params"></span>) </span>&#123;&#125;<br>    <span class="hljs-built_in">exports</span> = someFunc;<br>    <span class="hljs-comment">// 此时，exports 不再是一个 module.exports 的快捷方式，</span><br>    <span class="hljs-comment">// 且这个模块依然导出一个空的默认对象。</span><br>    <span class="hljs-built_in">module</span>.exports = someFunc;<br>    <span class="hljs-comment">// 此时，该模块导出 someFunc，而不是默认对象。</span><br>  &#125;)(<span class="hljs-built_in">module</span>, <span class="hljs-built_in">module</span>.exports);<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">module</span>.exports;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<h3 id="require-id-方法"><a href="#require-id-方法" class="headerlink" title="require(id)方法"></a>require(id)方法</h3><p><strong>id</strong>：<code>&lt;string&gt;</code> 模块的名称或路径。</p>
+<p><strong>返回值</strong>：<code>&lt;any&gt;</code>导入的模块内容（<code>module.exports</code>）</p>
+<p>用于引入模块、 <code>JSON</code>、或本地文件。 可以从 <code>node_modules</code> 引入模块。 可以使用相对路径（例如 <code>./</code>、 <code>./foo</code>、 <code>./bar/baz</code>、 <code>../foo</code>）引入本地模块或 JSON 文件，路径会根据 <a target="_blank" rel="noopener" href="http://nodejs.cn/api/modules.html#modules_dirname"><code>__dirname</code></a> 定义的目录名或当前工作目录进行处理。 </p>
+<blockquote>
+<p>上面最后一句话的意思是：</p>
+<p>CommonJS在使用相对路径导包时，会进行路径处理，使得相对路径的源路径是当前执行模块，而非启动模块。具体实现是将相对路径与当前<code>__dirname</code>结合。</p>
+</blockquote>
+<p>POSIX 风格的相对路径会以与操作系统无关的方式解析，这意味着上面的示例将会在 Windows 上以与在 Unix 系统上相同的方式工作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 使用相对于 `__dirname` 或当前工作目录的路径引入一个本地模块。</span><br><span class="hljs-comment">// （在 Windows 上，这会解析为 .\path\myLocalModule。）</span><br><span class="hljs-keyword">const</span> myLocalModule = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./path/myLocalModule&#x27;</span>);<br><br><span class="hljs-comment">// 引入 JSON 文件：</span><br><span class="hljs-keyword">const</span> jsonData = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./path/filename.json&#x27;</span>); <span class="hljs-comment">// 导入的为一个json对象</span><br><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">JSON</span>.stringify(jsonData)); <br><br><span class="hljs-comment">// 引入 node_modules 模块或 Node.js 内置模块：</span><br><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;crypto&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="缓存机制"><a href="#缓存机制" class="headerlink" title="缓存机制"></a>缓存机制</h2><ul>
+<li><p>CommonJS使用一个缓存对象来管理缓存，可以通过<code>require.cache</code>访问缓存对象。</p>
+</li>
+<li><p><font color='red'>模块在第一次加载后就会被保存到缓存对象中。</font> 这也意味着（类似其他缓存机制）在第一次加载之后，不论何时何地，如果多次导入该模块都解析到同一文件，从缓存中得到相同的导出对象 / 导出内容 。</p>
+</li>
+<li><p>CommonJS在第一次导入某个模块时会立即执行模块作用域中的代码。</p>
+</li>
+<li><p><font color='red'>模块作用域中的代码只会被执行一次</font>，多次导入同一模块 <font color='red'>不会导致模块的代码被执行多次</font>。 </p>
+<blockquote>
+<p>这是一个重要的特性。 借助它, 可以返回“部分完成”的对象，从而允许加载依赖的依赖, 即使它们会导致循环依赖。</p>
+</blockquote>
+</li>
+<li><p><font color='red'>如果想要多次执行一个模块中的部分代码，可以将这部分代码封装成函数并导出</font>，然后供其他模块调用该函数。</p>
+</li>
+</ul>
+<p>❗ <strong>注意点：</strong></p>
+<ol>
+<li><p>模块是基于其解析的文件名进行缓存的。 由于调用模块的位置的不同，模块可能被解析成不同的文件名（比如从 <code>node_modules</code> 目录加载），这样就不能保证 <code>require(&#39;foo&#39;)</code> 总能返回完全相同的对象。</p>
+<blockquote>
+<p>这句话的意思是，判断一个模块是否在缓存中，是通过 <code>__filename</code> 索引来判断的。</p>
+<p>缓存的结构是一个键值对对象，各个模块保存在缓存对象的属性中，属性名为 <code>完整的文件路径</code>，属性值为<code>模块对象[module]</code>。</p>
+</blockquote>
+</li>
+<li><p>此外，在不区分大小写的文件系统或操作系统中，被解析成不同的文件名可以指向同一文件，但缓存仍然会将它们视为不同的模块，并多次重新加载。 例如， <code>require(&#39;./foo&#39;)</code> 和 <code>require(&#39;./FOO&#39;)</code> 返回两个不同的对象，而不会管 <code>./foo</code> 和 <code>./FOO</code> 是否是相同的文件。</p>
+</li>
+</ol>
+<h2 id="CommonJS-循环加载处理策略"><a href="#CommonJS-循环加载处理策略" class="headerlink" title="CommonJS 循环加载处理策略"></a>CommonJS 循环加载处理策略</h2><p>循环加载指的是a脚本的执行依赖b脚本，b脚本的执行依赖a脚本。</p>
+<p><strong>CommonJS模块的加载原理</strong></p>
+<p>CommonJS模块就是一个脚本文件，require命令第一次加载该脚本时就会执行整个脚本，然后在内存中生成该模块的一个说明对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&#123;<br>  id: <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-comment">//模块名，唯一</span><br>  <span class="hljs-built_in">exports</span>: &#123; <span class="hljs-comment">//模块输出的各个接口</span><br>    ...<br>  &#125;,<br>  loaded: <span class="hljs-literal">true</span>, <span class="hljs-comment">//模块的脚本是否执行完毕</span><br>  ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>以后用到这个模块时，就会到对象的exports属性中取值。即使再次执行require命令，也不会再次执行该模块，而是到缓存中取值。</p>
+<p>CommonJS模块是加载时执行，即脚本代码在require时就全部执行。一旦出现某个模块被“循环加载”，就只输出已经执行的部分，没有执行的部分不会输出。</p>
+<p><strong>案例说明</strong></p>
+<p>案例来源于Node官方说明： <a target="_blank" rel="noopener" href="https://nodejs.org/api/modules.html#modules_cycles">https://nodejs.org/api/modules.html#modules_cycles</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//a.js</span><br><span class="hljs-built_in">exports</span>.done = <span class="hljs-literal">false</span>;<br><br><span class="hljs-keyword">var</span> b = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./b.js&#x27;</span>);<br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;在a.js中，b.done = %j&#x27;</span>, b.done);<br><br><span class="hljs-built_in">exports</span>.done = <span class="hljs-literal">true</span>;<br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;a.js执行完毕！&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//b.js</span><br><span class="hljs-built_in">exports</span>.done = <span class="hljs-literal">false</span>;<br><br><span class="hljs-keyword">var</span> a = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./a.js&#x27;</span>);<br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;在b.js中，a.done = %j&#x27;</span>, a.done);<br><br><span class="hljs-built_in">exports</span>.done = <span class="hljs-literal">true</span>;<br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;b.js执行完毕！&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//main.js</span><br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;main 开始&#x27;</span>);<br><span class="hljs-keyword">var</span> a = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./a.js&#x27;</span>);<br><span class="hljs-keyword">var</span> b = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./b.js&#x27;</span>);<br><br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;在main.js中，a.done = %j, b.done = %j&#x27;</span>, a.done, b.done);<br></code></pre></td></tr></table></figure>
+<p>输出结果如下：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs stylus">$ node main.js<br>main 开始<br><span class="hljs-selector-tag">a</span> 开始<br><span class="hljs-selector-tag">b</span> 开始<br>在 <span class="hljs-selector-tag">b</span> 中，<span class="hljs-selector-tag">a</span><span class="hljs-selector-class">.done</span> = false<br><span class="hljs-selector-tag">b</span> 结束<br>在 <span class="hljs-selector-tag">a</span> 中，<span class="hljs-selector-tag">b</span><span class="hljs-selector-class">.done</span> = true<br><span class="hljs-selector-tag">a</span> 结束<br>在 main 中，<span class="hljs-selector-tag">a</span>.done=true，<span class="hljs-selector-tag">b</span>.done=true<br></code></pre></td></tr></table></figure>
+<p>当 <code>main.js</code> 加载 <code>a.js</code> 时， <code>a.js</code> 又加载 <code>b.js</code>。 此时， <code>b.js</code> 会尝试去加载 <code>a.js</code>。 为了防止无限的循环，会返回一个 <code>a.js</code> 的 <code>exports</code> 对象的 <strong>未完成的副本</strong> 给 <code>b.js</code> 模块。 然后 <code>b.js</code> 完成加载，并将 <code>exports</code> 对象提供给 <code>a.js</code> 模块。</p>
+<hr>
+<h1 id="ES6-模块化规范"><a href="#ES6-模块化规范" class="headerlink" title="ES6 模块化规范"></a>ES6 模块化规范</h1><p><code>ECMAScript modules</code>即ES6模块化规范是JS模块化实现的官方标准形式。模块和模块之间通过一些列的<code>import</code>和<code>export</code>语句进行关联。</p>
+<h2 id="导出内容的语法"><a href="#导出内容的语法" class="headerlink" title="导出内容的语法"></a>导出内容的语法</h2><h3 id="1-export-变量初始化"><a href="#1-export-变量初始化" class="headerlink" title="1.export + 变量初始化"></a>1.export + 变量初始化</h3><p><code>export let/const 变量名 = 初始值</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">/* es-module.mjs */</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> version = <span class="hljs-string">&quot;1.1.1&quot;</span>; <span class="hljs-comment">// export导出的变量必须在声明时初始化一个值。⭐</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;foo&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="2-export-…"><a href="#2-export-…" class="headerlink" title="2.export {…}"></a>2.export {…}</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">/* es-module.mjs */</span><br><br><span class="hljs-keyword">const</span> version = <span class="hljs-string">&quot;1.1.1&quot;</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;foo&quot;</span>);<br>&#125;<br><br><span class="hljs-keyword">export</span> &#123;<br>	version,<br>    foo<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>⭐ 在<code>export &#123;..&#125;</code>中使用<code>as</code>也可以修改导出内容的名称：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">export</span> &#123;<br> version <span class="hljs-keyword">as</span> v,<br> foo <span class="hljs-keyword">as</span> bar<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>外部导入 export{…} 导出的内容时，需要使用 import {…} from，导出内容的名称要统一。</p>
+</blockquote>
+<h3 id="3-export-default-…"><a href="#3-export-default-…" class="headerlink" title="3.export default {…}"></a>3.export default {…}</h3><p><code>export default &#123;...&#125;</code>为外部提供了一个默认的导出接口和一个可自定义的命名空间。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> foo;<br><span class="hljs-keyword">const</span> version;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>    <span class="hljs-string">&quot;version&quot;</span> : version<br>    <span class="hljs-string">&quot;foo&quot;</span>: foo<br>&#125;<br><br><span class="hljs-comment">// ⭐ 或者使用对象属性的简写：</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>    version,<br>    foo<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="4-组合语法"><a href="#4-组合语法" class="headerlink" title="4.组合语法"></a>4.组合语法</h3><p>组合语法是语法1、语法3、语法3的组合，即在同一模块中使用多种导出语法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> name = <span class="hljs-string">&quot;m&quot;</span>;<br><br><span class="hljs-keyword">export</span> &#123;<br>	name <span class="hljs-keyword">as</span> n  <span class="hljs-comment">// ⭐ export &#123;...&#125; 中导出的内容不可以与export重名，否则会导致冲突</span><br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>    name <span class="hljs-comment">// ⭐ 不需要考虑重名问题</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="Module实例"><a href="#Module实例" class="headerlink" title="Module实例"></a>Module实例</h2><p>在<code>ES6</code>规范中，一个JS模块就是一个<code>Module</code>类的实例。</p>
+<ul>
+<li><p>模块中使用<code>export/export &#123;...&#125;</code>导出的内容会成为<code>Module实例</code>的属性。</p>
+<blockquote>
+<p>这也解释了为什么 export {…}中的内容和 export 导出的内容不能重名。</p>
+</blockquote>
+</li>
+<li><p>而<code>export default &#123;...&#125;</code>导出的这个对象会挂载到<code>Module实例</code>的<code>default</code>属性上。</p>
+<blockquote>
+<p>如果模块中没有使用 export default 语法，则 Module实例不存在default属性。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="导入模块的语法"><a href="#导入模块的语法" class="headerlink" title="导入模块的语法"></a>导入模块的语法</h2><p>在<font color='red'>Node.js 环境中</font>，ES6 的 <code>import ... from ..</code>会按照 <code>CommonJS</code>的规则去搜寻目标模块，并将该模块封装成ES6的<code>Module实例</code>。</p>
+<h3 id="1-import-…-from-…"><a href="#1-import-…-from-…" class="headerlink" title="1.import {…} from …"></a>1.import {…} from …</h3><p>能够解构出<code>Module实例</code>的指定属性。</p>
+<h3 id="2-import-命名空间-from-…"><a href="#2-import-命名空间-from-…" class="headerlink" title="2.import 命名空间 from …"></a>2.import 命名空间 from …</h3><p>能够获取<code>Module实例</code>的<code>default</code>属性值，并赋值给命名空间变量。</p>
+<h3 id="3-import-as-命名空间-from-…"><a href="#3-import-as-命名空间-from-…" class="headerlink" title="3.import * as 命名空间 from …"></a>3.import * as 命名空间 from …</h3><p>能够获取目标模块内<code>导出语法1</code> 和 <code>导出语法2</code> 的<font color='red'>全部内容</font>。</p>
+<h3 id="4-import-命名空间-…-from-…"><a href="#4-import-命名空间-…-from-…" class="headerlink" title="4.import 命名空间 , {…} from …"></a>4.import 命名空间 , {…} from …</h3><p>能够获取目标模块内<code>导出语法1</code>和<code>导出语法2</code>的<font color='red'>指定内容</font>，并能够获取<code>导出语法3</code>的<font color='red'>全部内容</font>。</p>
+<h2 id="使用import导入CommonJS模块"><a href="#使用import导入CommonJS模块" class="headerlink" title="使用import导入CommonJS模块"></a>使用import导入CommonJS模块</h2><p><strong>在较新的<font color='red'>Node.js环境中</font>，允许开发者使用<code>ES6</code>的<code>import ... from ..</code>语句导入一个<code>CommonJS</code>模块。当Node.js识别到正在用<code>ES6</code>语法导入目标模块的<code>module.exports</code>时，会进行以下操作：</strong></p>
+<p>⭐</p>
+<ol>
+<li>将<code>module.exports</code>封装成一个<code>ES6</code>的<font color='red'>Module实例</font>。</li>
+<li>将<code>module.exports</code>的内容会挂载到<font color='red'>Module实例</font>的<code>default</code>属性上。</li>
+<li>如果<code>module.exports</code>是引用类型，则它的各个属性也挂载到<font color='red'>Module实例</font>上。</li>
+</ol>
+<p><strong>例如：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// cjs.cjs</span><br><span class="hljs-built_in">exports</span>.name = <span class="hljs-string">&#x27;exported&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<p>以下JS文件将导入<code>cjs.cjs</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> m1 <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cjs.cjs&#x27;</span>;<br><span class="hljs-built_in">console</span>.log(m1);<br><span class="hljs-comment">// Prints: [Module] &#123; default: &#123; name: &#x27;exported&#x27; &#125;, name: &#x27;exported&#x27; &#125;</span><br><br><span class="hljs-keyword">import</span> &#123;<span class="hljs-keyword">default</span> <span class="hljs-keyword">as</span> cjs&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cjs.cjs&#x27;</span>;<br><span class="hljs-built_in">console</span>.log(cjs);<br><span class="hljs-comment">// Prints: &#123; name: &quot;exported&quot;&#125;</span><br><br><span class="hljs-comment">// 也可以：</span><br><span class="hljs-keyword">import</span> &#123; name &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cjs.cjs&#x27;</span><br></code></pre></td></tr></table></figure>
+<p><strong>语法糖写法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> cjs <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cjs.cjs&#x27;</span>; <br><span class="hljs-comment">// 直接获取module.exports 并命名为cjs</span><br><span class="hljs-comment">// 代替 import &#123; default as cjs &#125; from &#x27;./cjs.cjs&#x27;;</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>用Node.js官方文档的原话来说，这种写法 等价且简介。 “equivalent and sweeter”</p>
+</blockquote>
+<hr>
+<h1 id="判断JS文件的模块化系统"><a href="#判断JS文件的模块化系统" class="headerlink" title="判断JS文件的模块化系统"></a>判断JS文件的模块化系统</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Node.js环境中，从入口JS文件开始，不论是使用<code>import</code>语句还是<code>require</code>语句，都可以加载模块，但是目标模块（将要被导入的JS文件）的模块化规范对于当前JS文件是未知的。所以我们需要一套规则来指引Node，让它知道该用何种模块化规范导出目标模块（JS文件）的内容。</p>
+<h2 id="使用-require-语句导入模块"><a href="#使用-require-语句导入模块" class="headerlink" title="使用 require 语句导入模块"></a>使用 require 语句导入模块</h2><p>一个JS文件遵循“CommonJS规范”，用<code>require</code>导包时，<font color='red'>Node会按CommonJS去获取目标模块中的内容</font>。所以使用<code>require(id)</code>方法只能导入使用CommonJS规范导出内容的模块。</p>
+<p>若尝试用<code>require(id)</code>导入一个按照<code>ES6</code>规范导入内容的包，<font color="red">此时Node会报错</font>。</p>
+<h2 id="使用-import-语句导入模块"><a href="#使用-import-语句导入模块" class="headerlink" title="使用 import 语句导入模块"></a>使用 import 语句导入模块</h2><p>一个JS文件遵循“ES6模块化规范”，使用<code>import ... from &#39;...&#39;</code>导入模块时，Node会<font color='red'>优先分析</font> ①目标模块的扩展名 ，<font color='red'>再分析</font>② 离目标模块最近的❓<code>package.json</code>文件的<code>type</code>字段，从而判断用何种规范去解析目标模块的导出内容。</p>
+<blockquote>
+<p><strong>离目标模块最近的package.json</strong>是指从<font color='red'>目标模块所在目录及上级目录中，相对路径最短的package.json文件</font>。</p>
+</blockquote>
+<p><strong>Node.js解析以下情况的模块时，会按<code>ES6</code>规范去获取导出内容：</strong></p>
+<ol>
+<li>目标模块的扩展名为<code>.mjs</code>。</li>
+<li>目标模块的扩展名为<code>.js</code>，但是离目标模块最近的<code>package.json</code>文件中的<code>type</code>字段的属性值为<code>module</code>。</li>
+</ol>
+<p><strong>Node.js解析以下情况的模块时，会按<code>CommonJS</code>规范去获取导出内容：</strong></p>
+<ol>
+<li>目标模块的扩展名为<code>.cjs</code>。</li>
+<li>目标模块的扩展名为<code>.js</code>，但是离目标模块最近的<code>package.json</code>文件中的<code>type</code>字段的属性值为<code>commonjs</code></li>
+<li>目标模块的扩展名为<code>.js</code>，但是离目标模块存在最近的<code>package.json</code>文件，但该文件中不存在<code>type</code>字段。⭐（即使是更上层目录中有package.json文件存在type: ‘module’配置）。</li>
+<li>目标模块的扩展名为<code>.js</code>，但是<font color='red'>不存在</font>离目标模块最近的<code>package.json</code>，即<font color='red'>从目标文件所在目录到磁盘根目录都不存在</font><code>package.json</code>。</li>
+</ol>
+<blockquote>
+<p>使用<code>import xxx from &#39;...&#39;</code>导入一个<code>CommonJS</code>模块时，<code>xxx</code>的值为模块的<code>module.exports</code>。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="http://nodejs.cn/api/packages.html#packages_determining_module_system">Node.js文档判断模块系统原文</a></p>
+<p>Node.js will treat the following as <a target="_blank" rel="noopener" href="http://nodejs.cn/api/esm.html">ES modules</a> when passed to <code>node</code> as the initial input, or when referenced by <code>import</code> statements within ES module code:</p>
+<ul>
+<li>Files ending in <code>.mjs</code>.</li>
+<li>Files ending in <code>.js</code> when the nearest parent <code>package.json</code> file contains a top-level <a target="_blank" rel="noopener" href="http://nodejs.cn/api/packages.html#packages_type"><code>&quot;type&quot;</code></a> field with a value of <code>&quot;module&quot;</code>.</li>
+<li>Strings passed in as an argument to <code>--eval</code>, or piped to <code>node</code> via <code>STDIN</code>, with the flag <code>--input-type=module</code>.</li>
+</ul>
+<p>Node.js will treat as <a target="_blank" rel="noopener" href="http://nodejs.cn/api/modules.html">CommonJS</a> all other forms of input, such as <code>.js</code> files where the nearest parent <code>package.json</code> file contains no top-level <code>&quot;type&quot;</code> field, or string input without the flag <code>--input-type</code>. This behavior is to preserve backward compatibility. However, now that Node.js supports both CommonJS and ES modules, it is best to be explicit whenever possible. Node.js will treat the following as CommonJS when passed to <code>node</code> as the initial input, or when referenced by <code>import</code> statements within ES module code:</p>
+<ul>
+<li>Files ending in <code>.cjs</code>.</li>
+<li>Files ending in <code>.js</code> when the nearest parent <code>package.json</code> file contains a top-level field <a target="_blank" rel="noopener" href="http://nodejs.cn/api/packages.html#packages_type"><code>&quot;type&quot;</code></a> with a value of <code>&quot;commonjs&quot;</code>.</li>
+<li>Strings passed in as an argument to <code>--eval</code> or <code>--print</code>, or piped to <code>node</code> via <code>STDIN</code>, with the flag <code>--input-type=commonjs</code>.</li>
+</ul>
+<p>Package authors should include the <a target="_blank" rel="noopener" href="http://nodejs.cn/api/packages.html#packages_type"><code>&quot;type&quot;</code></a> field, even in packages where all sources are CommonJS. Being explicit about the <code>type</code> of the package will future-proof the package in case the default type of Node.js ever changes, and it will also make things easier for build tools and loaders to determine how the files in the package should be interpreted.</p>
+<h2 id="使用-import-动态导入"><a href="#使用-import-动态导入" class="headerlink" title="使用 import() 动态导入"></a>使用 import() 动态导入</h2><p>在按照 <code>ES6</code>和<code>CommonJS</code>规则编写的JS模块中，都可以使用<code>import(id)</code>来动态导入其他模块，而且目标模块既可以是<code>ES6</code>模块，也可以是<code>CommonJS</code>模块。</p>
+<p>此外，<code>import(id)</code>语法是动态导入，可以嵌套到<code>if</code>语句中。</p>
+<p>但是<code>import(id)</code>是由<code>promise</code>封装的异步方法，它返回一个<code>promise实例</code>，当导入成功时<code>promise实例</code>的值为目标模块的内容。</p>
+<h2 id="ES6模块编译成CommonJS模块"><a href="#ES6模块编译成CommonJS模块" class="headerlink" title="ES6模块编译成CommonJS模块"></a>ES6模块编译成CommonJS模块</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// ES6模块</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> foo = <span class="hljs-string">&#x27;foo&#x27;</span>;<br><br><span class="hljs-keyword">export</span> &#123;<br>	bar: <span class="hljs-string">&#x27;bar&#x27;</span><br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>    name: <span class="hljs-string">&#x27;es6 module&#x27;</span><br>&#125;<br><br><span class="hljs-comment">// 编译成CommonJS模块的结果：</span><br><span class="hljs-built_in">Object</span>.defineProperty(<span class="hljs-built_in">exports</span>, <span class="hljs-string">&quot;__esModule&quot;</span>, &#123; <span class="hljs-attr">value</span>: <span class="hljs-literal">true</span> &#125;); <span class="hljs-comment">/* 👈 为module.exports添加</span><br><span class="hljs-comment">															__esModule属性，属性值为true*/</span><br><span class="hljs-built_in">exports</span>.foo = <span class="hljs-string">&#x27;foo&#x27;</span>; <span class="hljs-comment">// 👈 原来ES6语法：export let/const ... </span><br><br><span class="hljs-built_in">exports</span>.bar = <span class="hljs-string">&#x27;bar&#x27;</span>; <span class="hljs-comment">// 👈 原来ES6语法： export &#123;...&#125;</span><br><br><span class="hljs-built_in">exports</span>.default = &#123;  <span class="hljs-comment">// 👈 原来ES6语法： export default ...。挂载到了module.exports.default下</span><br>    name: <span class="hljs-string">&#x27;es6 module&#x27;</span><br>&#125;<br><br><br><br></code></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="Node-js中的包"><a href="#Node-js中的包" class="headerlink" title="Node.js中的包"></a>Node.js中的包</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>在Node.js中，一个JS文件就是一个模块，一个模块可以依赖于另外一个模块。</p>
+<p>将模块有机地组织成一个目录文件树，并在顶层目录拥有一个<code>package.json</code>文件，这个目录就是一个包。</p>
+<blockquote>
+<p>但是根据Node.js加载模块的规则，只有存放在<code>node_modules</code>目录下且具有<code>package.json</code>文件的文件夹<font color='red'>才是可以被正确导入的包</font>。</p>
+</blockquote>
+<h2 id="package-json的作用"><a href="#package-json的作用" class="headerlink" title="package.json的作用"></a>package.json的作用</h2><p><code>package.json</code>文件中的键值对可以描述包，包括 ①包的名字、②包的入口、③内部映射、④外部依赖等信息。</p>
+<h3 id="包的名字"><a href="#包的名字" class="headerlink" title="包的名字"></a>包的名字</h3><p><code>name</code>字段用于指定包的名字。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;my-package&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<hr>
+<h3 id="包的入口"><a href="#包的入口" class="headerlink" title="包的入口"></a>包的入口</h3><p>在一个包的<code>package.json</code>文件中，有两个字段可以定义包的入口文件，分别是<code>main</code>和<code>exports</code>。所有版本的Node.js都支持由<code>main</code>字段描述包的入口，而新版本的Node.js支持由<code>exports</code>定义包的入口，而且它的功能更加强大。</p>
+<h4 id="exports和main的优先级"><a href="#exports和main的优先级" class="headerlink" title="exports和main的优先级"></a>exports和main的优先级</h4><ul>
+<li><p>在新版本Node.js中，<code>exports</code>字段拥有更高的优先级，如果<code>package.json</code>中存在<code>exports</code>字段，则<code>main</code>字段不再起作用。</p>
+</li>
+<li><p>但是<code>main</code>字段可以作为向下兼容的备选出口而存在。即旧版本的Node.js始终将<code>main</code>字段定义的出口模块作为包的出口。</p>
+</li>
+</ul>
+<h4 id="主入口的导出"><a href="#主入口的导出" class="headerlink" title="主入口的导出"></a>主入口的导出</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>  <span class="hljs-attr">&quot;main&quot;</span>: <span class="hljs-string">&quot;./main.js&quot;</span>,<br>  <span class="hljs-attr">&quot;exports&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;.&quot;</span>: <span class="hljs-string">&quot;./main.js&quot;</span>, <span class="hljs-comment">//  &quot;.&quot; 代表导包时的主入口</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>语法糖写法：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-comment">// 当使用exports只导出主入口时，可以像main字段一样简写入口</span><br>&#123;<br>  <span class="hljs-attr">&quot;main&quot;</span>: <span class="hljs-string">&quot;./main.js&quot;</span>,<br>  <span class="hljs-attr">&quot;exports&quot;</span>: <span class="hljs-string">&quot;./main.js&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="使用exports定义子入口"><a href="#使用exports定义子入口" class="headerlink" title="使用exports定义子入口"></a>使用exports定义子入口</h4><p><code>exports</code>字段允许我们定义包的子入口。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;my-package&quot;</span>,<br>  <span class="hljs-attr">&quot;main&quot;</span>: <span class="hljs-string">&quot;./main.js&quot;</span>,<br>  <span class="hljs-attr">&quot;exports&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;.&quot;</span>: <span class="hljs-string">&quot;./main.js&quot;</span>,<br>    <span class="hljs-attr">&quot;./submodule&quot;</span>: <span class="hljs-string">&quot;./src/submodule.js&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>通过子入口，外部可以导入模块的子模块：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> mySubModule <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;my-package/submodule&#x27;</span>;<br><span class="hljs-comment">// Loads ./node_modules/my-package/src/submodule.js</span><br></code></pre></td></tr></table></figure>
+<p>但需要注意的是，只有<code>package.json</code>中定义了的子入口才能够被导出：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> anotherModule <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;my-package/another&#x27;</span>;<br><span class="hljs-comment">// ❌ Throws ERR_PACKAGE_PATH_NOT_EXPORTED</span><br></code></pre></td></tr></table></figure>
+
+
+<h4 id="有条件的导出和双包"><a href="#有条件的导出和双包" class="headerlink" title="有条件的导出和双包"></a>有条件的导出和双包</h4><p><code>package.json</code>中的<code>exports</code>支持包的管理者根据不同的条件，将同一个导出路径分发到不同的入口模块。</p>
+<p><strong>应用于双包模块</strong></p>
+<p>例如，如果一个包想根据调用该包的JS文件的导入语句（<code>require() / import</code>）来导出不同的模块，可以这样做：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-comment">// package.json</span><br>&#123;<br>  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;my-package&quot;</span>,<br>  <span class="hljs-attr">&quot;main&quot;</span>: <span class="hljs-string">&quot;./main-require.cjs&quot;</span>,<br>  <span class="hljs-attr">&quot;exports&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;import&quot;</span>: <span class="hljs-string">&quot;./main-module.js&quot;</span>,<span class="hljs-comment">// main-module.js包内使用import语句导入包内模块</span><br>    <span class="hljs-attr">&quot;require&quot;</span>: <span class="hljs-string">&quot;./main-require.cjs&quot;</span> <br>  &#125;,<br>  <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;module&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>⭐⭐</p>
+<p>这样做的好处是调用该包的JS文件并不清楚这个包内文件的模块化规范，为了实现一个包能够被两种语句导入，包内模块管理的<font color='red'>一种策略</font>是：</p>
+<ol>
+<li><p>首先，包内整体使用<code>CommonJS</code>模块化规范，即核心功能代码都使用<code>CommonJS</code>，导入和导出使用<code>require/ module.exports</code>。</p>
+</li>
+<li><p><code>require</code>导出的入口文件的扩展名设置为<code>.cjs</code>或<code>.js</code>。（只会按<code>CommonJS</code>解析包内内容）</p>
+</li>
+<li><p><code>import</code>导出的入口文件扩展名为<code>.js</code>或<code>.mjs</code>。如果设置为为<code>js</code>，则<code>package.json</code>的<code>type</code>字段的值要设置为<code>module</code>，且包内所有使用<code>CommonJS</code>的模块扩展名都应该为<code>.cjs</code>。</p>
+</li>
+</ol>
+<h4 id="双包的危害"><a href="#双包的危害" class="headerlink" title="双包的危害"></a>双包的危害</h4><p><a target="_blank" rel="noopener" href="http://nodejs.cn/api/packages.html#packages_dual_commonjs_es_module_packages">点击查看Node.js相关说明</a></p>
+<p>双包的危害即<code>dual package hazard</code>。当一个JS包为了能够让不同的导入语句<code>import/require</code>获取包内的内容时，会提供两个入口。而当两个出口导出的是不同的导出对象时，就容易导致意想不到的Bug。</p>
+<p><strong>双包危害发生时的表现</strong>：</p>
+<p>假如当一个模块<code>main</code>依赖于<code>foo</code>模块，又依赖于<code>bar</code>模块，<code>bar</code>模块又依赖于<code>foo</code>。在<code>main</code>中导入<code>foo</code>使用的是<code>ES6</code>语法，<code>bar</code>中导入<code>foo</code>使用的是<code>CommonJS</code>语法，❗ 这就会导致<code>main</code>和<code>bar</code>中导入的<code>foo</code>很可能不是同一个模块对象。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-comment">// ./node_modules/foo/package.json</span><br>&#123;<br>   <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;foo&quot;</span>,<br>    <span class="hljs-attr">&quot;exports&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;require&quot;</span>: <span class="hljs-string">&quot;./index.cjs&quot;</span>,<br>        <span class="hljs-attr">&quot;import&quot;</span>: <span class="hljs-string">&quot;./index.mjs&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// ======================================</span><br><span class="hljs-comment">/* ./node_modules/foo/index.cjs */</span><br><span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;<br><br><span class="hljs-built_in">exports</span>.add = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">n</span>) </span>&#123;<br>    count += n;<br>&#125;<br><br><span class="hljs-built_in">exports</span>.print = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;count:&quot;</span>, count);<br>&#125;<br><br><span class="hljs-comment">//=======================================</span><br><span class="hljs-comment">// ./node_modules/foo/index.mjs</span><br><span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(<span class="hljs-params">n</span>) </span>&#123;<br>    count += n;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">print</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;count:&quot;</span>, count);<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>    add,<br>    print<br>&#125;<br><br><span class="hljs-comment">//=======================================</span><br><span class="hljs-comment">// ./bar.cjs</span><br><span class="hljs-keyword">const</span> foo = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;foo&#x27;</span>);<br><span class="hljs-built_in">exports</span>.add = foo.add;<br><span class="hljs-built_in">exports</span>.print = foo.print;<br><br><span class="hljs-comment">//=======================================</span><br><span class="hljs-comment">// ./main.mjs</span><br><span class="hljs-keyword">import</span> foo <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;foo&#x27;</span>;<br><span class="hljs-keyword">import</span> bar <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./bar.js&#x27;</span>;<br>bar.add(<span class="hljs-number">1</span>);<br>foo.print(); <span class="hljs-comment">// ⭐ 输出0，证明bar中的foo模块和main导入的foo模块不是同一个对象</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+<p><strong>最小化双包危害的方案：</strong></p>
+<ol>
+<li><p><code>ES模块封装器</code></p>
+<p>在上例中，对<code>foo</code>包内的<code>index.mjs</code>进行修改，重命名为<code>es-wrapper.mjs</code>。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-comment">// ./node_modules/foo/package.json</span><br><br>&#123;<br>   <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;foo&quot;</span>,<br>    <span class="hljs-attr">&quot;exports&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;require&quot;</span>: <span class="hljs-string">&quot;./index.cjs&quot;</span>,<br>        <span class="hljs-attr">&quot;import&quot;</span>: <span class="hljs-string">&quot;./es-wrapper.mjs&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// ./node_modules/foo/es-wrapper.mjs</span><br><span class="hljs-keyword">import</span> foo <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./index.cjs&#x27;</span>;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> foo;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>隔离状态</code></p>
+<p>如果一个JS包是无状态的，且不考虑包的副本的冗余，可以不用考虑双包风险。因为不会出现让开发者意想不到的结果，只是内存中会存在一个包的两份代码。</p>
+<p>但是上例中，存在状态<code>count</code>，为了保证内存中一个包只有一个状态，包内就需要对状态进行隔离。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-comment">// ./node_modules/foo/package.json</span><br><br>&#123;<br>   <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;foo&quot;</span>,<br>    <span class="hljs-attr">&quot;exports&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;require&quot;</span>: <span class="hljs-string">&quot;./index.cjs&quot;</span>,<br>        <span class="hljs-attr">&quot;import&quot;</span>: <span class="hljs-string">&quot;./index.mjs&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在<code>foo</code>包内新增<code>state.cjs</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// ./node_modules/foo/state.cjs</span><br><span class="hljs-keyword">let</span> state = &#123;  <span class="hljs-comment">// 被隔离的状态</span><br>    count: <span class="hljs-number">0</span><br>&#125;<br><span class="hljs-built_in">module</span>.exports = state;<br></code></pre></td></tr></table></figure>
+<p>修改<code>index.cjs</code>和<code>index.mjs</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// ./node_modules/foo/index.cjs</span><br><span class="hljs-keyword">const</span> state = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./state.cjs&#x27;</span>);<br><br><span class="hljs-built_in">exports</span>.add = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">n</span>) </span>&#123;<br>    state.count += n;<br>&#125;<br><br><span class="hljs-built_in">exports</span>.print = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(state.count);<br>&#125;<br><br><span class="hljs-comment">//========================================</span><br><span class="hljs-comment">// ./node_modules/foo/index.mjs</span><br><span class="hljs-keyword">import</span> state <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./state.cjs&#x27;</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(<span class="hljs-params">n</span>) </span>&#123;<br>    state.count += n;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">print</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(state.fn);<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>    add,<br>    print<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>这样做虽然隔离了状态，但是一个包在内存中仍然有两份代码。</p>
+</blockquote>
+</li>
+</ol>
+<hr>
+<h3 id="包内路径别名（内部映射）"><a href="#包内路径别名（内部映射）" class="headerlink" title="包内路径别名（内部映射）"></a>包内路径别名（内部映射）</h3><p>除了<code>exports</code>字段之外，<code>Package.json</code>文件还可以用<code>imports</code>字段定义<font color='red'>包内文件相互导入的路径别名</font>。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-comment">// ./node_modules/es-module-package/package.json</span><br>&#123;<br>  <span class="hljs-attr">&quot;exports&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;./features/*&quot;</span>: <span class="hljs-string">&quot;./src/features/*.js&quot;</span><br>  &#125;,<br>  <span class="hljs-attr">&quot;imports&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;#internal/*&quot;</span>: <span class="hljs-string">&quot;./src/internal/*.js&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但需要注意的是<code>imports</code>字段定义的路径别名都需要以<code>#</code>开头，将<code>包内路径别名</code>和<code>向包外导出的子路径别名</code>区分开来。</p>
+<blockquote>
+<p>包内路径别名也可以有条件地导出。👇</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-comment">// package.json</span><br>&#123;<br>  <span class="hljs-attr">&quot;imports&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;#dep&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;node&quot;</span>: <span class="hljs-string">&quot;dep-node-native&quot;</span>,<br>      <span class="hljs-attr">&quot;default&quot;</span>: <span class="hljs-string">&quot;./dep-polyfill.js&quot;</span><br>    &#125;<br>  &#125;,<br>  <span class="hljs-attr">&quot;dependencies&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;dep-node-native&quot;</span>: <span class="hljs-string">&quot;^1.0.0&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<h1 id="Node-js-API"><a href="#Node-js-API" class="headerlink" title="Node.js API"></a>Node.js API</h1><h2 id="path模块"><a href="#path模块" class="headerlink" title="path模块"></a>path模块</h2><h3 id="path-resolve-和-path-join-的区别"><a href="#path-resolve-和-path-join-的区别" class="headerlink" title="path.resolve 和 path.join 的区别"></a>path.resolve 和 path.join 的区别</h3><p><code>path.join</code>和<code>path.resolve</code>函数都允许传入多个字符串，将参数拼接后返回一个路径字符串。</p>
+<p>但是在使用他们时，要考虑到其中的区别。</p>
+<blockquote>
+<p>在path.join和path.resolve函数的参数中，参数末尾的<code>/</code>不会起作用。</p>
+<p>在path.join函数中，参数开头的<code>/</code>也不起作用，而在path.resolve中，参数的开头谨慎使用<code>/</code>。</p>
+</blockquote>
+<p><strong>一、path.resolve()方法</strong></p>
+<p>我们可以将<code>path.resolve</code>方法<font color='red'>解析路径的起点是执行Node命令的工作目录</font>，跟path.resolve方法执行的位置无关，我们且将工作目录称作<code>root</code>。</p>
+<p><code>path.resolve(subpath0, subpath1, subpath2, ...)</code>返回一个路径，该路径相当于不断地执行<code>cd</code>命令，</p>
+<p>基于<code>root</code>，先<code>cd subpath0</code>，然后<code>cd subpath1</code>，再不断<code>cd</code>，最后返回切换到的所在目录。</p>
+<p>❗ 需要注意的是，如果参数中有以磁盘<code>X:</code>或<code>/</code>开头的字符串，则将会切换到平台的根目录下。</p>
+<blockquote>
+<p>当然 path.resolve方法不会真的去切换目录，上面这段话会帮助我们理解path.resolve的算法。</p>
+</blockquote>
+<p>⭐ 例子：</p>
+<p>假设当前工作目录为<code> E:\</code>， 同时<code>E:\test\index.js</code>中的内容如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">console</span>.log( path.resolve() );<br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;bar&#x27;</span>) );<br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>) );<br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;/bar&#x27;</span>));<br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;bar&#x27;</span>, <span class="hljs-string">&#x27;..&#x27;</span>));<br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;C:\\dist&#x27;</span>, <span class="hljs-string">&#x27;img&#x27;</span>));<br></code></pre></td></tr></table></figure>
+<p>执行 <code>node ./test/index.js</code>，输出结果如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">console</span>.log( path.resolve() );                 <span class="hljs-comment">// 输出👉  &quot;E:\\&quot;</span><br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;bar&#x27;</span>) );     <span class="hljs-comment">// 输出👉  &quot;E:\\foo\\bar&quot;</span><br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>) );       <span class="hljs-comment">// 输出👉  &quot;E:\\foo&quot;</span><br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;/bar&#x27;</span>));     <span class="hljs-comment">// 输出👉  &quot;E:\\bar&quot;</span><br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;bar&#x27;</span>, <span class="hljs-string">&#x27;..&#x27;</span>)) <span class="hljs-comment">// 输出👉  &quot;E:\\foo&quot;</span><br><span class="hljs-built_in">console</span>.log( path.resolve(<span class="hljs-string">&#x27;C:\\dist&#x27;</span>, <span class="hljs-string">&#x27;img&#x27;</span>)); <span class="hljs-comment">// 输出👉  &quot;C:\\dist\\img&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+<p><strong>二、path.join()方法</strong></p>
+<p>该方法只是将参数中的路径进行智能拼接，每个字符串参数最前面的<code>/</code>不起作用，会被认为是上一级目录。</p>
+<p><code>path.join</code>方法解析的起点会变化：</p>
+<p>如果第一个参数是以磁盘根路径开头的绝对路径，则<code>path.join</code>解析的起点为第一个参数路径。</p>
+<p>如果第一个参数是以根路径<code>/</code>开头的绝对路径，则<code>path.join</code>解析的起点为第一个参数路径。</p>
+<p>如果第一个参数不是以根路径开头的绝对路径，则<code>path.join</code>解析的起点为当前目录，即<code>&quot;.&quot;</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 没有参数</span><br><span class="hljs-built_in">console</span>.log( path.join() );                 <span class="hljs-comment">// 输出👉  &quot;.&quot;</span><br><br><span class="hljs-comment">// 以相对路径foo作为第一个参数</span><br><span class="hljs-built_in">console</span>.log( path.join(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;bar&#x27;</span>) );     <span class="hljs-comment">// 输出👉  &quot;foo\\bar&quot;</span><br><br><span class="hljs-comment">// &quot;/bar&quot; 前的斜杠无效</span><br><span class="hljs-built_in">console</span>.log( path.join(<span class="hljs-string">&#x27;foo/&#x27;</span>, <span class="hljs-string">&#x27;/bar&#x27;</span>) );     <span class="hljs-comment">// 输出👉  &quot;foo\\bar&quot;</span><br><br><span class="hljs-comment">// 以linux下根路径/foo/作为第一个参数。</span><br><span class="hljs-built_in">console</span>.log( path.join(<span class="hljs-string">&#x27;/foo/&#x27;</span>, <span class="hljs-string">&#x27;bar&#x27;</span>) );  <span class="hljs-comment">// 输出👉  &#x27;\\foo\\bar&#x27;</span><br><br><span class="hljs-comment">// 以点号作为第一个参数</span><br><span class="hljs-built_in">console</span>.log( path.join(<span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;foo&#x27;</span>) );       <span class="hljs-comment">// 输出👉  &quot;foo&quot;</span><br><br><span class="hljs-comment">// 以上一级目录作为第一个参数</span><br><span class="hljs-built_in">console</span>.log( path.join(<span class="hljs-string">&#x27;..&#x27;</span>, <span class="hljs-string">&#x27;foo&#x27;</span>));       <span class="hljs-comment">// 输出👉  &quot;..\\foo&quot;</span><br><br><span class="hljs-comment">// 以上一级目录作为参数</span><br><span class="hljs-built_in">console</span>.log( path.join(<span class="hljs-string">&#x27;foo/&#x27;</span>, <span class="hljs-string">&#x27;/bar&#x27;</span>, <span class="hljs-string">&#x27;..&#x27;</span>)) <span class="hljs-comment">// 输出👉  &quot;foo&quot;</span><br><br><span class="hljs-comment">// windows下绝对路径作为参数</span><br><span class="hljs-built_in">console</span>.log( path.join(<span class="hljs-string">&#x27;C:\\dist&#x27;</span>, <span class="hljs-string">&#x27;img&#x27;</span>)); <span class="hljs-comment">// 输出👉  &quot;C:\dist\img&quot;</span><br><span class="hljs-built_in">console</span>.log( path.join(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;C:\\&#x27;</span>));     <span class="hljs-comment">// 输出👉  &quot;foo\\C:\\&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="path-extname"><a href="#path-extname" class="headerlink" title="path.extname"></a>path.extname</h3><p><code>path.extname(filepath)</code>返回filepath指定文件的扩展名，例如： .js  .css  .html，会带有点号。</p>
+<h3 id="path-basename"><a href="#path-basename" class="headerlink" title="path.basename"></a>path.basename</h3><p><code>path.basename(filepath, [extname])</code>返回filepath指定文件的文件名。</p>
+<ul>
+<li><p>如果调用该函数时，没有给定extname，则返回的结果形式为带有扩展名的文件名，</p>
+<p>例如 path.basename(‘./src/index.js’) 返回<code> index.js</code>；</p>
+</li>
+<li><p>如果调用该函数时，给定了extname参数，则返回的结果形式为不带有扩展名的文件名，</p>
+<p>例如 path.basename(‘./src/index.js’, ‘.js’) 返回<code> index</code>；</p>
+</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/19/TypeScript/ts/">
+                        <span class="hidden-mobile">TypeScript笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
