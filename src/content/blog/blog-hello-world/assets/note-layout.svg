@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="280" viewBox="0 0 800 280" role="img">
+  <rect width="800" height="280" rx="20" fill="#f3efe7"/>
+  <rect x="28" y="28" width="300" height="224" rx="16" fill="#fffdf9" stroke="#e6dfd4" stroke-width="2"/>
+  <text x="48" y="62" fill="#1f1a17" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">blog-hello-world/</text>
+  <text x="64" y="100" fill="#1f1a17" font-family="Segoe UI, sans-serif" font-size="15">index.md</text>
+  <text x="64" y="136" fill="#1f1a17" font-family="Segoe UI, sans-serif" font-size="15">assets/</text>
+  <text x="84" y="172" fill="#9a3412" font-family="Segoe UI, sans-serif" font-size="15">note-layout.svg</text>
+  <text x="48" y="220" fill="#6b625c" font-family="Segoe UI, sans-serif" font-size="13">one folder per note</text>
+  <path d="M344 150 H430" fill="none" stroke="#9a3412" stroke-width="3" stroke-linecap="round"/>
+  <path d="M418 138 L434 150 L418 162" fill="none" stroke="#9a3412" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="448" y="70" width="324" height="140" rx="16" fill="#243028"/>
+  <text x="472" y="112" fill="#d7e3dc" font-family="Consolas, monospace" font-size="16">![demo]</text>
+  <text x="472" y="148" fill="#9ec9a8" font-family="Consolas, monospace" font-size="16">(./assets/note-layout.svg)</text>
+  <text x="472" y="180" fill="#8fa198" font-family="Segoe UI, sans-serif" font-size="13">relative path, not /images</text>
+</svg>
