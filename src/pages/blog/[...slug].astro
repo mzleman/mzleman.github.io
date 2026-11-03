@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog', ({ data }) => !data.draft);
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const dateFormat = new Intl.DateTimeFormat('zh-CN', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+	<nav class="breadcrumb" aria-label="面包屑">
+		<a href="/">首页</a>
+		<span class="breadcrumb__sep" aria-hidden="true">/</span>
+		<span class="breadcrumb__current" aria-current="page">{post.data.title}</span>
+	</nav>
+	<header class="article-header">
+		<p class="meta">
+			<time datetime={post.data.date.toISOString()}>{dateFormat.format(post.data.date)}</time>
+			{post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}
+		</p>
+		<h1>{post.data.title}</h1>
+	</header>
+	<article class="prose">
+		<Content />
+	</article>
+</BaseLayout>
+
+<script>
+	import '../../scripts/image-lightbox.ts';
+</script>

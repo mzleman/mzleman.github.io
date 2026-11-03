@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import IceBear from '../components/IceBear.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const latest = posts.slice(0, 3);
+const archive = posts.map((post) => ({
+	id: post.id,
+	title: post.data.title,
+	description: post.data.description,
+	date: post.data.date.toISOString(),
+	tags: post.data.tags,
+}));
+
+const dateFormat = new Intl.DateTimeFormat('zh-CN', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<BaseLayout title="个人博客" description="个人博客">
+	<section class="hero">
+		<div class="hero__copy">
+			<p class="eyebrow">Personal Blog</p>
+			<h1>个人博客</h1>
+			<p class="lede">
+				GitHub 主页：
+				<a class="lede__link" href="https://github.com/mzleman" target="_blank" rel="noreferrer">
+					mzleman
+				</a>
+			</p>
+		</div>
+		<div class="hero__mascot">
+			<IceBear />
+		</div>
+	</section>
+
+	<section class="block">
+		<h2 class="section-title">最新笔记</h2>
+		{
+			latest.length > 0 ? (
+				<ul class="post-list">
+					{latest.map((post) => (
+						<li>
+							<a href={`/blog/${post.id}`}>
+								<time datetime={post.data.date.toISOString()}>
+									{dateFormat.format(post.data.date)}
+								</time>
+								<h3>{post.data.title}</h3>
+								<p>{post.data.description}</p>
+							</a>
+						</li>
+					))}
+				</ul>
+			) : (
+				<p class="empty">还没有笔记。</p>
+			)
+		}
+	</section>
+
+	<section class="block" id="archive" data-archive>
+		<div class="archive-head">
+			<h2 class="section-title">全部笔记</h2>
+			<label class="archive-search">
+				<span class="visually-hidden">搜索笔记</span>
+				<input data-archive-search type="search" placeholder="搜索标题、摘要或标签" />
+			</label>
+		</div>
+		<p class="archive-status" data-archive-status></p>
+		<ul class="post-list" data-archive-list></ul>
+		<nav class="archive-pager" data-archive-pager hidden></nav>
+	</section>
+</BaseLayout>
+
+<script is:inline id="archive-data" type="application/json" set:html={JSON.stringify(archive)} />
+<script>
+	import '../scripts/post-archive.ts';
+</script>

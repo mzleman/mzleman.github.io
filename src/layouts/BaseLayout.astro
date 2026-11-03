@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = '把学习过程记成短文。' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<main class="shell">
+			<slot />
+		</main>
+		<nav class="mobile-dock" aria-label="回到顶部">
+			<button class="mobile-dock__btn" type="button" data-scroll-top aria-label="回到顶部">顶部</button>
+		</nav>
+		<script>
+			const dock = document.querySelector('.mobile-dock');
+			const topButton = document.querySelector('[data-scroll-top]');
+
+			function showTopButton() {
+				return window.scrollY > Math.max(160, window.innerHeight * 0.4);
+			}
+
+			function syncTopButton() {
+				if (!(dock instanceof HTMLElement)) return;
+				const visible = showTopButton();
+				dock.classList.toggle('is-visible', visible);
+				dock.setAttribute('aria-hidden', visible ? 'false' : 'true');
+			}
+
+			topButton?.addEventListener('click', () => {
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+			window.addEventListener('scroll', syncTopButton, { passive: true });
+			syncTopButton();
+		</script>
+	</body>
+</html>

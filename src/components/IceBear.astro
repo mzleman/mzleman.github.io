@@ -1,0 +1,130 @@
+<svg
+	class="ice-bear"
+	viewBox="0 0 200 240"
+	role="img"
+	aria-label="白熊"
+>
+	<ellipse class="ice-bear__shadow" cx="100" cy="222" rx="52" ry="11" fill="#d8cfc4" />
+	<g class="ice-bear__figure">
+		<ellipse cx="48" cy="152" rx="15" ry="30" fill="#f4f9fd" stroke="#d3e0ec" stroke-width="2" />
+		<ellipse cx="152" cy="152" rx="15" ry="30" fill="#f4f9fd" stroke="#d3e0ec" stroke-width="2" />
+		<ellipse cx="100" cy="154" rx="58" ry="66" fill="#f7fbff" stroke="#d3e0ec" stroke-width="2" />
+		<circle cx="58" cy="54" r="15" fill="#f7fbff" stroke="#d3e0ec" stroke-width="2" />
+		<circle cx="142" cy="54" r="15" fill="#f7fbff" stroke="#d3e0ec" stroke-width="2" />
+		<ellipse cx="100" cy="82" rx="52" ry="46" fill="#f7fbff" stroke="#d3e0ec" stroke-width="2" />
+		<ellipse cx="100" cy="100" rx="20" ry="13" fill="#ffffff" />
+		<ellipse cx="100" cy="97" rx="5.5" ry="4.2" fill="#243028" />
+		<g class="ice-bear__eyes">
+			<circle cx="82" cy="78" r="4.2" fill="#243028" />
+			<circle cx="118" cy="78" r="4.2" fill="#243028" />
+		</g>
+		<g class="ice-bear__steam">
+			<path d="M158 118c4-8 0-12 3-18" fill="none" stroke="#9bb5c9" stroke-width="2" stroke-linecap="round" />
+			<path d="M168 122c3-7 1-11 4-17" fill="none" stroke="#9bb5c9" stroke-width="2" stroke-linecap="round" />
+		</g>
+		<ellipse cx="164" cy="148" rx="16" ry="10" fill="#f3efe7" stroke="#c9b8a8" stroke-width="2" />
+		<rect x="152" y="138" width="24" height="8" rx="3" fill="#e7ddd2" />
+		<polygon class="ice-bear__spark" points="28,92 31,99 38,102 31,105 28,112 25,105 18,102 25,99" fill="#9ec9e6" />
+	</g>
+</svg>
+
+<style>
+	.ice-bear {
+		display: block;
+		width: 100%;
+		height: auto;
+		overflow: visible;
+	}
+
+	.ice-bear__figure {
+		transform-origin: 100px 210px;
+		animation: ice-bear-bob 3.2s ease-in-out infinite;
+	}
+
+	.ice-bear__shadow {
+		transform-origin: 100px 222px;
+		animation: ice-bear-shadow 3.2s ease-in-out infinite;
+	}
+
+	.ice-bear__eyes {
+		transform-origin: 100px 78px;
+		animation: ice-bear-blink 5.2s ease-in-out infinite;
+	}
+
+	.ice-bear__steam {
+		animation: ice-bear-steam 2.6s ease-in-out infinite;
+	}
+
+	.ice-bear__spark {
+		transform-origin: 28px 102px;
+		animation: ice-bear-spark 2.4s ease-in-out infinite;
+	}
+
+	@keyframes ice-bear-bob {
+		0%,
+		100% {
+			transform: translateY(0) rotate(-1.4deg);
+		}
+		50% {
+			transform: translateY(-7px) rotate(1.4deg);
+		}
+	}
+
+	@keyframes ice-bear-shadow {
+		0%,
+		100% {
+			transform: scaleX(1);
+			opacity: 0.72;
+		}
+		50% {
+			transform: scaleX(0.86);
+			opacity: 0.45;
+		}
+	}
+
+	@keyframes ice-bear-blink {
+		0%,
+		42%,
+		48%,
+		100% {
+			transform: scaleY(1);
+		}
+		45% {
+			transform: scaleY(0.08);
+		}
+	}
+
+	@keyframes ice-bear-steam {
+		0%,
+		100% {
+			opacity: 0.25;
+			transform: translateY(0);
+		}
+		50% {
+			opacity: 0.9;
+			transform: translateY(-8px);
+		}
+	}
+
+	@keyframes ice-bear-spark {
+		0%,
+		100% {
+			opacity: 0.35;
+			transform: scale(0.82) rotate(0deg);
+		}
+		50% {
+			opacity: 1;
+			transform: scale(1.08) rotate(18deg);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.ice-bear__figure,
+		.ice-bear__shadow,
+		.ice-bear__eyes,
+		.ice-bear__steam,
+		.ice-bear__spark {
+			animation: none;
+		}
+	}
+</style>
