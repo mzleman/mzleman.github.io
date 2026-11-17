@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="700" viewBox="0 0 800 700" role="img">
+  <title>异步 I/O：Java 与 Node.js</title>
+  <style>
+    text { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+  </style>
+  <rect width="800" height="700" rx="20" fill="#f3efe7"/>
+
+  <rect x="24" y="24" width="752" height="268" rx="18" fill="#fffdf9" stroke="#e6dfd4" stroke-width="2"/>
+  <text x="48" y="62" fill="#9a3412" font-size="20" font-weight="700">Java</text>
+  <text x="108" y="62" fill="#1f1a17" font-size="16" font-weight="700">一个请求一条线程</text>
+  <text x="48" y="90" fill="#6b625c" font-size="14">处理请求的线程会停在数据库或下游调用上</text>
+
+  <rect x="48" y="112" width="704" height="48" rx="12" fill="#f8ebe3"/>
+  <text x="68" y="142" fill="#1f1a17" font-size="16" font-weight="700">连接 1</text>
+  <text x="150" y="142" fill="#6b625c" font-size="15">工作线程正在等数据库</text>
+  <rect x="668" y="124" width="64" height="26" rx="8" fill="#9a3412"/>
+  <text x="700" y="142" text-anchor="middle" fill="#fffdf9" font-size="13" font-weight="700">堵住</text>
+
+  <rect x="48" y="172" width="704" height="48" rx="12" fill="#f8ebe3"/>
+  <text x="68" y="202" fill="#1f1a17" font-size="16" font-weight="700">连接 2</text>
+  <text x="150" y="202" fill="#6b625c" font-size="15">工作线程正在等下游</text>
+  <rect x="668" y="184" width="64" height="26" rx="8" fill="#9a3412"/>
+  <text x="700" y="202" text-anchor="middle" fill="#fffdf9" font-size="13" font-weight="700">堵住</text>
+
+  <rect x="48" y="232" width="704" height="48" rx="12" fill="#f8ebe3"/>
+  <text x="68" y="262" fill="#1f1a17" font-size="16" font-weight="700">连接 3</text>
+  <text x="150" y="262" fill="#6b625c" font-size="15">工作线程正在等客户端</text>
+  <rect x="668" y="244" width="64" height="26" rx="8" fill="#9a3412"/>
+  <text x="700" y="262" text-anchor="middle" fill="#fffdf9" font-size="13" font-weight="700">堵住</text>
+
+  <path d="M400 300 V324" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+  <path d="M392 316 L400 326 L408 316" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="24" y="332" width="752" height="280" rx="18" fill="#243028"/>
+  <text x="48" y="370" fill="#fffdf9" font-size="20" font-weight="700">Node.js</text>
+  <text x="140" y="370" fill="#f0d2c4" font-size="16" font-weight="700">主线程不堵在 I/O 上</text>
+  <text x="48" y="398" fill="#9ec9a8" font-size="14">等待登记给操作系统，数据到了再执行回调</text>
+
+  <rect x="48" y="418" width="704" height="64" rx="12" fill="#fffdf9"/>
+  <text x="68" y="446" fill="#1f1a17" font-size="18" font-weight="700">主线程 · 事件循环</text>
+  <text x="68" y="468" fill="#6b625c" font-size="14">同一时间只做一件已经就绪的事</text>
+
+  <rect x="48" y="498" width="220" height="44" rx="10" fill="#31483c"/>
+  <text x="158" y="526" text-anchor="middle" fill="#d7e3dc" font-size="14">连接 1 · 在等</text>
+  <rect x="280" y="498" width="220" height="44" rx="10" fill="#31483c"/>
+  <text x="390" y="526" text-anchor="middle" fill="#d7e3dc" font-size="14">连接 2 · 在等</text>
+  <rect x="512" y="498" width="240" height="44" rx="10" fill="#f8ebe3"/>
+  <text x="632" y="526" text-anchor="middle" fill="#9a3412" font-size="14" font-weight="700">连接 3 · 回调就绪</text>
+
+  <text x="48" y="578" fill="#9ec9a8" font-size="14">在等的连接没有自己的线程。只有数据到了，才占一下主线程。</text>
+
+  <rect x="24" y="628" width="752" height="52" rx="14" fill="#e6dfd4"/>
+  <text x="48" y="660" fill="#1f1a17" font-size="15" font-weight="700">一万个连接都在等：Java 要准备大量线程，Node.js 还是这一条主线程。</text>
+</svg>
