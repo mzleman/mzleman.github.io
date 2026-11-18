@@ -1,0 +1,110 @@
+---
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	headings: Heading[];
+}
+
+const items = Astro.props.headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+{
+	items.length > 0 && (
+		<>
+			<nav class="outline outline--side" aria-label="大纲">
+				<p class="outline__title">大纲</p>
+				<ol class="outline__list">
+					{items.map((heading) => (
+						<li class:list={['outline__item', `outline__item--${heading.depth}`]}>
+							<a href={`#${heading.slug}`}>{heading.text}</a>
+						</li>
+					))}
+				</ol>
+			</nav>
+			<div class="outline-panel" data-outline-panel hidden>
+				<button class="outline-panel__backdrop" type="button" data-outline-close aria-label="关闭大纲" />
+				<div class="outline-panel__sheet" role="dialog" aria-modal="true" aria-label="大纲">
+					<div class="outline-panel__bar">
+						<p class="outline__title">大纲</p>
+						<button class="icon-btn" type="button" data-outline-close aria-label="关闭大纲">
+							<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+								<path
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									d="M6 6l12 12M18 6L6 18"></path>
+							</svg>
+						</button>
+					</div>
+					<ol class="outline__list">
+						{items.map((heading) => (
+							<li class:list={['outline__item', `outline__item--${heading.depth}`]}>
+								<a href={`#${heading.slug}`}>{heading.text}</a>
+							</li>
+						))}
+					</ol>
+				</div>
+			</div>
+		</>
+	)
+}
+
+<script>
+	const links = [...document.querySelectorAll<HTMLAnchorElement>('.outline a')];
+	const headings = links
+		.map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+		.filter((heading): heading is HTMLElement => heading instanceof HTMLElement);
+	const uniqueHeadings = [...new Set(headings)];
+	const panel = document.querySelector('[data-outline-panel]');
+	const openButton = document.querySelector('[data-outline-open]');
+
+	function setPanel(open: boolean) {
+		if (!(panel instanceof HTMLElement)) return;
+		panel.hidden = !open;
+		document.body.classList.toggle('outline-open', open);
+		if (openButton instanceof HTMLButtonElement) {
+			openButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+		}
+	}
+
+	function markCurrent() {
+		const line = window.scrollY + 128;
+		let current = uniqueHeadings[0];
+		for (const heading of uniqueHeadings) {
+			if (heading.offsetTop <= line) current = heading;
+		}
+		for (const link of links) {
+			const id = decodeURIComponent(link.hash.slice(1));
+			const active = current?.id === id;
+			link.classList.toggle('is-active', active);
+			if (active) link.setAttribute('aria-current', 'location');
+			else link.removeAttribute('aria-current');
+		}
+	}
+
+	if (uniqueHeadings.length > 0 && openButton instanceof HTMLButtonElement) {
+		openButton.hidden = false;
+		openButton.setAttribute('aria-expanded', 'false');
+		openButton.setAttribute('aria-controls', 'outline-panel');
+		panel?.setAttribute('id', 'outline-panel');
+		openButton.addEventListener('click', () => {
+			setPanel(panel instanceof HTMLElement ? panel.hidden : false);
+		});
+		panel?.addEventListener('click', (event) => {
+			const target = event.target;
+			if (!(target instanceof Element)) return;
+			if (target.closest('[data-outline-close]') || target.closest('.outline-panel a')) setPanel(false);
+		});
+		window.dispatchEvent(new Event('outline-available'));
+	}
+
+	if (uniqueHeadings.length > 0) {
+		markCurrent();
+		window.addEventListener('scroll', markCurrent, { passive: true });
+	}
+</script>

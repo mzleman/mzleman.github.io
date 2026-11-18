@@ -1,14 +1,11 @@
 ---
-
 title: Node.js 学习笔记
 description: Node.js 的由来、维护发布、异步 I/O，以及运行时架构。
 date: 2026-11-11
 tags:
-
-- nodejs
+  - nodejs
   - javascript
-  draft: false
-
+draft: false
 ---
 
 ## Node.js 简介
