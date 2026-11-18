@@ -3,8 +3,8 @@ title: Node.js 模块化
 description: Package Scope、语法嗅探、CommonJS、ES Module、exports 解析，以及 ESM 与 CJS 的互操作和双包陷阱。
 date: 2026-11-18
 tags:
-- nodejs
-- javascript
+  - nodejs
+  - javascript
 draft: false
 ---
 ## Package Scope
@@ -43,7 +43,7 @@ project/
 │       ├── package.json      # Scope B
 │       └── index.js          # 属于 Scope B
 └── node_modules/
-    └── bar.js                # ⭐没有package scope，只能是否语法检测判断模块化语法，或默认CommonJS
+    ├── bar.js                # 没有 package.json，不形成 Package Scope
     └── lodash/
         ├── package.json      # Scope C
         └── index.js          # 属于 Scope C
@@ -61,7 +61,7 @@ project/
 
 Package Scope 主要影响 Node.js 对模块的解释和解析行为。
 
-**① 决定** `**.js**` **文件的模块类型**
+**① 决定 `.js` 文件的模块类型**
 
 通过 `package.json` 中的 `type` 字段：
 ```
@@ -76,7 +76,7 @@ Package Scope 主要影响 Node.js 对模块的解释和解析行为。
 
 `.mjs` 始终是 ESM，`.cjs` 始终是 CommonJS，不受 `type` 影响。
 
-**② 决定** `**imports**` **字段的查找范围**
+**② 决定 `imports` 字段的查找范围**
 
 以 `#` 开头的包内部导入标识符，会在当前模块所属 Package Scope 的 `package.json` 中查找 `imports` 映射。
 
@@ -102,13 +102,16 @@ import utils from '#utils';
 
 如果 `package.json` 定义了 `name` 和 `exports`，当前包内部的模块可以通过包名引用自身公开的入口：
 
-```
+```json
 {
   "name": "my-package",
   "exports": {
     ".": "./index.js"
   }
 }
+```
+
+```js
 import something from 'my-package';
 ```
 
@@ -178,7 +181,7 @@ Syntax Detection 只针对模块类型不明确的输入。
 
 主要包括：
 
-**①** `**.js**` **文件**
+**① `.js` 文件**
 
 文件满足以下条件：
 
@@ -195,7 +198,7 @@ project/
 
 如果 `package.json` 没有 `type` 字段，那么 `index.js` 就属于模块类型不明确的输入。
 
-**② 没有指定** `**--input-type**` **的字符串输入**
+**② 没有指定 `--input-type` 的字符串输入**
 
 例如：
 
@@ -211,7 +214,7 @@ node --eval "console.log('hello')"
 
 以下情况不需要通过 Syntax Detection 判断模块类型：
 
-**①** `**.mjs**` **文件**
+**① `.mjs` 文件**
 
 ```
 // index.mjs
@@ -220,7 +223,7 @@ import fs from 'node:fs';
 
 `.mjs` 扩展名明确表示 ESM。
 
-**②** `**.cjs**` **文件**
+**② `.cjs` 文件**
 
 ```
 // index.cjs
@@ -229,7 +232,7 @@ const fs = require('node:fs');
 
 `.cjs` 扩展名明确表示 CommonJS。
 
-**③** `**package.json**` **明确声明了** `**type**`
+**③ `package.json` 明确声明了 `type`**
 
 ```
 {
@@ -415,8 +418,11 @@ Syntax Detection 是 Node.js 在模块类型不明确时，通过检查源代码
 
 
 ### 基本语法
+
 `require(id)` 同步加载一个模块，返回值是对方的 `module.exports`。`id` 可以是相对当前文件的路径、一个包名，或 `node:fs` 这种内置模块。相对路径相对的是当前文件，不是启动 Node 时的工作目录。
-❗注意：CommonJS模块化规范的JS文件不允许出现顶层`await`。但支持通过`import()`动态导入一个ESM。
+
+**注意：** CommonJS 的 JS 文件不允许出现顶层 `await`，但可以通过 `import()` 动态导入 ESM。
+
 ```javascript
 // index.cjs
 
@@ -468,20 +474,22 @@ console.log(this.b); // undefined
 #### 支持的标识符
 
 1. 核心模块。编译在 Node 的可执行文件里，不对应磁盘上的一个文件，所以不会去 `node_modules` 里找同名包。常用的有：
-  - `node:fs`、`node:fs/promises`：读写文件
-  - `node:path`：拼路径
-  - `node:http`、`node:https`：HTTP 服务和请求
-  - `node:events`：事件
-  - `node:stream`：流
-  - `node:os`：操作系统信息
-  - `node:child_process`：拉起子进程
-  - `node:crypto`：加密
-  - `node:buffer`、`node:util`、`node:url`
-  - `node:module`、`node:vm`：模块系统和脚本编译
 
-引入时写成 `node:fs` 这种形式。`fs` 这种旧写法，多数老模块还能用，但 `node:` 写明要的是内置模块。后加的一些模块只能带前缀，例如 `node:test`、`node:sqlite`。这样也不会在 Node 以后新增同名核心模块时，把原来的第三方包抢走。不是核心模块的，都按“文件路径”或“包路径”去解析。
-1. 文件路径。绝对路径以 `/` 或盘符开头，相对路径以 `./` 或 `../` 开头。
-2. 包路径。例如`foo`、 `foo/lib`
+   - `node:fs`、`node:fs/promises`：读写文件
+   - `node:path`：拼路径
+   - `node:http`、`node:https`：HTTP 服务和请求
+   - `node:events`：事件
+   - `node:stream`：流
+   - `node:os`：操作系统信息
+   - `node:child_process`：拉起子进程
+   - `node:crypto`：加密
+   - `node:buffer`、`node:util`、`node:url`
+   - `node:module`、`node:vm`：模块系统和脚本编译
+
+   引入时写成 `node:fs` 这种形式。`fs` 这种旧写法，多数老模块还能用，但 `node:` 写明要的是内置模块。后加的一些模块只能带前缀，例如 `node:test`、`node:sqlite`。这样也不会在 Node 以后新增同名核心模块时，把原来的第三方包抢走。不是核心模块的，都按“文件路径”或“包路径”去解析。
+
+2. 文件路径。绝对路径以 `/` 或盘符开头，相对路径以 `./` 或 `../` 开头。
+3. 包路径。例如 `foo`、`foo/lib`。
 
 
 
@@ -614,14 +622,16 @@ Node 不把JS文件当裸脚本执行。它先套一层包装器，再编译成�
 
 主路径是：
 
-1. 把 `id` 解析成绝对路径。按该文件的绝对路径作为key，进行缓存，缓存的是module对象。
+1. 把 `id` 解析成绝对路径。按该文件的绝对路径作为 key 缓存，缓存的是 module 对象。
 2. 查 `Module._cache`，也就是 `require.cache`。模块已经执行完，直接返回它的 `exports`。
-3. 没有就新建一个 `module`以`module.exports`对象，马上把`module`对象放进缓存。
-> 主路径上，是先创建并缓存`module`，再执行后面步骤（读文件内容、执行其模块代码），循环依赖靠的就是这第三步。因为如果在当前模块还没执行完时，当前模块依赖的其他模块又 `require` 回来时，缓存里已经有它`module`对象和导出内容，但 `loaded` 还是 `false`，拿到的是一份还没填完的 `exports`。
-1. 读文件用同步的 `readFileSync`。
-2. 源码套上包装器，编译成函数。公开接口是 `vm.compileFunction`：给它源码和参数名，它返回一个函数。Node 的加载器不走这个公开函数，而是调用底层的 `compileFunctionForCJSLoader`。效果一样，参数就是包装器上的那五个。
-3. 调用这个函数。`this` 和第一个参数都是当时的 `module.exports`，后面依次是 `require`、`module`、文件路径、目录。
-4. 执行完把 `module.loaded` 设为 `true`，`require` 返回 `module.exports`。中途抛错会把刚放进缓存的记录删掉，下次 `require` 会再试一次。
+3. 没有就新建一个 `module`，带上 `module.exports` 对象，马上把 `module` 放进缓存。
+
+   > 主路径上，是先创建并缓存 `module`，再执行后面步骤（读文件内容、执行其模块代码）。循环依赖靠的就是这第三步。因为如果在当前模块还没执行完时，当前模块依赖的其他模块又 `require` 回来，缓存里已经有这个 `module` 和导出内容，但 `loaded` 还是 `false`，拿到的是一份还没填完的 `exports`。
+
+4. 读文件用同步的 `readFileSync`。
+5. 源码套上包装器，编译成函数。公开接口是 `vm.compileFunction`：给它源码和参数名，它返回一个函数。Node 的加载器不走这个公开函数，而是调用底层的 `compileFunctionForCJSLoader`。效果一样，参数就是包装器上的那五个。
+6. 调用这个函数。`this` 和第一个参数都是当时的 `module.exports`，后面依次是 `require`、`module`、文件路径、目录。
+7. 执行完把 `module.loaded` 设为 `true`，`require` 返回 `module.exports`。中途抛错会把刚放进缓存的记录删掉，下次 `require` 会再试一次。
 
 > 个人思考：每个新模块都要读文件再编译，所以不该出现在对时间敏感的执行过程里，比如服务器的 API 接口。Node 服务应该在冷启动时先加载必要的模块，再启动服务。
 
@@ -796,9 +806,10 @@ ES Module 不是 CommonJS 那种“读到 `require` 时，马上执行另一个�
 
 1. **依赖图建立**
 
-a. Node.js宏的模块加载器从入口模块出发，首先将入口模块地址解析成一个URL，如`file://....`
-1. **链接与绑定**：递归处理整张依赖图，创建模块作用域，把每个导入绑定连接到真正的导出绑定。
-2. **求值（evaluate）**：依赖先执行，导入方后执行；一个模块只执行一次。
+   a. Node.js 的模块加载器从入口模块出发，首先将入口模块地址解析成一个 URL，如 `file://....`
+
+2. **链接与绑定**：递归处理整张依赖图，创建模块作用域，把每个导入绑定连接到真正的导出绑定。
+3. **求值（evaluate）**：依赖先执行，导入方后执行；一个模块只执行一次。
 
 Node.js加载器主要负责依赖图建立部分的宿主工作，例如识别文件格式、解析包、读取文件和维护缓存。
 
@@ -811,22 +822,22 @@ Node 源码把一次模块加载抽象成 `ModuleJob`，把交给 V8 的模块�
 #### 支持的标识符
 
 1. **核心模块。** `node:fs`、`node:fs/promises` 这种 `node:` URL。后加的模块只有这一种写法，例如 `node:test`、`node:sqlite`。
-2. **URL 标识符**。包括`file:` **和** `data:`**。** `file:///D:/app/main.js` 直接指向该文件。`data:text/javascript,...` 把源码写在 URL 里，没有对应的磁盘文件。`https:` 也能被认成 URL，默认到加载阶段会失败。
+2. **URL 标识符**。包括 `file:` 和 `data:`。`file:///D:/app/main.js` 直接指向该文件。`data:text/javascript,...` 把源码写在 URL 里，没有对应的磁盘文件。`https:` 也能被认成 URL，默认到加载阶段会失败。
 3. **文件模块。** 以 `/`、`./`、`../` 开头。说明符里还没有协议，相对当前模块 URL 解析之后才变成 `file:` URL。扩展名要写全，目录要写到具体文件，例如 `./lib/index.js`。Windows 上的 `D:/app/main.js` 会被当成协议 `d:`，要写成 `file:///D:/app/main.js`。
-4. `#` **开头的标识符（子路径导入）。** 查当前包 `package.json` 的 `imports`。`#internal`、`#dep` 都是这种说明符。单独一个 `#` 无效。只有当前包内部的文件可以写这些名字。
+4. **以 `#` 开头的标识符（子路径导入）。** 查当前包 `package.json` 的 `imports`。`#internal`、`#dep` 都是这种说明符。单独一个 `#` 无效。只有当前包内部的文件可以写这些名字。
 5. **裸标识符（包路径）。** 其余说明符都归这里，例如 `lodash`、`lodash/get.js`、`@scope/pkg`。从当前模块所在目录向上找 `node_modules`，包有 `exports` 时按 `exports` 解析。不带前缀的老内置名也先到这里，`fs` 会被改写成 `node:fs` 再返回。
 
 
 
 #### 解析模块标识符
 
-1. 核心模块、URL标识符、文件模块的解析规则比较显而易见，只是要注意ESM模块解析不会自动补全扩展名进行嗅探。
+1. 核心模块、URL 标识符、文件模块的解析规则比较显而易见，只是要注意 ESM 模块解析不会自动补全扩展名进行嗅探。
 
-1. `#`开头的标识符最后也会映射成核心模块、URL标识符、文件模块、裸标识符，只是要注意参考的`imports`字段是当前模块所属的Package Scope中的`package.json`。
+2. `#` 开头的标识符最后也会映射成核心模块、URL 标识符、文件模块、裸标识符，只是要注意参考的 `imports` 字段是当前模块所属的 Package Scope 中的 `package.json`。
 
-1. 裸标识符的解析过程：
+3. 裸标识符的解析过程：
 
-![image-20261117194331307](./assets/esm-parse-module.png)
+![裸标识符的解析过程](./assets/esm-parse-module.png)
 
 
 
@@ -1019,7 +1030,7 @@ b
 main
 ```
 
-**例子二 **⭐
+**例子二**
 
 ```js
 // shared.js
@@ -1307,16 +1318,21 @@ Node.js 内置识别六种条件：
 | `node-addons` | 是否允许原生 Addons | 选择使用 C++ 原生扩展的实现 |
 | `module-sync` | 同步 ESM 加载能力 | 选择可同步加载的 ESM 实现 |
 | `default` | 无条件成立 | 提供默认兜底入口 |
+
 **具体说明：**
-**（1）**`import` **和** `require`
+
+**（1）** `import` 和 `require`
+
 区分模块加载方式：
 - `import`：通过 ESM 加载机制匹配。
 - `require`：通过 CommonJS 加载机制匹配。
 
-**（2）**`node`
+**（2）** `node`
+
 区分 Node.js 和其他 JavaScript 运行环境。
 
-**（3）**`node-addons`
+**（3）** `node-addons`
+
 判断当前 Node.js 是否允许加载原生 C++ Addons。
 默认情况下成立，可以通过以下参数关闭：
 ```
@@ -1324,25 +1340,31 @@ node --no-addons app.js
 ```
 常用于提供原生扩展实现和纯 JavaScript 降级实现。
 
-**（4）**`module-sync`
+**（4）** `module-sync`
+
 判断当前 Node.js 是否支持同步加载 ESM。
 - 可以用于 `import`、`import()` 和 `require()` 等加载方式。
 - 通过 `require()` 加载时，目标 ESM 模块图不能包含顶层 `await`。
 - 适用于提供一份可同步加载的 ESM 实现。
 
-**（5）**`default`
+**（5）** `default`
+
 无条件成立的兜底条件，建议放在条件对象最后。
 
 #### 3.2 社区约定条件（Community Conditions）
 这些条件不是 Node.js 核心内置条件，而是由 JavaScript 生态中的工具链约定和识别。
+
 | Key | 判断维度 | 主要用途 |
 | --- | --- | --- |
 | `types` | 类型解析 | 指向 TypeScript 类型声明文件 |
 | `browser` | 运行平台 | 选择浏览器环境实现 |
 | `development` | 构建模式 | 选择开发版本 |
 | `production` | 构建模式 | 选择生产版本 |
+
 **具体说明：**
-**（1）**`types`
+
+**（1）** `types`
+
 用于告诉 TypeScript 类型解析器应该使用哪个类型声明文件。
 ```json
 {
@@ -1360,7 +1382,8 @@ node --no-addons app.js
 - Node.js 不会默认识别 `types`。
 - 建议将 `types` 放在条件对象最前面。
 
-**（2）**`browser`
+**（2）** `browser`
+
 用于区分浏览器环境和其他运行环境。
 ```
 {
@@ -1376,7 +1399,8 @@ node --no-addons app.js
 例如，浏览器构建工具可以启用 `browser` 条件，从而选择浏览器专用实现。
 注意：Node.js 不会自动判断当前是否存在 `window` 来决定是否匹配 `browser`。
 
-**（3）**`development` **和** `production`
+**（3）** `development` 和 `production`
+
 用于区分开发环境和生产环境。
 ```json
 {
@@ -1392,6 +1416,7 @@ node --no-addons app.js
 典型区别：
 - Development：保留完整错误信息、调试代码和参数校验。
 - Production：精简代码，减少调试开销。
+
 注意：两个条件应当始终互斥，不能同时启用。
 
 #### 3.3 自定义条件（Custom Conditions）
@@ -1438,6 +1463,7 @@ node --conditions=development --conditions=custom app.js
 1. 首先检查 `development`。
 2. 条件成立，选择 `./dist/dev.js`。
 3. 不再检查 `browser`。
+
 如果调换两个 Key 的位置，则会选择 `browser.js`。
 
 #### 4.2 条件嵌套
@@ -1466,10 +1492,12 @@ node --conditions=development --conditions=custom app.js
 2. 进入对应的嵌套对象。
 3. 再根据构建模式匹配 `development` 或 `production`。
 4. 最终得到目标模块路径。
+
 可以理解为一棵递归遍历的条件选择树。
 
 #### 4.3 如何判断 Value 是目标路径还是条件对象？
 解析器通过 Value 的数据类型判断下一步操作。
+
 | Value 类型 | 含义 | 解析行为 |
 | --- | --- | --- |
 | String | 目标模块路径 | 结束当前条件匹配 |
@@ -1527,16 +1555,22 @@ node --conditions=development --conditions=custom app.js
 2. 如果是精确匹配，直接选择对应 Value。
 3. 如果是模式匹配，选择最具体的匹配模式，并替换通配符。
 4. 根据 Value 的数据类型决定下一步操作：
-  - String：得到目标模块路径。
-  - Object：按照 Key 顺序递归匹配条件。
-  - Array：依次尝试候选目标。
-  - null：拒绝导出。
+
+   - String：得到目标模块路径。
+   - Object：按照 Key 顺序递归匹配条件。
+   - Array：依次尝试候选目标。
+   - null：拒绝导出。
+
 5. 得到目标路径后，进入目标路径解析流程。
-![assets/1794991921121.png](assets/1794991921121.png)
+
+![exports 解析：先匹配子路径，再按 Value 的类型继续](./assets/1794991921121.png)
+
 **最终记住三个核心：**
+
 1. **Key 决定匹配什么**：精确子路径、通配子路径或条件名称。
 2. **Value 的类型决定如何继续解析**：字符串、对象、数组或 `null`。
 3. **对象属性顺序决定条件匹配优先级**：第一个匹配成功的条件优先。
+
 这三个规则基本构成了理解 Node.js `PACKAGE_EXPORTS_RESOLVE` 的基础。
 
 
@@ -1558,20 +1592,29 @@ ESM（ECMAScript Modules）和 CJS（CommonJS）是两套不同的模块系统�
 两者的核心区别在于：ESM 的导入导出关系可以在模块执行前确定，而 CJS 的导出对象可以在代码运行过程中动态修改。
 
 ### 2. CJS 与 ESM 的模块缓存及互操作
+
 Node.js 中，CommonJS（CJS）和 ECMAScript Modules（ESM）分别拥有独立的模块加载机制和缓存机制。
+
 **两套独立的缓存机制**
+
 - **CJS Cache**：通过 `require.cache` 暴露，可以查看和操作 CommonJS 模块缓存。以模块文件路径为主要标识。
 - **ESM Module Map**：由 ESM Loader 内部维护，不提供类似 `require.cache` 的公开缓存操作 API。根据模块 URL 等标识管理模块实例。
+
 **跨模块系统加载与缓存**
+
 CJS 和 ESM 可以相互加载，但跨系统加载并不意味着两套缓存合并。
+
 | 加载方式 | 加载机制 | 缓存归属 |
 | --- | --- | --- |
 | CJS → CJS | `require()` | CJS Cache |
 | ESM → ESM | `import` | ESM Module Map |
 | ESM → CJS | `import` | CJS Cache |
 | CJS → ESM | `require()`（Node.js 新版本支持） | ESM Module Map |
+
 跨系统加载时，由目标模块所属的加载机制负责加载和管理模块实例。
+
 **核心结论**
+
 - CJS 和 ESM 拥有各自独立的模块缓存。
 - 两套缓存没有直接合并，也没有提供通用的缓存互访 API。
 - 跨模块系统加载时，仍然由目标模块对应的 Loader 管理其模块实例。
@@ -1615,7 +1658,7 @@ import pkg from './module.cjs';
 import { name, age } from './module.cjs';
 ```
 
-这种写法有一个限制：**Node.js 并不会执行 CJS 模块，然后读取** `module.exports` **对象的所有属性来生成具名导出。**
+这种写法有一个限制：**Node.js 并不会执行 CJS 模块，然后读取 `module.exports` 对象的所有属性来生成具名导出。**
 
 因为 CJS 的导出对象可能在运行过程中动态变化，Node.js 无法像处理 ESM 那样，在模块链接阶段确定所有导出成员。
 
@@ -1891,8 +1934,8 @@ async function load() {
 
 ### 6. 核心理解
 可以把 ESM 和 CJS 的互操作理解为 Node.js 在两套模块系统之间提供了一层兼容机制：
-- **ESM 导入 CJS：** Node.js 将 CJS 的 `module.exports` 作为默认导出，并通过静态分析尽可能提供具名导出。**ESM从CJS中得到的具名导出、默认导出都是值拷贝，通过命名空间导出得到的是对CJS封装后的ESM模块命名空间对象。**
-- **CJS 导入 ESM：** Node.js 将 ESM 的 Module Namespace Object 提供给 CJS，支持动态 `import()`，也支持满足同步执行条件的 `require()`。**对模块命名空间对象解构以后得到的导出成员也不是live binding，而是值拷贝**
+- **ESM 导入 CJS：** Node.js 将 CJS 的 `module.exports` 作为默认导出，并通过静态分析尽可能提供具名导出。**ESM 从 CJS 得到的具名导出和默认导出都是值拷贝；通过命名空间导出得到的，是把 CJS 封装之后的 ESM 模块命名空间对象。**
+- **CJS 导入 ESM：** Node.js 将 ESM 的 Module Namespace Object 提供给 CJS，支持动态 `import()`，也支持满足同步执行条件的 `require()`。**对模块命名空间对象解构以后得到的导出成员也不是 live binding，而是值拷贝。**
 
 **最值得记住的两个结论：**
 1. ESM 和 CJS 的模块导出机制并不相同，不能简单地认为两边的导入导出语法可以一一对应。
