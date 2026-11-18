@@ -1951,8 +1951,8 @@ async function load() {
 
 #### 6. 核心理解
 可以把 ESM 和 CJS 的互操作理解为 Node.js 在两套模块系统之间提供了一层兼容机制：
-- **ESM 导入 CJS：** Node.js 将 CJS 的 `module.exports` 作为默认导出，并通过静态分析尽可能提供具名导出。
-- **CJS 导入 ESM：** Node.js 将 ESM 的 Module Namespace Object 提供给 CJS，支持动态 `import()`，也支持满足同步执行条件的 `require()`。
+- **ESM 导入 CJS：** Node.js 将 CJS 的 `module.exports` 作为默认导出，并通过静态分析尽可能提供具名导出。**ESM从CJS中得到的具名导出、默认导出都是值拷贝，通过命名空间导出得到的是对CJS封装后的ESM模块命名空间对象。**
+- **CJS 导入 ESM：** Node.js 将 ESM 的 Module Namespace Object 提供给 CJS，支持动态 `import()`，也支持满足同步执行条件的 `require()`。**对模块命名空间对象解构以后得到的导出成员也不是live binding，而是值拷贝**
 
 **最值得记住的两个结论：**
 1. ESM 和 CJS 的模块导出机制并不相同，不能简单地认为两边的导入导出语法可以一一对应。
