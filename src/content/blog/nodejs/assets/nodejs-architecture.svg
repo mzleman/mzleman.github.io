@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="784" viewBox="0 0 800 784" role="img">
+  <title>Node.js 运行时架构</title>
+  <style>
+    text { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .mono { font-family: Consolas, "Cascadia Mono", "Sarasa Mono SC", monospace; }
+  </style>
+  <rect width="800" height="784" rx="20" fill="#f3efe7"/>
+
+  <rect x="24" y="24" width="752" height="252" rx="18" fill="#243028"/>
+  <text x="48" y="62" fill="#fffdf9" font-size="22" font-weight="700">V8</text>
+  <text x="96" y="62" fill="#f0d2c4" font-size="16" font-weight="700">JavaScript 引擎</text>
+  <text x="48" y="88" fill="#9ec9a8" font-size="14">把源码编译成机器码，管理内存和垃圾回收。代码只在主线程上跑</text>
+
+  <rect x="44" y="108" width="712" height="68" rx="12" fill="#fffdf9"/>
+  <text x="64" y="136" fill="#1f1a17" font-size="20" font-weight="700">你的代码</text>
+  <text x="64" y="160" fill="#6b625c" font-size="14">业务逻辑写在这里</text>
+
+  <rect x="44" y="188" width="712" height="64" rx="12" fill="#fffdf9"/>
+  <text x="64" y="226" fill="#1f1a17" font-size="20" font-weight="700">核心模块</text>
+  <rect x="176" y="205" width="56" height="30" rx="8" fill="#f3efe7"/>
+  <text class="mono" x="204" y="225" text-anchor="middle" fill="#1f1a17" font-size="14">fs</text>
+  <rect x="242" y="205" width="70" height="30" rx="8" fill="#f3efe7"/>
+  <text class="mono" x="277" y="225" text-anchor="middle" fill="#1f1a17" font-size="14">http</text>
+  <rect x="322" y="205" width="70" height="30" rx="8" fill="#f3efe7"/>
+  <text class="mono" x="357" y="225" text-anchor="middle" fill="#1f1a17" font-size="14">path</text>
+  <rect x="402" y="205" width="88" height="30" rx="8" fill="#f3efe7"/>
+  <text class="mono" x="446" y="225" text-anchor="middle" fill="#1f1a17" font-size="14">stream</text>
+  <rect x="500" y="205" width="88" height="30" rx="8" fill="#f3efe7"/>
+  <text class="mono" x="544" y="225" text-anchor="middle" fill="#1f1a17" font-size="14">events</text>
+
+  <path d="M400 284 V308" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+  <path d="M392 300 L400 310 L408 300" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="24" y="316" width="752" height="88" rx="18" fill="#f8ebe3" stroke="#efd5c8" stroke-width="2"/>
+  <text x="48" y="352" fill="#9a3412" font-size="20" font-weight="700">C++ 绑定</text>
+  <text x="48" y="378" fill="#6b625c" font-size="14">跑在 V8 里的核心模块要碰文件和网络时，从这一层出去</text>
+
+  <path d="M400 412 V436" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+  <path d="M392 428 L400 438 L408 428" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="24" y="444" width="752" height="224" rx="18" fill="#fffdf9" stroke="#e6dfd4" stroke-width="2"/>
+  <text x="48" y="476" fill="#9a3412" font-size="16" font-weight="700">libuv 和其他 C/C++ 库</text>
+  <rect x="44" y="494" width="712" height="90" rx="12" fill="#243028"/>
+  <text x="64" y="528" fill="#fffdf9" font-size="20" font-weight="700">libuv</text>
+  <text x="64" y="552" fill="#9ec9a8" font-size="14">事件循环、异步 I/O</text>
+  <text x="64" y="572" fill="#d7e3dc" font-size="14">网络走非阻塞接口，文件和部分 DNS 放进线程池</text>
+
+  <rect x="44" y="598" width="169" height="50" rx="10" fill="#f3efe7"/>
+  <text class="mono" x="128.5" y="618" text-anchor="middle" fill="#1f1a17" font-size="13" font-weight="700">OpenSSL</text>
+  <text x="128.5" y="636" text-anchor="middle" fill="#6b625c" font-size="12">加密、TLS</text>
+  <rect x="225" y="598" width="169" height="50" rx="10" fill="#f3efe7"/>
+  <text class="mono" x="309.5" y="618" text-anchor="middle" fill="#1f1a17" font-size="13" font-weight="700">llhttp</text>
+  <text x="309.5" y="636" text-anchor="middle" fill="#6b625c" font-size="12">解析 HTTP</text>
+  <rect x="406" y="598" width="169" height="50" rx="10" fill="#f3efe7"/>
+  <text class="mono" x="490.5" y="618" text-anchor="middle" fill="#1f1a17" font-size="13" font-weight="700">c-ares</text>
+  <text x="490.5" y="636" text-anchor="middle" fill="#6b625c" font-size="12">异步 DNS</text>
+  <rect x="587" y="598" width="169" height="50" rx="10" fill="#f3efe7"/>
+  <text class="mono" x="671.5" y="618" text-anchor="middle" fill="#1f1a17" font-size="13" font-weight="700">zlib</text>
+  <text x="671.5" y="636" text-anchor="middle" fill="#6b625c" font-size="12">压缩</text>
+
+  <path d="M400 676 V700" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+  <path d="M392 692 L400 702 L408 692" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="24" y="708" width="752" height="52" rx="14" fill="#e6dfd4"/>
+  <text x="48" y="740" fill="#1f1a17" font-size="16" font-weight="700">操作系统</text>
+  <text x="144" y="740" fill="#6b625c" font-size="15">磁盘、网络和 DNS 都从这里进出</text>
+</svg>

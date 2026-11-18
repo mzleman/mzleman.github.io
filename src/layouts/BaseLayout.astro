@@ -4,14 +4,26 @@ import '../styles/global.css';
 interface Props {
 	title: string;
 	description?: string;
+	wide?: boolean;
+	home?: boolean;
 }
 
-const { title, description = '把学习过程记成短文。' } = Astro.props;
+const { title, description = '把学习过程记成短文。', wide = false, home = false } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="zh-CN">
 	<head>
+		<script is:inline>
+			const storedTheme = localStorage.getItem('theme');
+			const theme =
+				storedTheme === 'light' || storedTheme === 'dark'
+					? storedTheme
+					: window.matchMedia('(prefers-color-scheme: dark)').matches
+						? 'dark'
+						: 'light';
+			document.documentElement.dataset.theme = theme;
+		</script>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,23 +32,92 @@ const { title, description = '把学习过程记成短文。' } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
-		<main class="shell">
+		{
+			!home && (
+		<header class:list={['site-header', { 'site-header--wide': wide }]}>
+			<div class="site-header__inner">
+				<a class="site-header__brand" href="/">个人博客</a>
+				<div class="site-header__actions">
+					<button class="icon-btn" type="button" data-outline-open hidden aria-label="打开大纲">
+						<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+							<path
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								d="M8 6h13M8 12h13M8 18h13M4 6h.01M4 12h.01M4 18h.01"></path>
+						</svg>
+					</button>
+					<button class="icon-btn" type="button" data-theme-toggle aria-label="切换主题">
+						<svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+							<path
+								fill="currentColor"
+								d="M9.53 1.72a.75.75 0 0 1 .16.82A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.46-.69.75.75 0 0 1 .98.98 10.5 10.5 0 0 1-9.69 6.46c-5.8 0-10.5-4.7-10.5-10.5 0-4.37 2.67-8.11 6.46-9.7a.75.75 0 0 1 .82.17Z"
+							></path>
+						</svg>
+						<svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+							<circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+							<path
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								d="M12 2.5v2.2M12 19.3v2.2M4.8 4.8l1.6 1.6M17.6 17.6l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.8 19.2l1.6-1.6M17.6 6.4l1.6-1.6"
+							></path>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</header>
+			)
+		}
+		<main class:list={['shell', { 'shell--wide': wide, 'shell--home': home }]}>
 			<slot />
 		</main>
-		<nav class="mobile-dock" aria-label="回到顶部">
-			<button class="mobile-dock__btn" type="button" data-scroll-top aria-label="回到顶部">顶部</button>
+		<nav class="mobile-dock" aria-label="页面操作">
+			<button class="mobile-dock__btn" type="button" data-scroll-top aria-label="回到顶部">
+				<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+					<path
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M6 14l6-6 6 6"></path>
+				</svg>
+			</button>
 		</nav>
 		<script>
 			const dock = document.querySelector('.mobile-dock');
 			const topButton = document.querySelector('[data-scroll-top]');
+			const themeButton = document.querySelector('[data-theme-toggle]');
+
+			function currentTheme() {
+				return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+			}
+
+			function syncThemeButton() {
+				if (!(themeButton instanceof HTMLButtonElement)) return;
+				const dark = currentTheme() === 'dark';
+				themeButton.setAttribute('aria-label', dark ? '切换为浅色主题' : '切换为深色主题');
+			}
+
+			themeButton?.addEventListener('click', () => {
+				const next = currentTheme() === 'dark' ? 'light' : 'dark';
+				document.documentElement.dataset.theme = next;
+				localStorage.setItem('theme', next);
+				syncThemeButton();
+			});
+			syncThemeButton();
 
 			function showTopButton() {
 				return window.scrollY > Math.max(160, window.innerHeight * 0.4);
 			}
 
-			function syncTopButton() {
-				if (!(dock instanceof HTMLElement)) return;
+			function syncDock() {
+				if (!(dock instanceof HTMLElement) || !(topButton instanceof HTMLButtonElement)) return;
 				const visible = showTopButton();
+				topButton.hidden = !visible;
 				dock.classList.toggle('is-visible', visible);
 				dock.setAttribute('aria-hidden', visible ? 'false' : 'true');
 			}
@@ -44,8 +125,8 @@ const { title, description = '把学习过程记成短文。' } = Astro.props;
 			topButton?.addEventListener('click', () => {
 				window.scrollTo({ top: 0, behavior: 'smooth' });
 			});
-			window.addEventListener('scroll', syncTopButton, { passive: true });
-			syncTopButton();
+			window.addEventListener('scroll', syncDock, { passive: true });
+			syncDock();
 		</script>
 	</body>
 </html>

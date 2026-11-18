@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import Outline from '../../components/Outline.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -11,7 +12,8 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const showOutline = headings.some((heading) => heading.depth === 2 || heading.depth === 3);
 const dateFormat = new Intl.DateTimeFormat('zh-CN', {
 	year: 'numeric',
 	month: 'long',
@@ -19,22 +21,27 @@ const dateFormat = new Intl.DateTimeFormat('zh-CN', {
 });
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
-	<nav class="breadcrumb" aria-label="面包屑">
-		<a href="/">首页</a>
-		<span class="breadcrumb__sep" aria-hidden="true">/</span>
-		<span class="breadcrumb__current" aria-current="page">{post.data.title}</span>
-	</nav>
-	<header class="article-header">
-		<p class="meta">
-			<time datetime={post.data.date.toISOString()}>{dateFormat.format(post.data.date)}</time>
-			{post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}
-		</p>
-		<h1>{post.data.title}</h1>
-	</header>
-	<article class="prose">
-		<Content />
-	</article>
+<BaseLayout title={post.data.title} description={post.data.description} wide>
+	<div class:list={['reading', { 'reading--with-outline': showOutline }]}>
+		{showOutline && <Outline headings={headings} />}
+		<div class="reading__main">
+			<nav class="breadcrumb" aria-label="面包屑">
+				<a href="/">首页</a>
+				<span class="breadcrumb__sep" aria-hidden="true">/</span>
+				<span class="breadcrumb__current" aria-current="page">{post.data.title}</span>
+			</nav>
+			<header class="article-header">
+				<h1>{post.data.title}</h1>
+				<p class="meta">
+					<time datetime={post.data.date.toISOString()}>{dateFormat.format(post.data.date)}</time>
+					{post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}
+				</p>
+			</header>
+			<article class="prose">
+				<Content />
+			</article>
+		</div>
+	</div>
 </BaseLayout>
 
 <script>
